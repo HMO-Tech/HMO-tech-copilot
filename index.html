@@ -3,46 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sterling Tech | AI Control Panel</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Sterling Tech | AI Panel</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&family=Inter:wght@300;400;600&display=swap');
-        
         body {
-            font-family: 'Inter', sans-serif;
+            margin: 0; padding: 0;
             background: radial-gradient(circle at top right, #1e293b, #020617);
-            color: #f1f5f9;
-            min-height: 100vh;
-            margin: 0;
+            color: #f1f5f9; font-family: sans-serif;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;
         }
-
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 24px;
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { color: #3b82f6; font-size: 40px; font-weight: bold; letter-spacing: 5px; }
+        .panel {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px; width: 90%; max-width: 800px;
+            padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
-
-        .brand-font { font-family: 'Urbanist', sans-serif; letter-spacing: 6px; }
-        
-        .chat-container {
-            height: 420px;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: #3b82f6 #0f172a;
+        #chat-box {
+            height: 350px; overflow-y: auto; margin-bottom: 20px;
+            padding-right: 10px; display: flex; flex-direction: column; gap: 10px;
         }
-
-        .glow-button {
-            transition: all 0.3s ease;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        .msg { padding: 12px; border-radius: 12px; font-size: 14px; max-width: 85%; }
+        .ai { background: #1e293b; border: 1px solid #334155; align-self: flex-start; }
+        .user { background: #2563eb; color: white; align-self: flex-end; }
+        .input-group { display: flex; gap: 10px; }
+        textarea {
+            flex: 1; background: #0f172a; border: 1px solid #334155; border-radius: 10px;
+            color: white; padding: 12px; resize: none; outline: none;
         }
-
-        .glow-button:hover {
-            box-shadow: 0 0 25px rgba(59, 130, 246, 0.7);
-            transform: translateY(-2px);
+        button {
+            background: #2563eb; color: white; border: none; padding: 0 25px;
+            border-radius: 10px; cursor: pointer; font-weight: bold;
         }
-
-        .input-field {
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid #1e293b;
-            transition: border
+        .status { font-size: 11px; color: #10b981; margin-top: 15px; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">STERLING TECH</div>
+        <div style="font-size: 12px; color: #64748b; margin-top: 5px; letter-spacing: 2px;">AI COMPUTATIONAL DESIGN</div>
+    </div>
+    <div class="panel">
+        <div id="chat-box">
+            <div class="msg ai"><b>SYSTEM:</b> Ready for Rhino & Grasshopper commands.</div>
+        </div>
+        <div class="input-group">
+            <textarea id="input" placeholder="Ask for a script..."></textarea>
+            <button onclick="send()">SEND</button>
+        </div>
+        <div class="status">● Connection: Live on Vercel</div>
+    </div>
+    <script>
+        async function send() {
+            const box = document.getElementById('chat-box');
+            const input = document.getElementById('input');
+            if(!input.value.trim()) return;
+            box.innerHTML += `<div class="msg user">${input.value}</div>`;
+            const val = input.value; input.value = '';
+            box.scrollTop = box.scrollHeight;
+            box.innerHTML += `<div class="msg ai" id="ld">Computing...</div>`;
+            setTimeout(() => {
+                document.getElementById('ld').innerHTML = "<b>STERLING AI:</b> Script generation logic is active. Please ensure GROQ_API_KEY is set in Vercel.";
+                box.scrollTop = box.scrollHeight;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
