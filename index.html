@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Control Panel | Sterling Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700&display=swap');
+        body { font-family: 'Vazirmatn', sans-serif; background: #0f172a; color: white; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-4xl w-full glass rounded-3xl p-8 shadow-2xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-blue-400">پنل هوشمند Sterling Tech</h1>
+            <p class="text-gray-400 mt-2">توسعه یافته برای اسکریپت‌های Rhino & Grasshopper</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="space-y-4">
+                <div class="glass p-4 rounded-xl text-sm">
+                    <span class="block text-gray-500">وضعیت اتصال:</span>
+                    <span class="text-green-400 font-bold">● متصل به Vercel</span>
+                </div>
+                <div class="glass p-4 rounded-xl text-sm text-gray-300">
+                    این پنل آماده اتصال به API مدل Claude 3.5 است.
+                </div>
+            </div>
+
+            <div class="md:col-span-2 space-y-4">
+                <div id="chat-box" class="h-64 glass rounded-xl p-4 overflow-y-auto text-sm text-gray-200">
+                    سیستم: خوش آمدید آقای محسنی. آماده دریافت دستورات پارامتریک هستم...
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" placeholder="سوال خود را بپرسید..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500">
+                    <button class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg transition-all">ارسال</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
