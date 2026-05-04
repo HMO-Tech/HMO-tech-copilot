@@ -1,44 +1,48 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Control Panel | Sterling Tech</title>
+    <title>Sterling Tech | AI Control Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700&display=swap');
-        body { font-family: 'Vazirmatn', sans-serif; background: #0f172a; color: white; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-    </style>
-</head>
-<body class="min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-4xl w-full glass rounded-3xl p-8 shadow-2xl">
-        <header class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-blue-400">پنل هوشمند Sterling Tech</h1>
-            <p class="text-gray-400 mt-2">توسعه یافته برای اسکریپت‌های Rhino & Grasshopper</p>
-        </header>
+        @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&family=Inter:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top right, #1e293b, #020617);
+            color: #f1f5f9;
+            min-height: 100vh;
+            margin: 0;
+        }
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="space-y-4">
-                <div class="glass p-4 rounded-xl text-sm">
-                    <span class="block text-gray-500">وضعیت اتصال:</span>
-                    <span class="text-green-400 font-bold">● متصل به Vercel</span>
-                </div>
-                <div class="glass p-4 rounded-xl text-sm text-gray-300">
-                    این پنل آماده اتصال به API مدل Claude 3.5 است.
-                </div>
-            </div>
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 24px;
+        }
 
-            <div class="md:col-span-2 space-y-4">
-                <div id="chat-box" class="h-64 glass rounded-xl p-4 overflow-y-auto text-sm text-gray-200">
-                    سیستم: خوش آمدید آقای محسنی. آماده دریافت دستورات پارامتریک هستم...
-                </div>
-                <div class="flex gap-2">
-                    <input type="text" placeholder="سوال خود را بپرسید..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500">
-                    <button class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg transition-all">ارسال</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+        .brand-font { font-family: 'Urbanist', sans-serif; letter-spacing: 6px; }
+        
+        .chat-container {
+            height: 420px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #3b82f6 #0f172a;
+        }
+
+        .glow-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .glow-button:hover {
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .input-field {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #1e293b;
+            transition: border
