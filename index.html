@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,24 +21,39 @@
             border-radius: 20px; width: 95%; max-width: 850px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); backdrop-filter: blur(10px);
         }
         #chat-box { height: 380px; overflow-y: auto; margin-bottom: 20px; padding-right: 10px; display: flex; flex-direction: column; gap: 15px; }
-        .msg { padding: 14px; border-radius: 12px; font-size: 14px; max-width: 90%; line-height: 1.6; word-wrap: break-word; white-space: pre-line; }
+        
+        /* اصلاحیه فوق‌پیشرفته برای مهار به هم ریختگی متن فارسی و انگلیسی متداخل */
+        .msg { 
+            padding: 14px; 
+            border-radius: 12px; 
+            font-size: 14.5px; 
+            max-width: 90%; 
+            line-height: 1.7; 
+            word-wrap: break-word; 
+            white-space: pre-line;
+            direction: rtl;
+            text-align: right;
+            unicode-bidi: plaintext; /* رندر هوشمند هر خط بر اساس زبان همان خط */
+        }
+        
         .ai { background: #1e293b; border: 1px solid #334155; align-self: flex-start; width: 100%; box-sizing: border-box; }
-        .user { background: #00f2fe; color: #020617; font-weight: 600; align-self: flex-end; text-align: right; }
-        .rtl-layout { direction: rtl; text-align: right; }
-        .ltr-layout { direction: ltr; text-align: left; }
+        .user { background: #00f2fe; color: #020617; font-weight: 600; align-self: flex-end; text-align: right; direction: rtl; }
+        
         .code-container {
             background: #090d16; border: 1px solid #1e293b; border-radius: 8px;
-            margin-top: 10px; padding: 12px; font-family: 'Courier New', Courier, monospace; overflow-x: auto; direction: ltr; text-align: left;
+            margin-top: 10px; padding: 12px; font-family: 'Courier New', Courier, monospace; overflow-x: auto; 
+            direction: ltr !important; text-align: left !important;
         }
-        .code-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 6px; margin-bottom: 8px; font-size: 12px; color: #64748b; }
+        .code-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 6px; margin-bottom: 8px; font-size: 12px; color: #64748b; direction: ltr; }
         .code-actions button { background: #1e293b; color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.3); padding: 3px 8px; font-size: 11px; border-radius: 4px; cursor: pointer; }
         .code-actions button:hover { background: #00f2fe; color: #020617; }
-        pre { margin: 0; color: #a7f3d0; font-size: 13px; }
+        pre { margin: 0; color: #a7f3d0; font-size: 13px; direction: ltr; text-align: left; }
+        
         .input-group { display: flex; gap: 10px; }
-        textarea { flex: 1; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: white; padding: 12px; resize: none; outline: none; height: 50px; }
+        textarea { flex: 1; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: white; padding: 12px; resize: none; outline: none; height: 50px; direction: rtl; text-align: right; }
         textarea:focus { border-color: #00f2fe; }
         .send-btn { background: #00f2fe; color: #020617; border: none; padding: 0 25px; border-radius: 10px; cursor: pointer; font-weight: bold; }
-        .status { font-size: 11px; color: #10b981; margin-top: 15px; text-transform: uppercase; }
+        .status { font-size: 11px; color: #10b981; margin-top: 15px; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -49,7 +64,7 @@
     </div>
     <div class="panel">
         <div id="chat-box">
-            <div class="msg ai"><b>SYSTEM:</b> Live Engine Connected. Enter any engineering query in English or Persian. Press Enter to send.</div>
+            <div class="msg ai"><b>SYSTEM:</b> موتور هوشمند متصل شد. دستور خود را به زبان فارسی یا انگلیسی وارد کنید و Enter را بزنید.</div>
         </div>
         <div class="input-group">
             <textarea id="input" placeholder="دستور خود را وارد کنید... (ارسال با Enter)"></textarea>
@@ -71,10 +86,16 @@
 
         // --- Core Functions ---
         function copyCode(btn) { const pre = btn.closest('.code-container').querySelector('pre'); navigator.clipboard.writeText(pre.innerText); btn.innerText = 'COPIED!'; setTimeout(() => btn.innerText = 'Copy', 1000); }
-        function downloadCode(btn) { const pre = btn.closest('.code-container').querySelector('pre'); const blob = new Blob([pre.innerText], {type: 'text/plain'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'hmo_output.py'; a.click(); }
-        function isPersian(text) { return /^[\u0600-\u06FF\s]+/.test(text.trim()); }
+        function downloadCode(btn, lang) { 
+            const pre = btn.closest('.code-container').querySelector('pre'); 
+            const blob = new Blob([pre.innerText], {type: 'text/plain'}); 
+            const a = document.createElement('a'); 
+            const ext = lang === 'javascript' || lang === 'js' ? 'js' : 'py';
+            a.href = URL.createObjectURL(blob); 
+            a.download = `hmo_output.${ext}`; 
+            a.click(); 
+        }
 
-        // قابلیت ارسال با دکمه Enter روی کیبورد
         document.getElementById('input').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -83,17 +104,29 @@
         });
 
         function formatAIResponse(rawText) {
-            const codeBlockRegex = /```python([\s\S]*?)```/g;
+            const codeBlockRegex = /```(python|javascript|js|css|html)?([\s\S]*?)```/g;
             let match, lastIndex = 0, htmlOutput = "";
-            const layoutClass = isPersian(rawText) ? "rtl-layout" : "ltr-layout";
-            htmlOutput += `<div class="${layoutClass}">`;
+            
             while ((match = codeBlockRegex.exec(rawText)) !== null) {
                 htmlOutput += rawText.substring(lastIndex, match.index);
-                const codeContent = match[1].trim();
-                htmlOutput += `</div><div class="code-container"><div class="code-header"><span>hmo_co_pilot.py</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button><button onclick="downloadCode(this)">Download .py</button></div></div><pre><code>${codeContent}</code></pre></div><div class="${layoutClass}">`;
+                const lang = match[1] ? match[1].trim() : 'code';
+                const codeContent = match[2].trim();
+                
+                htmlOutput += `</div><div class="code-container">
+                    <div class="code-header">
+                        <span>hmo_output.${lang === 'javascript' || lang === 'js' ? 'js' : 'py'}</span>
+                        <div class="code-actions">
+                            <button onclick="copyCode(this)">Copy</button>
+                            <button onclick="downloadCode(this, '${lang}')">Download</button>
+                        </div>
+                    </div>
+                    <pre><code>${codeContent}</code></pre>
+                </div><div class="msg ai">`;
+                
                 lastIndex = codeBlockRegex.lastIndex;
             }
-            htmlOutput += rawText.substring(lastIndex) + "</div>";
+            
+            htmlOutput += rawText.substring(lastIndex);
             return htmlOutput;
         }
 
@@ -107,7 +140,7 @@
             input.value = ''; box.scrollTop = box.scrollHeight;
 
             const uniqueId = 'ld_' + Date.now();
-            box.innerHTML += `<div class="msg ai" id="${uniqueId}">Thinking...</div>`;
+            box.innerHTML += `<div class="msg ai" id="${uniqueId}">در حال پردازش...</div>`;
             box.scrollTop = box.scrollHeight;
 
             try {
@@ -124,7 +157,7 @@
                     document.getElementById(uniqueId).innerHTML = `<b>SYSTEM ERROR:</b> ${data.error || 'API Connection Failed.'}`;
                 }
             } catch (error) {
-                document.getElementById(uniqueId).innerHTML = `<b>CONNECTION ERROR:</b> Offline or server unreachable.`;
+                document.getElementById(uniqueId).innerHTML = `<b>CONNECTION ERROR:</b> آفلاین یا عدم دسترسی به سرور.`;
             }
             box.scrollTop = box.scrollHeight;
         }
