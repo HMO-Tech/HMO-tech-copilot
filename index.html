@@ -49,10 +49,10 @@
     </div>
     <div class="panel">
         <div id="chat-box">
-            <div class="msg ai"><b>SYSTEM:</b> Live Engine Connected. Enter any engineering query or ask me to script a geometry in English or Persian.</div>
+            <div class="msg ai"><b>SYSTEM:</b> Live Engine Connected. Enter any engineering query in English or Persian. Press Enter to send.</div>
         </div>
         <div class="input-group">
-            <textarea id="input" placeholder="دستور خود را وارد کنید یا سوالی بپرسید..."></textarea>
+            <textarea id="input" placeholder="دستور خود را وارد کنید... (ارسال با Enter)"></textarea>
             <button class="send-btn" onclick="send()">SEND</button>
         </div>
         <div class="status">● Co-Pilot Engine: Live API Mode</div>
@@ -74,29 +74,23 @@
         function downloadCode(btn) { const pre = btn.closest('.code-container').querySelector('pre'); const blob = new Blob([pre.innerText], {type: 'text/plain'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'hmo_output.py'; a.click(); }
         function isPersian(text) { return /^[\u0600-\u06FF\s]+/.test(text.trim()); }
 
-        // تفکیک هوشمند کد و متن ارسالی از API
+        // گوش دادن به کلید Enter در تکست‌اریا
+        document.getElementById('input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault(); // جلوگیری از رفتن به خط بعد
+                send();
+            }
+        });
+
         function formatAIResponse(rawText) {
             const codeBlockRegex = /```python([\s\S]*?)```/g;
-            let match;
-            let lastIndex = 0;
-            let htmlOutput = "";
+            let match, lastIndex = 0, htmlOutput = "";
             const layoutClass = isPersian(rawText) ? "rtl-layout" : "ltr-layout";
-
             htmlOutput += `<div class="${layoutClass}">`;
-            
             while ((match = codeBlockRegex.exec(rawText)) !== null) {
                 htmlOutput += rawText.substring(lastIndex, match.index);
                 const codeContent = match[1].trim();
-                htmlOutput += `
-                    </div>
-                    <div class="code-container">
-                        <div class="code-header"><span>hmo_co_pilot.py</span>
-                            <div class="code-actions"><button onclick="copyCode(this)">Copy</button><button onclick="downloadCode(this)">Download .py</button></div>
-                        </div>
-                        <pre><code>${codeContent}</code></pre>
-                    </div>
-                    <div class="${layoutClass}">
-                `;
+                htmlOutput += `</div><div class="code-container"><div class="code-header"><span>hmo_co_pilot.py</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button><button onclick="downloadCode(this)">Download .py</button></div></div><pre><code>${codeContent}</code></pre></div><div class="${layoutClass}">`;
                 lastIndex = codeBlockRegex.lastIndex;
             }
             htmlOutput += rawText.substring(lastIndex) + "</div>";
@@ -117,7 +111,6 @@
             box.scrollTop = box.scrollHeight;
 
             try {
-                // ارسال زنده به بک‌اند ورسل روی دامنه جاری
                 const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -125,13 +118,13 @@
                 });
                 const data = await response.json();
                 
-                if(data.response) {
+                if(response.ok && data.response) {
                     document.getElementById(uniqueId).innerHTML = `<b>HMO-TECH:</b><br>${formatAIResponse(data.response)}`;
                 } else {
-                    document.getElementById(uniqueId).innerHTML = `<b>SYSTEM ERROR:</b> API failure. Check Vercel environment variables.`;
+                    document.getElementById(uniqueId).innerHTML = `<b>SYSTEM ERROR:</b> ${data.error || 'API Connection Failed.'}`;
                 }
             } catch (error) {
-                document.getElementById(uniqueId).innerHTML = `<b>CONNECTION ERROR:</b> Offline or failed request.`;
+                document.getElementById(uniqueId).innerHTML = `<b>CONNECTION ERROR:</b> Offline or server unreachable.`;
             }
             box.scrollTop = box.scrollHeight;
         }
