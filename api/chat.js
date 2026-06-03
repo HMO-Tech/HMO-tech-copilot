@@ -1,4 +1,4 @@
-// api/chat.js (HMO-Tech Ultra-Focused Co-Pilot)
+// api/chat.js (D&T Ai-TECH Dedicated Co-Pilot Backend)
 export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -11,7 +11,9 @@ export default async function handler(req, res) {
         const { prompt } = req.body;
         const apiKey = process.env.GROQ_API_KEY;
 
-        if (!apiKey) return res.status(400).json({ error: 'GROQ_API_KEY is missing.' });
+        if (!apiKey) {
+            return res.status(400).json({ error: 'GROQ_API_KEY is missing from environment setup.' });
+        }
 
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
@@ -24,11 +26,11 @@ export default async function handler(req, res) {
                 messages: [
                     {
                         role: 'system',
-                        content: 'You are HMO-TECH AI Co-Pilot, a precise full-stack and computational design engineer. Be highly concise. Do not repeat previous statements. Never fake 3D codes using 2D HTML/CSS. When asked for Three.js, provide real WebGL code using standard libraries like OrbitControls if navigation is needed. Answer in clear Persian when prompted in Persian.'
+                        content: 'You are D&T Ai-TECH, a highly precise full-stack developer and computational design assistant specialized in Python, JavaScript, Rhino 3D, and Grasshopper. Your answers must be short, high-performing, and structurally accurate. Do not repeat your explanations or run into endless loops. Never provide 2D HTML structures when Three.js WebGL is requested. Always reply in clean Persian when user addresses you in Persian.'
                     },
                     { role: 'user', content: prompt }
                 ],
-                temperature: 0.4 // تمرکز بالا و کاهش لوپ‌های تکراری هوش مصنوعی
+                temperature: 0.4
             })
         });
 
@@ -38,9 +40,9 @@ export default async function handler(req, res) {
         if (data.choices && data.choices[0] && data.choices[0].message) {
             return res.status(200).json({ response: data.choices[0].message.content });
         }
-        return res.status(500).json({ error: 'Unexpected response structure.' });
+        return res.status(500).json({ error: 'Unexpected structure from API response.' });
 
     } catch (error) {
-        return res.status(500).json({ error: 'Server Exception: ' + error.message });
+        return res.status(500).json({ error: 'Server Side Exception: ' + error.message });
     }
 }
