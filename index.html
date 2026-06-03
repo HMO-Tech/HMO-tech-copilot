@@ -13,16 +13,11 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;
             overflow-x: hidden;
         }
-        .header { 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 15px; 
-        }
-        /* باکس نگهدارنده بوم سه بعدی */
-        #canvas-3d {
-            width: 120px; height: 120px; margin-bottom: 5px; cursor: grab;
-        }
+        .header { display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 15px; }
+        #canvas-3d { width: 120px; height: 120px; margin-bottom: 5px; cursor: grab; }
         #canvas-3d:active { cursor: grabbing; }
-        
         .logo { color: #00f2fe; font-size: 32px; font-weight: bold; letter-spacing: 5px; text-shadow: 0 0 15px rgba(0, 242, 254, 0.4); }
+        
         .panel {
             background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(0, 242, 254, 0.25);
@@ -31,17 +26,19 @@
             backdrop-filter: blur(10px);
         }
         #chat-box {
-            height: 350px; overflow-y: auto; margin-bottom: 20px;
+            height: 380px; overflow-y: auto; margin-bottom: 20px;
             padding-right: 10px; display: flex; flex-direction: column; gap: 15px;
         }
-        .msg { padding: 14px; border-radius: 12px; font-size: 14px; max-width: 90%; line-height: 1.6; }
+        .msg { padding: 14px; border-radius: 12px; font-size: 14px; max-width: 90%; line-height: 1.6; word-wrap: break-word; }
         .ai { background: #1e293b; border: 1px solid #334155; align-self: flex-start; width: 100%; box-sizing: border-box; }
-        .user { background: #00f2fe; color: #020617; font-weight: 600; align-self: flex-end; }
+        .user { background: #00f2fe; color: #020617; font-weight: 600; align-self: flex-end; text-align: right; direction: rtl; }
+        .rtl-text { direction: rtl; text-align: right; }
+        .ltr-text { direction: ltr; text-align: left; }
         
         .code-container {
             background: #090d16; border: 1px solid #1e293b; border-radius: 8px;
             margin-top: 10px; padding: 12px; font-family: 'Courier New', Courier, monospace;
-            position: relative; overflow-x: auto;
+            position: relative; overflow-x: auto; direction: ltr; text-align: left;
         }
         .code-header {
             display: flex; justify-content: space-between; align-items: center;
@@ -50,7 +47,7 @@
         }
         .code-actions button {
             background: #1e293b; color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.3);
-            padding: 3px 8px; font-size: 11px; border-radius: 4px; margin-left: 5px;
+            padding: 3px 8px; font-size: 11px; border-radius: 4px; margin-left: 5px; cursor: pointer;
         }
         .code-actions button:hover { background: #00f2fe; color: #020617; }
         pre { margin: 0; color: #a7f3d0; font-size: 13px; }
@@ -73,49 +70,40 @@
     <div class="header">
         <div id="canvas-3d"></div>
         <div class="logo">HMO-TECH</div>
-        <div style="font-size: 12px; color: #64748b; margin-top: 5px; letter-spacing: 2px;">AI RHINO & GRASSHOPPER CO-PILOT</div>
+        <div style="font-size: 12px; color: #64748b; margin-top: 5px; letter-spacing: 2px;">AI COMPASS & DESIGN CO-PILOT</div>
     </div>
     <div class="panel">
         <div id="chat-box">
             <div class="msg ai">
-                <b>SYSTEM:</b> HMO-Tech Professional 3D Assistant initialized. Describe the parametric geometry or algorithmic logic you need for Rhinoceros.
+                <b>SYSTEM:</b> HMO-Tech Multi-Language Assistant active. I can draft code, debug your scripts, or explain advanced algorithmic geometry in both English & Persian.
             </div>
         </div>
         <div class="input-group">
-            <textarea id="input" placeholder="e.g., Create a grid of sine-wave responsive points..."></textarea>
+            <textarea id="input" placeholder="دستور خود را وارد کنید یا سوالی بپرسید... / Type a command or ask a question..."></textarea>
             <button class="send-btn" onclick="send()">SEND</button>
         </div>
-        <div class="status">● Co-Pilot Engine: Connected to Vercel Backend</div>
+        <div class="status">● Co-Pilot Engine: Advanced Multi-Tasking Live</div>
     </div>
 
     <script>
-        // --- کدهای مربوط به رندر ۳ بعدی لوگو (Three.js) ---
+        // --- 3D Logo Scene ---
         const container = document.getElementById('canvas-3d');
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
         camera.position.z = 3.5;
-
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(120, 120);
         container.appendChild(renderer.domElement);
 
-        // ساخت ساختار هندسی مشبک و تکنولوژی‌محور (Octahedron Grid)
         const geometry = new THREE.OctahedronGeometry(1, 1);
-        const material = new THREE.MeshBasicMaterial({
-            color: 0x00f2fe,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.8
-        });
+        const material = new THREE.MeshBasicMaterial({ color: 0x00f2fe, wireframe: true, transparent: true, opacity: 0.8 });
         const techMesh = new THREE.Mesh(geometry, material);
         scene.add(techMesh);
 
-        // اضافه کردن نقاط اتصال نئونی (Nodes) در تقاطع‌ها
         const pointsMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.07 });
         const techPoints = new THREE.Points(geometry, pointsMaterial);
         scene.add(techPoints);
 
-        // تعامل با حرکت موس
         let mouseX = 0, mouseY = 0;
         document.addEventListener('mousemove', (e) => {
             mouseX = (e.clientX - window.innerWidth / 2) * 0.001;
@@ -124,22 +112,20 @@
 
         function animate() {
             requestAnimationFrame(animate);
-            // چرخش خودکار نرم + واکنش به حرکت موس
-            techMesh.rotation.x += 0.005 + mouseY * 0.1;
-            techMesh.rotation.y += 0.008 + mouseX * 0.1;
+            techMesh.rotation.x += 0.005 + mouseY * 0.05;
+            techMesh.rotation.y += 0.008 + mouseX * 0.05;
             techPoints.rotation.x = techMesh.rotation.x;
             techPoints.rotation.y = techMesh.rotation.y;
             renderer.render(scene, camera);
         }
         animate();
 
-        // --- توابع کمکی پنل چت ---
+        // --- Code Utilities ---
         function copyCode(btn) {
             const pre = btn.closest('.code-container').querySelector('pre');
             navigator.clipboard.writeText(pre.innerText);
-            const origText = btn.innerText;
             btn.innerText = 'COPIED!';
-            setTimeout(() => btn.innerText = origText, 1000);
+            setTimeout(() => btn.innerText = 'Copy', 1000);
         }
 
         function downloadCode(btn) {
@@ -147,40 +133,80 @@
             const blob = new Blob([pre.innerText], {type: 'text/plain'});
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = 'rhino_script.py';
+            a.download = 'hmo_co_pilot_output.py';
             a.click();
         }
 
+        // بررسی زبان ورودی (تشخیص فارسی بودن)
+        function isPersian(text) {
+            const p = /^[\u0600-\u06FF\s]+/;
+            return p.test(text.trim());
+        }
+
+        // --- منطق پردازش و پاسخ هوشمند دستیار ---
         async function send() {
             const box = document.getElementById('chat-box');
             const input = document.getElementById('input');
-            if(!input.value.trim()) return;
+            const prompt = input.value.trim();
+            if(!prompt) return;
             
-            const userPrompt = input.value;
-            box.innerHTML += `<div class="msg user">${userPrompt}</div>`;
+            // نمایش پیام کاربر با قالب‌بندی زبان مناسب
+            const userClass = isPersian(prompt) ? 'user' : 'user ltr-text';
+            box.innerHTML += `<div class="msg ${userClass}">${prompt}</div>`;
             input.value = '';
             box.scrollTop = box.scrollHeight;
             
             const uniqueId = 'ld_' + Date.now();
-            box.innerHTML += `<div class="msg ai" id="${uniqueId}">Analyzing geometry & generating script...</div>`;
+            box.innerHTML += `<div class="msg ai" id="${uniqueId}">Analyzing input and consulting HMO-Tech knowledge base...</div>`;
             box.scrollTop = box.scrollHeight;
             
             setTimeout(() => {
-                const samplePythonCode = `import Rhinoceros as rc\nimport Rhino.Geometry as rg\nimport scriptcontext as sc\n\n# HMO-Tech Generated Parametric Logic\ndef CreateParametricStructure():\n    points = []\n    for i in range(10):\n        for j in range(10):\n            pt = rg.Point3d(i, j, (i*j) * 0.1)\n            points.append(pt)\n            sc.doc.Objects.AddPoint(pt)\n    sc.doc.Views.Redraw()\n\nCreateParametricStructure()`;
+                let responseHTML = '';
+                const lowerPrompt = prompt.toLowerCase();
+                const isFa = isPersian(prompt);
 
-                document.getElementById(uniqueId).innerHTML = `
-                    <b>HMO-TECH CO-PILOT:</b> Here is your optimized Python script for Rhino. It builds a parametric point network based on your prompt.
-                    <div class="code-container">
-                        <div class="code-header">
-                            <span>rhino_computational_design.py</span>
-                            <div class="code-actions">
-                                <button onclick="copyCode(this)">Copy</button>
-                                <button onclick="downloadCode(this)">Download .py</button>
-                            </div>
-                        </div>
-                        <pre><code>${samplePythonCode}</code></pre>
-                    </div>
-                `;
+                // ۱. سناریو: سوال در مورد نوع یا منطق کدها (فارسی و انگلیسی)
+                if (lowerPrompt.includes('چکار میکنی') || lowerPrompt.includes('کاربرد') || lowerPrompt.includes('what do you do') || lowerPrompt.includes('help')) {
+                    if (isFa) {
+                        responseHTML = `<div class="rtl-text"><b>HMO-TECH ASSISTANT:</b> من دستیار تخصصی شما در زمینه طراحی محاسباتی و برنامه‌نویسی سیستم هستم. کارهای زیر را با هم انجام می‌دهیم:<br>🔹 <b>تولید اسکریپت:</b> نوشتن کدهای بهینه پایتون برای راینو و گراس‌هاپر.<br>🔹 <b>تحلیل الگوریتم:</b> توضیح منطق ریاضی پشت فرم‌های پیچیده هندسی.<br>🔹 <b>دیباگ خطاها:</b> کدهای معیوب خود را بفرستید تا خطاها را برطرف کنم.</div>`;
+                    } else {
+                        responseHTML = `<div class="ltr-text"><b>HMO-TECH ASSISTANT:</b> I am your advanced co-pilot for computational design and automation. Here is how I can assist you:<br>🔹 <b>Scripting:</b> Generating Python codes for Rhino/Grasshopper workflows.<br>🔹 <b>Analysis:</b> Explaining complex architectural and mathematical logic.<br>🔹 <b>Debugging:</b> Reviewing and fixing errors in your existing code bases.</div>`;
+                    }
+                }
+                // ۲. سناریو: درخواست اسکریپت یا کلمات کلیدی مربوط به کدنویسی
+                else if (lowerPrompt.includes('script') || lowerPrompt.includes('code') || lowerPrompt.includes('کد') || lowerPrompt.includes('اسکریپت') || lowerPrompt.includes('write') || lowerPrompt.includes('ساخت')) {
+                    const pyCode = `import Rhino.Geometry as rg\nimport scriptcontext as sc\n\n# Optimized Parametric Structure\ndef GenerateHMOStructure():\n    # Algorithmic curves built by HMO-Tech Co-Pilot\n    center = rg.Point3d(0, 0, 0)\n    sphere = rg.Sphere(center, 5.0)\n    sc.doc.Objects.AddSphere(sphere)\n    sc.doc.Views.Redraw()\n\nGenerateHMOStructure()`;
+                    
+                    if (isFa) {
+                        responseHTML = `
+                            <div class="rtl-text"><b>HMO-TECH ASSISTANT:</b> اسکریپت پایتون مورد نظر شما با رعایت اصول بهینه‌سازی هندسی تولید شد. این کد یک ساختار کروی پارامتریک در راینو ایجاد می‌کند:</div>
+                            <div class="code-container">
+                                <div class="code-header"><span>hmo_parametric_design.py</span>
+                                    <div class="code-actions"><button onclick="copyCode(this)">Copy</button><button onclick="downloadCode(this)">Download .py</button></div>
+                                </div>
+                                <pre><code>${pyCode}</code></pre>
+                            </div>`;
+                    } else {
+                        responseHTML = `
+                            <div class="ltr-text"><b>HMO-TECH ASSISTANT:</b> I have compiled the computational geometry script based on your requirements. It instantiates a parametric sphere within RhinoCommon:</div>
+                            <div class="code-container">
+                                <div class="code-header"><span>hmo_parametric_design.py</span>
+                                    <div class="code-actions"><button onclick="copyCode(this)">Copy</button><button onclick="downloadCode(this)">Download .py</button></div>
+                                </div>
+                                <pre><code>${pyCode}</code></pre>
+                            </div>`;
+                    }
+                }
+                // ۳. سناریو: گفتگو یا سوالات متفرقه و مهندسی
+                else {
+                    if (isFa) {
+                        responseHTML = `<div class="rtl-text"><b>HMO-TECH ASSISTANT:</b> مفهوم پیام شما پردازش شد. به عنوان یک دستیار مهندسی کامپیوتر و معماری الگوریتمیک، می‌توانم این موضوع را از زاویه ساختارهای توزیع‌شده یا هندسه دیجیتال تحلیل کنم. لطفاً جزئیات بیشتری از کامپوننت یا اسکریپت مدنظرتان بگویید!</div>`;
+                    } else {
+                        responseHTML = `<div class="ltr-text"><b>HMO-TECH ASSISTANT:</b> Input analyzed successfully. As an expert engineering system, I can help you implement this logic into your pipeline. Please provide more contextual parameters or error logs if available.</div>`;
+                    }
+                }
+
+                document.getElementById(uniqueId).innerHTML = responseHTML;
                 box.scrollTop = box.scrollHeight;
             }, 1200);
         }
