@@ -1,87 +1,66 @@
-<!DOCTYPE html>
-<html lang="fa">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>D&T Ai-TECH | Computational Design Hub</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <style>
-        /* (همان استایل‌های قبلی تو، فقط بخش‌های جدید اضافه شد) */
-        body { margin: 0; padding: 0; background: radial-gradient(circle at top right, #0f172a, #020617); color: #f1f5f9; font-family: 'Segoe UI', Tahoma, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
-        .header { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; }
-        #canvas-3d { width: 120px; height: 120px; margin-bottom: 5px; cursor: grab; }
-        .logo { color: #00f2fe; font-size: 32px; font-weight: bold; letter-spacing: 3px; text-shadow: 0 0 15px rgba(0, 242, 254, 0.4); }
-        .panel { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(0, 242, 254, 0.25); border-radius: 20px; width: 95%; max-width: 850px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); backdrop-filter: blur(10px); }
-        #chat-box { height: 380px; overflow-y: auto; margin-bottom: 20px; padding-right: 10px; display: flex; flex-direction: column; gap: 15px; }
-        .msg { padding: 14px; border-radius: 12px; font-size: 14.5px; max-width: 90%; line-height: 1.7; word-wrap: break-word; white-space: pre-line; direction: rtl; text-align: right; }
-        .ai { background: #1e293b; border: 1px solid #334155; align-self: flex-start; width: 100%; box-sizing: border-box; }
-        .user { background: #00f2fe; color: #020617; font-weight: 600; align-self: flex-end; text-align: right; }
-        .code-container { background: #090d16; border: 1px solid #1e293b; border-radius: 8px; margin-top: 10px; padding: 12px; direction: ltr; text-align: left; }
-        .input-group { display: flex; gap: 10px; align-items: center; }
-        textarea { flex: 1; background: #0f172a; border: 1px solid #334155; border-radius: 10px; color: white; padding: 12px; resize: none; outline: none; height: 50px; direction: rtl; text-align: right; }
-        .file-btn { background: #334155; color: #00f2fe; border: none; padding: 10px; border-radius: 10px; cursor: pointer; }
-        .send-btn { background: #00f2fe; color: #020617; border: none; padding: 0 25px; border-radius: 10px; cursor: pointer; font-weight: bold; height: 50px; }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <div id="canvas-3d"></div>
-        <div class="logo">D&T Ai-TECH</div>
-    </div>
-    <div class="panel">
-        <div id="chat-box">
-            <div class="msg ai"><b>SYSTEM:</b> هسته پیشرفته متصل شد. می‌توانید فایل (PDF, تصویر، کد) آپلود کنید.</div>
-        </div>
-        <div class="input-group">
-            <input type="file" id="fileInput" style="display:none" onchange="console.log('File Selected')">
-            <button class="file-btn" onclick="document.getElementById('fileInput').click()">📎</button>
-            <textarea id="input" placeholder="دستور خود را وارد کنید..."></textarea>
-            <button class="send-btn" onclick="send()">SEND</button>
-        </div>
-    </div>
+<div class="input-group" style="display: flex; gap: 10px; align-items: center; padding: 10px;">
+    <button class="file-btn" onclick="document.getElementById('fileInput').click()" style="background: #1e293b; border: 1px solid #00f2fe; color: #00f2fe; padding: 10px 15px; border-radius: 8px; cursor: pointer;">
+        📎 فایل
+    </button>
+    <input type="file" id="fileInput" style="display:none" onchange="updateFileLabel()">
+    
+    <textarea id="input" placeholder="دستور خود را وارد کنید..." style="flex:1;"></textarea>
+    
+    <button class="send-btn" onclick="send()" style="background: #00f2fe; color: #020617; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">SEND</button>
+</div>
+<div id="fileStatus" style="font-size: 12px; color: #64748b; margin-top: 5px; text-align: right;"></div>
 
-    <script>
-        // --- 3D Logo ---
-        const container = document.getElementById('canvas-3d');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000); camera.position.z = 3.5;
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true }); renderer.setSize(120, 120); container.appendChild(renderer.domElement);
-        const geometry = new THREE.OctahedronGeometry(1, 1);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00f2fe, wireframe: true });
-        const techMesh = new THREE.Mesh(geometry, material); scene.add(techMesh);
-        function animate() { requestAnimationFrame(animate); techMesh.rotation.x += 0.006; techMesh.rotation.y += 0.009; renderer.render(scene, camera); } animate();
+<script>
+    // نمایش نام فایل در رابط کاربری
+    function updateFileLabel() {
+        const fileInput = document.getElementById('fileInput');
+        const status = document.getElementById('fileStatus');
+        status.innerText = fileInput.files.length > 0 ? "فایل آماده ارسال: " + fileInput.files[0].name : "";
+    }
 
-        // --- Core Functions ---
-        async function send() {
-            const input = document.getElementById('input');
-            const fileInput = document.getElementById('fileInput');
-            const box = document.getElementById('chat-box');
-            const prompt = input.value.trim();
-            if(!prompt && fileInput.files.length === 0) return;
-
-            box.innerHTML += `<div class="msg user">${prompt || 'فایل آپلود شد'}</div>`;
-            input.value = '';
-
-            let fileParts = [];
-            for (let file of fileInput.files) {
-                const base64 = await new Promise(r => {
-                    let reader = new FileReader();
-                    reader.onload = () => r(reader.result.split(',')[1]);
-                    reader.readAsDataURL(file);
-                });
-                fileParts.push({ inlineData: { data: base64, mimeType: file.type } });
-            }
-
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt, fileParts })
-            });
-
-            const data = await response.json();
-            box.innerHTML += `<div class="msg ai">${data.response}</div>`;
-            fileInput.value = '';
+    // اصلاح کلید اینتر
+    document.getElementById('input').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            send();
         }
-    </script>
-</body>
-</html>
+    });
+
+    // تابع send اصلاح شده
+    async function send() {
+        const input = document.getElementById('input');
+        const fileInput = document.getElementById('fileInput');
+        const box = document.getElementById('chat-box');
+        const prompt = input.value.trim();
+        
+        if(!prompt && fileInput.files.length === 0) return;
+
+        // نمایش پیام کاربر
+        box.innerHTML += `<div class="msg user">${prompt} ${fileInput.files.length > 0 ? '<br><i>(پیوست شد)</i>' : ''}</div>`;
+        input.value = '';
+        document.getElementById('fileStatus').innerText = '';
+
+        // ارسال فایل
+        let fileParts = [];
+        for (let file of fileInput.files) {
+            const base64 = await new Promise(r => {
+                let reader = new FileReader();
+                reader.onload = () => r(reader.result.split(',')[1]);
+                reader.readAsDataURL(file);
+            });
+            fileParts.push({ inlineData: { data: base64, mimeType: file.type } });
+        }
+
+        // فراخوانی API
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt, fileParts })
+        });
+
+        const data = await response.json();
+        box.innerHTML += `<div class="msg ai">${data.response || data.error}</div>`;
+        fileInput.value = '';
+        box.scrollTop = box.scrollHeight;
+    }
+</script>
