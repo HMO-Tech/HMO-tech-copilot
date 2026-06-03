@@ -74,10 +74,10 @@
         function downloadCode(btn) { const pre = btn.closest('.code-container').querySelector('pre'); const blob = new Blob([pre.innerText], {type: 'text/plain'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'hmo_output.py'; a.click(); }
         function isPersian(text) { return /^[\u0600-\u06FF\s]+/.test(text.trim()); }
 
-        // گوش دادن به کلید Enter در تکست‌اریا
+        // قابلیت ارسال با دکمه Enter روی کیبورد
         document.getElementById('input').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault(); // جلوگیری از رفتن به خط بعد
+                e.preventDefault();
                 send();
             }
         });
