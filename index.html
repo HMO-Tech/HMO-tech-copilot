@@ -7,6 +7,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap');
 
+        /* متغیرهای رنگی تم جمنای و هویت D&T */
         :root {
             --bg-main: #131314; 
             --bg-sidebar: #1e1f22; 
@@ -15,26 +16,29 @@
             --brand-purple: #9068be;
             --text-main: #e3e3e3;
             --text-muted: #c4c7c5;
+            
+            /* گرادیان متحرک SEND */
             --ai-gradient: linear-gradient(270deg, #1c7bba, #9068be, #e6739f, #00ffff);
         }
 
         body {
             margin: 0; padding: 0; display: flex; height: 100vh;
-            font-family: 'Google Sans', 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Google Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-main); color: var(--text-main);
             overflow: hidden; direction: ltr; 
         }
 
-        /* --- نوار کناری (Sidebar) --- */
+        /* --- نوار کناری (Sidebar) شبیه به جمنای --- */
         .sidebar {
             width: 280px; background-color: var(--bg-sidebar);
             display: flex; flex-direction: column;
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden; border-right: 1px solid rgba(255,255,255,0.05); z-index: 10;
         }
+
         .sidebar.collapsed { width: 68px; }
         .sidebar-header { display: flex; align-items: center; padding: 12px 10px; height: 70px; box-sizing: border-box; white-space: nowrap; }
-        
+
         .menu-btn {
             background: transparent; border: none; color: var(--text-muted);
             width: 48px; height: 48px; border-radius: 50%; cursor: pointer;
@@ -42,11 +46,12 @@
         }
         .menu-btn:hover { background-color: var(--bg-hover); color: white; }
 
-        .brand-container { display: flex; align-items: center; gap: 8px; margin-left: 5px; transition: opacity 0.2s, transform 0.2s; }
+        .brand-container { display: flex; align-items: center; gap: 12px; margin-left: 5px; transition: opacity 0.2s, transform 0.2s; }
         .sidebar.collapsed .brand-container { opacity: 0; transform: translateX(-10px); pointer-events: none; }
 
-        .brand-title { font-size: 16px; font-weight: 700; color: var(--text-main); letter-spacing: 0.5px; }
+        .brand-title { font-size: 18px; font-weight: 700; color: var(--text-main); letter-spacing: 0.5px; }
 
+        /* منوی گزینه‌ها */
         .sidebar-nav { display: flex; flex-direction: column; padding: 10px 12px; gap: 8px; }
         .nav-item {
             display: flex; align-items: center; gap: 15px; padding: 12px 16px; border-radius: 25px; 
@@ -56,14 +61,14 @@
         .nav-item:hover, .nav-item.active { background-color: var(--bg-hover); }
         .nav-icon { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex-shrink: 0; }
         .nav-icon svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-        
+
         .sidebar.collapsed .nav-item { padding: 12px; width: 44px; height: 44px; border-radius: 50%; justify-content: center; margin: 0 auto; }
         .sidebar.collapsed .nav-text { display: none; }
 
-        /* --- محتوای اصلی --- */
+        /* --- محتوای اصلی و گرادیانت پس‌زمینه اختصاصی D&T --- */
         .main-content {
             flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-            background: radial-gradient(circle at 50% 45%, rgba(144, 104, 190, 0.12) 0%, rgba(0, 255, 255, 0.04) 30%, var(--bg-main) 65%);
+            background: radial-gradient(circle at 50% 45%, rgba(144, 104, 190, 0.15) 0%, rgba(0, 255, 255, 0.05) 30%, var(--bg-main) 65%);
             position: relative; padding: 20px 20px 30px 20px; box-sizing: border-box;
         }
 
@@ -72,19 +77,19 @@
         
         /* بخش‌های داینامیک سایدبار */
         #dynamic-view { width: 100%; display: none; flex-direction: column; gap: 15px; overflow-y: auto; max-height: 75vh; text-align: center; padding: 40px 20px; }
-        .view-title { font-size: 24px; color: var(--brand-cyan); margin-bottom: 10px; }
+        .view-title { font-size: 26px; color: var(--brand-cyan); margin-bottom: 10px; font-weight: bold; }
 
         .greeting-container { text-align: center; }
         .greeting-text { font-size: 2.5rem; font-weight: 400; color: transparent; background: linear-gradient(90deg, #f8fafc, #94a3b8); -webkit-background-clip: text; margin: 0; letter-spacing: -0.5px; }
 
-        /* تراز هوشمند متون چت (پشتیبانی کامل از فارسی و انگلیسی ترکیبی) */
+        /* تراز هوشمند متون چت (فارسی و انگلیسی ترکیبی) */
         .msg-row { display: flex; width: 100%; margin-bottom: 5px; }
         .msg-row.user-row { justify-content: flex-end; }
         .msg-row.ai-row { justify-content: flex-start; }
 
         .msg-bubble { max-width: 85%; padding: 14px 20px; border-radius: 22px; font-size: 15px; line-height: 1.6; word-wrap: break-word; direction: rtl; text-align: right; unicode-bidi: plaintext; }
         .user-bubble { background-color: #303134; color: var(--text-main); border-radius: 22px 22px 4px 22px; }
-        .ai-bubble { color: var(--text-main); background-color: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); }
+        .ai-bubble { color: var(--text-main); background-color: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03); }
         .ai-loading { color: var(--brand-cyan); font-style: italic; }
 
         /* --- باکس ورودی هوش مصنوعی --- */
@@ -113,28 +118,29 @@
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
             <div class="brand-container">
-                <svg width="34" height="34" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 8px rgba(0,255,255,0.4)); flex-shrink:0;">
+                <svg width="38" height="38" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 8px rgba(0,255,255,0.4)); flex-shrink:0;">
                     <defs>
-                        <linearGradient id="sideGemini" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <linearGradient id="hmoGeminiMix" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#9d4edd" />
+                            <stop offset="60%" stop-color="#7209b7" />
                             <stop offset="100%" stop-color="#00f2fe" />
                         </linearGradient>
                     </defs>
-                    <path d="M 265 50 L 140 50 C 90 50 50 90 50 140 L 50 360 C 50 410 90 450 140 450 L 360 450 C 410 450 450 410 450 360 L 450 215" stroke="url(#sideGemini)" stroke-width="22" stroke-linecap="round" fill="none"/>
-                    <path d="M 410 135 C 410 80 435 55 490 55 C 435 55 410 30 410 -25 C 410 30 385 55 330 55 C 385 55 410 80 410 135 Z" transform="translate(-40, 0)" fill="url(#sideGemini)"/>
-                    <line x1="125" y1="130" x2="255" y2="130" stroke="url(#sideGemini)" stroke-width="18" stroke-linecap="round"/>
-                    <circle cx="125" cy="130" r="10" fill="url(#sideGemini)"/>
-                    <circle cx="255" cy="130" r="10" fill="url(#sideGemini)"/>
-                    <line x1="85" y1="165" x2="240" y2="165" stroke="url(#sideGemini)" stroke-width="18" stroke-linecap="round"/>
-                    <circle cx="85" cy="165" r="10" fill="url(#sideGemini)"/>
-                    <circle cx="240" cy="165" r="10" fill="url(#sideGemini)"/>
-                    <path d="M 125 200 L 125 260 L 215 260" stroke="url(#sideGemini)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    <circle cx="125" cy="200" r="10" fill="url(#sideGemini)"/>
-                    <path d="M 215 200 C 285 200 320 235 320 295 C 320 355 285 390 215 390 C 190 390 175 375 175 355 L 175 295" stroke="url(#sideGemini)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    <circle cx="320" cy="295" r="10" fill="url(#sideGemini)"/>
-                    <rect x="120" y="325" width="55" height="55" stroke="url(#sideGemini)" stroke-width="18" stroke-linejoin="round" fill="none"/>
-                    <line x1="235" y1="295" x2="235" y2="415" stroke="url(#sideGemini)" stroke-width="18" stroke-linecap="round"/>
-                    <circle cx="235" cy="415" r="10" fill="url(#sideGemini)"/>
+                    <path d="M 540 160 L 320 160 C 230 160 160 230 160 320 L 160 680 C 160 770 230 840 320 840 L 680 840 C 770 840 840 770 840 680 L 840 440" stroke="url(#hmoGeminiMix)" stroke-width="34" stroke-linecap="round" fill="none"/>
+                    <path d="M 760 350 C 760 250 810 200 910 200 C 810 200 760 150 760 50 C 760 150 710 200 610 200 C 710 200 760 250 760 350 Z" fill="url(#hmoGeminiMix)"/>
+                    <path d="M 320 255 L 500 255" stroke="url(#hmoGeminiMix)" stroke-width="30" stroke-linecap="round"/>
+                    <circle cx="320" cy="255" r="20" fill="#00f2fe"/>
+                    <circle cx="500" cy="255" r="20" fill="#00f2fe"/>
+                    <path d="M 240 325 L 480 325" stroke="url(#hmoGeminiMix)" stroke-width="30" stroke-linecap="round"/>
+                    <circle cx="240" cy="325" r="20" fill="#00f2fe"/>
+                    <circle cx="480" cy="325" r="20" fill="#00f2fe"/>
+                    <path d="M 320 405 L 320 495 L 450 495" stroke="url(#hmoGeminiMix)" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <circle cx="320" cy="405" r="20" fill="#00f2fe"/>
+                    <path d="M 450 405 C 570 405 615 450 615 565 C 615 680 570 725 450 725 C 400 725 380 705 380 655 L 380 565" stroke="url(#hmoGeminiMix)" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <circle cx="615" cy="565" r="20" fill="#00f2fe"/>
+                    <rect x="290" y="610" width="90" height="90" stroke="url(#hmoGeminiMix)" stroke-width="30" stroke-linejoin="round" fill="none"/>
+                    <path d="M 480 550 L 480 770" stroke="url(#hmoGeminiMix)" stroke-width="30" stroke-linecap="round"/>
+                    <circle cx="480" cy="770" r="20" fill="#00f2fe"/>
                 </svg>
                 <span class="brand-title">D&T Ai-TECH</span>
             </div>
@@ -178,7 +184,7 @@
 
         <div id="dynamic-view">
             <h2 class="view-title" id="view-header-title">ماژول فرعی</h2>
-            <p style="color: var(--text-muted); font-size: 15px;">این بخش در حال توسعه است و به زودی به آرشیو متصل می‌شود.</p>
+            <p style="color: var(--text-muted); font-size: 15px;">این بخش در حال توسعه است و به زودی به دیتابیس متصل می‌شود.</p>
         </div>
 
         <div class="prompt-container">
@@ -210,22 +216,19 @@
             document.getElementById('app-sidebar').classList.toggle('collapsed');
         }
 
-        // سوئیچ پویای بخش‌های سایدبار
+        // فعال‌سازی و سوئیچ پویای تمام منوهای سایدبار (New chat, Search, Videos, Library)
         function switchView(viewName) {
             const chatView = document.getElementById('chat-view-wrapper');
             const dynamicView = document.getElementById('dynamic-view');
             const title = document.getElementById('view-header-title');
             
-            // مدیریت کلاس اکتیو دکمه‌ها
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             event.currentTarget.classList.add('active');
 
             if(viewName === 'chat') {
-                dynamicView.style.display = 'none';
-                chatView.style.display = 'flex';
+                dynamicView.style.display = 'none'; chatView.style.display = 'flex';
             } else {
-                chatView.style.display = 'none';
-                dynamicView.style.display = 'flex';
+                chatView.style.display = 'none'; dynamicView.style.display = 'flex';
                 if(viewName === 'search') title.innerText = "Search Hub";
                 if(viewName === 'videos') title.innerText = "Computational Design Videos";
                 if(viewName === 'library') title.innerText = "Project Code Library";
@@ -242,7 +245,7 @@
             status.innerHTML = fileInput.files.length > 0 ? `<span style="background:rgba(0,255,255,0.06); padding:4px 12px; border-radius:6px; border:1px solid rgba(0,255,255,0.15)">✓ Attached: ${fileInput.files[0].name}</span>` : '';
         }
 
-        // هوش صوتی
+        // هوش صوتی مستقل زنده (Voice to Text)
         let recognition; let isRecording = false;
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -267,7 +270,7 @@
             }
         }
 
-        // ارسال پیام و پردازش چندوجهی
+        // موتور اصلی ارسال پیام و پردازش چندوجهی فایل‌ها متصل به ورسل
         async function handleMessageExecution() {
             const promptInput = document.getElementById('user-prompt');
             const fileInput = document.getElementById('hidden-file-input');
