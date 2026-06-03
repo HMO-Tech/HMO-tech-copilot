@@ -74,10 +74,10 @@
         function downloadCode(btn) { const pre = btn.closest('.code-container').querySelector('pre'); const blob = new Blob([pre.innerText], {type: 'text/plain'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'hmo_output.py'; a.click(); }
         function isPersian(text) { return /^[\u0600-\u06FF\s]+/.test(text.trim()); }
 
-        // قابلیت ارسال با دکمه Enter روی کیبورد
+        // گوش دادن به کلید Enter در تکست‌اریا
         document.getElementById('input').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
+                e.preventDefault(); // جلوگیری از رفتن به خط بعد
                 send();
             }
         });
@@ -87,3 +87,47 @@
             let match, lastIndex = 0, htmlOutput = "";
             const layoutClass = isPersian(rawText) ? "rtl-layout" : "ltr-layout";
             htmlOutput += `<div class="${layoutClass}">`;
+            while ((match = codeBlockRegex.exec(rawText)) !== null) {
+                htmlOutput += rawText.substring(lastIndex, match.index);
+                const codeContent = match[1].trim();
+                htmlOutput += `</div><div class="code-container"><div class="code-header"><span>hmo_co_pilot.py</span><div class="code-actions"><button onclick="copyCode(this)">Copy</button><button onclick="downloadCode(this)">Download .py</button></div></div><pre><code>${codeContent}</code></pre></div><div class="${layoutClass}">`;
+                lastIndex = codeBlockRegex.lastIndex;
+            }
+            htmlOutput += rawText.substring(lastIndex) + "</div>";
+            return htmlOutput;
+        }
+
+        async function send() {
+            const box = document.getElementById('chat-box');
+            const input = document.getElementById('input');
+            const prompt = input.value.trim();
+            if(!prompt) return;
+
+            box.innerHTML += `<div class="msg user">${prompt}</div>`;
+            input.value = ''; box.scrollTop = box.scrollHeight;
+
+            const uniqueId = 'ld_' + Date.now();
+            box.innerHTML += `<div class="msg ai" id="${uniqueId}">Thinking...</div>`;
+            box.scrollTop = box.scrollHeight;
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+                const data = await response.json();
+                
+                if(response.ok && data.response) {
+                    document.getElementById(uniqueId).innerHTML = `<b>HMO-TECH:</b><br>${formatAIResponse(data.response)}`;
+                } else {
+                    document.getElementById(uniqueId).innerHTML = `<b>SYSTEM ERROR:</b> ${data.error || 'API Connection Failed.'}`;
+                }
+            } catch (error) {
+                document.getElementById(uniqueId).innerHTML = `<b>CONNECTION ERROR:</b> Offline or server unreachable.`;
+            }
+            box.scrollTop = box.scrollHeight;
+        }
+    </script>
+</body>
+</html>
