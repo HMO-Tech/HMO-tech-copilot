@@ -1,54 +1,582 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa">
 <head>
     <meta charset="UTF-8">
-    <title>D&T Ai-TECH | Intelligent Core</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&T Ai-TECH | AI Studio</title>
     <style>
-        body { background: #050505; color: #fff; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 20px; }
-        .app-container { width: 100%; max-width: 700px; display: flex; flex-direction: column; gap: 20px; }
-        .logo-box { text-align: center; margin-bottom: 20px; }
-        .logo-box h1 { color: #00f2fe; margin: 0; font-size: 28px; letter-spacing: 2px; }
-        #chat-box { height: 500px; background: #111; border-radius: 15px; padding: 20px; overflow-y: auto; border: 1px solid #222; }
-        .input-area { background: #181818; padding: 15px; border-radius: 15px; display: flex; align-items: center; gap: 10px; border: 1px solid #333; }
-        textarea { flex: 1; background: none; border: none; color: white; outline: none; height: 50px; resize: none; }
-        .send-btn { background: #00f2fe; color: #000; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .file-btn { color: #888; cursor: pointer; font-size: 20px; }
-        .msg { margin-bottom: 15px; padding: 10px; border-radius: 8px; }
-        .user { background: #222; color: #00f2fe; }
-        .ai { background: #000; border-right: 2px solid #00f2fe; }
+        @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap');
+
+        /* متغیرهای رنگی تم جمنای و هویت D&T */
+        :root {
+            --bg-main: #131314; /* پس‌زمینه بسیار تاریک جمنای */
+            --bg-sidebar: #1e1f22; 
+            --bg-hover: rgba(255, 255, 255, 0.08);
+            --brand-cyan: #00ffff;
+            --brand-purple: #9068be;
+            --text-main: #e3e3e3;
+            --text-muted: #c4c7c5;
+            
+            /* گرادیان متحرک SEND */
+            --ai-gradient: linear-gradient(270deg, #1c7bba, #9068be, #e6739f, #00ffff);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            font-family: 'Google Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            overflow: hidden;
+            direction: ltr; 
+        }
+
+        /* --- نوار کناری (Sidebar) شبیه به جمنای --- */
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-sidebar);
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            border-right: 1px solid rgba(255,255,255,0.05);
+            z-index: 10;
+        }
+
+        .sidebar.collapsed {
+            width: 68px;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 10px;
+            height: 70px;
+            box-sizing: border-box;
+            white-space: nowrap;
+        }
+
+        .menu-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .menu-btn:hover {
+            background-color: var(--bg-hover);
+            color: white;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: 5px;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .sidebar.collapsed .brand-container {
+            opacity: 0;
+            transform: translateX(-10px);
+            pointer-events: none;
+        }
+
+        /* فراخوانی لوگوی شفاف شما */
+        .logo-img {
+            width: 40px; 
+            height: auto;
+            filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.3));
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+        }
+
+        /* منوی گزینه‌ها */
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            padding: 10px 12px;
+            gap: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 16px;
+            border-radius: 25px; 
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s, padding 0.3s, border-radius 0.3s;
+            white-space: nowrap;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .nav-item:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .nav-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .nav-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .nav-text {
+            transition: opacity 0.2s;
+        }
+
+        .sidebar.collapsed .nav-item {
+            padding: 12px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .sidebar.collapsed .nav-text {
+            display: none;
+        }
+
+        /* --- محتوای اصلی و گرادیانت پس‌زمینه اختصاصی D&T --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            background: radial-gradient(circle at 50% 45%, rgba(144, 104, 190, 0.15) 0%, rgba(0, 255, 255, 0.05) 30%, var(--bg-main) 65%);
+            position: relative;
+            padding: 20px 20px 30px 20px;
+            box-sizing: border-box;
+        }
+
+        /* بخش نمایش پیام‌های رد و بدل شده به شیوه‌ای مدرن */
+        .chat-container {
+            width: 100%;
+            max-width: 820px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #chat-box {
+            width: 100%;
+            display: none; /* در ابتدا مخفی است و با اولین پیام ظاهر می‌شود */
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            padding: 10px;
+            box-sizing: border-box;
+            max-height: 75vh;
+        }
+
+        .greeting-container {
+            text-align: center;
+        }
+
+        .greeting-text {
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: transparent;
+            background: linear-gradient(90deg, #f8fafc, #94a3b8);
+            -webkit-background-clip: text;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        /* استایل‌های شکیل پیام کاربر و هوش مصنوعی */
+        .msg-row { display: flex; width: 100%; margin-bottom: 5px; }
+        .msg-row.user-row { justify-content: flex-end; }
+        .msg-row.ai-row { justify-content: flex-start; }
+
+        .msg-bubble {
+            max-width: 85%;
+            padding: 14px 20px;
+            border-radius: 22px;
+            font-size: 15px;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+        .user-bubble {
+            background-color: #303134;
+            color: var(--text-main);
+            border-radius: 22px 22px 4px 22px;
+            text-align: right;
+            direction: rtl;
+        }
+        .ai-bubble {
+            color: var(--text-main);
+            text-align: right;
+            direction: rtl;
+            padding-left: 0;
+        }
+        .ai-loading {
+            color: var(--brand-cyan);
+            font-style: italic;
+        }
+
+        /* --- باکس ورودی هوش مصنوعی --- */
+        .prompt-container {
+            width: 100%;
+            max-width: 820px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .prompt-box {
+            background: rgba(30, 31, 34, 0.7);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 35px;
+            padding: 10px 15px 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transition: border-color 0.3s, background 0.3s;
+        }
+
+        .prompt-box:focus-within {
+            background: rgba(40, 41, 45, 0.9);
+            border-color: rgba(144, 104, 190, 0.4);
+        }
+
+        /* آیکون‌های داخل باکس جستجو */
+        .action-icon {
+            color: var(--text-muted);
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+        }
+
+        .chat-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            font-family: inherit;
+            direction: rtl;
+            text-align: right;
+        }
+
+        .chat-input::placeholder {
+            color: #888;
+            direction: rtl;
+            text-align: right;
+        }
+
+        /* نشان مینی‌مال فشرده برای فایل پیوست شده */
+        #file-status {
+            font-size: 13px;
+            color: var(--brand-cyan);
+            padding-left: 25px;
+            min-height: 18px;
+            font-weight: 500;
+        }
+
+        /* --- دکمه متحرک SEND --- */
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .send-btn {
+            background: var(--ai-gradient);
+            background-size: 300% 300%;
+            animation: gradientFlow 4s ease infinite;
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(144, 104, 190, 0.6);
+        }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="logo-box"><h1>⬡ D&T Ai-TECH</h1></div>
-        <div id="chat-box"></div>
-        <div class="input-area">
-            <button class="file-btn" onclick="document.getElementById('f').click()">📎</button>
-            <input type="file" id="f" style="display:none">
-            <textarea id="inp" placeholder="دستور یا تحلیل فایل..."></textarea>
-            <button class="send-btn" onclick="send()">SEND</button>
+
+    <aside class="sidebar" id="app-sidebar">
+        <div class="sidebar-header">
+            <button class="menu-btn" onclick="toggleSidebar()" title="Collapse menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+            <div class="brand-container">
+                <img src="طراحی بدون عنوان.png" alt="D&T AI Logo" class="logo-img">
+                <span class="brand-title">D&T Ai-TECH</span>
+            </div>
         </div>
-    </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item" onclick="window.location.reload()">
+                <div class="nav-icon" style="color: var(--brand-cyan);">
+                    <svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"></path></svg>
+                </div>
+                <span class="nav-text">New chat</span>
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </div>
+                <span class="nav-text">Search chats</span>
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                </div>
+                <span class="nav-text">Videos</span>
+            </a>
+            <a href="#" class="nav-item">
+                <div class="nav-icon">
+                    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </div>
+                <span class="nav-text">Library</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="chat-container">
+            <div class="greeting-container" id="greeting-wrapper">
+                <h1 class="greeting-text">Where should we start?</h1>
+            </div>
+            
+            <div id="chat-box"></div>
+        </div>
+
+        <div class="prompt-container">
+            <div id="file-status"></div>
+            <div class="prompt-box">
+                <div class="action-icon" title="Upload file" onclick="document.getElementById('hidden-file-input').click()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </div>
+                <input type="file" id="hidden-file-input" style="display:none" onchange="updateFileIndicator()">
+                
+                <input type="text" id="user-prompt" class="chat-input" placeholder="Ask D&T Ai-TECH or upload a design...">
+                
+                <div class="action-icon" id="mic-btn" title="Voice input" onclick="toggleVoiceInput()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                </div>
+                
+                <button class="send-btn" onclick="handleMessageExecution()">SEND</button>
+            </div>
+        </div>
+    </main>
 
     <script>
-        async function send() {
-            const inp = document.getElementById('inp'), f = document.getElementById('f'), box = document.getElementById('chat-box');
-            if(!inp.value && f.files.length === 0) return;
-            box.innerHTML += `<div class="msg user">کاربر: ${inp.value}</div>`;
+        // کنترل پویای جمع شدن سایدبار کشویی
+        function toggleSidebar() {
+            const sidebar = document.getElementById('app-sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        // گوش دادن به کلید Enter برای ارسال سریع پیام بدون نیاز به کلیک
+        document.getElementById('user-prompt').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleMessageExecution();
+            }
+        });
+
+        // نمایش وضعیت مینی‌مال و لوکس فایل اضافه شده زیر کادر ورودی
+        function updateFileIndicator() {
+            const fileInput = document.getElementById('hidden-file-input');
+            const fileStatus = document.getElementById('file-status');
+            if (fileInput.files.length > 0) {
+                fileStatus.innerHTML = `<span style="background:rgba(0,255,255,0.08); padding:3px 10px; border-radius:6px; border:1px solid rgba(0,255,255,0.15)">✓ Ready to upload: ${fileInput.files[0].name}</span>`;
+            } else {
+                fileStatus.innerHTML = '';
+            }
+        }
+
+        // --- هوش صوتی زنده (Speech To Text) ---
+        let recognition;
+        let isRecording = false;
+
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
             
-            let fileParts = [];
-            for (let file of f.files) {
-                const base64 = await new Promise(r => { let rd = new FileReader(); rd.onload = () => r(rd.result.split(',')[1]); rd.readAsDataURL(file); });
-                fileParts.push({ inlineData: { data: base64, mimeType: file.type } });
+            recognition.lang = 'fa-IR'; // تنظیم پیش‌فرض تشخیص زبان فارسی و متون ترکیبی
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            recognition.onresult = function(event) {
+                const resultText = event.results[0][0].transcript;
+                const promptInput = document.getElementById('user-prompt');
+                if (promptInput.value) {
+                    promptInput.value += ' ' + resultText;
+                } else {
+                    promptInput.value = resultText;
+                }
+            };
+
+            recognition.onend = function() {
+                isRecording = false;
+                const micBtn = document.getElementById('mic-btn');
+                micBtn.style.color = 'var(--text-muted)';
+                micBtn.style.boxShadow = 'none';
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Speech Capture Failed:', event.error);
+                stopVoiceRecognition();
+            };
+        }
+
+        function toggleVoiceInput() {
+            if (!recognition) {
+                alert("مرورگر شما از قابلیت ضبط مستقیم صدا پشتیبانی نمی‌کند. لطفا از گوگل کروم یا مایکروسافت اج استفاده کنید.");
+                return;
+            }
+            if (isRecording) { stopVoiceRecognition(); } else { startVoiceRecognition(); }
+        }
+
+        function startVoiceRecognition() {
+            isRecording = true;
+            recognition.start();
+            const micBtn = document.getElementById('mic-btn');
+            micBtn.style.color = '#ff4757'; /* تغییر رنگ نئونی دکمه به وضعیت فعال صوتی */
+            micBtn.style.boxShadow = '0 0 12px rgba(255, 71, 87, 0.4)';
+        }
+
+        function stopVoiceRecognition() {
+            isRecording = false;
+            recognition.stop();
+        }
+
+        // --- پردازش پیام متنی و چندوجهی نهایی متصل به سرور ورسل ---
+        async function handleMessageExecution() {
+            const promptInput = document.getElementById('user-prompt');
+            const fileInput = document.getElementById('hidden-file-input');
+            const greetingWrapper = document.getElementById('greeting-wrapper');
+            const chatBox = document.getElementById('chat-box');
+            
+            const textValue = promptInput.value.trim();
+            if (!textValue && fileInput.files.length === 0) return;
+
+            // انتقال داینامیک صفحه به حالت گفتگو (مدل رفتاری جمنای)
+            if (greetingWrapper.style.display !== 'none') {
+                greetingWrapper.style.display = 'none';
+                chatBox.style.display = 'flex';
             }
 
+            let fileLabel = fileInput.files.length > 0 ? `<br><small style="color: var(--brand-cyan);">[Attached: ${fileInput.files[0].name}]</small>` : '';
+            chatBox.innerHTML += `
+                <div class="msg-row user-row">
+                    <div class="msg-bubble user-bubble"><b>You</b><br>${textValue || "Analyzing design file..."}${fileLabel}</div>
+                </div>`;
+            
+            promptInput.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const currentAiId = 'ai_stream_' + Date.now();
+            chatBox.innerHTML += `
+                <div class="msg-row ai-row">
+                    <div class="msg-bubble ai-bubble" id="${currentAiId}">
+                        <span class="ai-loading">D&T Core is processing...</span>
+                    </div>
+                </div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // استخراج دیتای Base64 برای ارسال بدون نقص فایل چندرسانه‌ای به API گوگل
+            let fileParts = [];
+            if (fileInput.files.length > 0) {
+                for (let file of fileInput.files) {
+                    const base64Data = await new Promise(resolve => {
+                        let reader = new FileReader();
+                        reader.onload = () => resolve(reader.result.split(',')[1]);
+                        reader.readAsDataURL(file);
+                    });
+                    fileParts.push({ inlineData: { data: base64Data, mimeType: file.type } });
+                }
+            }
+
+            document.getElementById('file-status').innerText = '';
+
             try {
-                const res = await fetch('/api/chat', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ prompt: inp.value, fileParts }) });
-                const data = await res.json();
-                box.innerHTML += `<div class="msg ai"><b>AI:</b> ${data.response || 'خطا در دریافت پاسخ'}</div>`;
-            } catch(e) { box.innerHTML += `<div class="msg ai">خطای اتصال به سرور</div>`; }
-            inp.value = ''; f.value = ''; box.scrollTop = box.scrollHeight;
+                const result = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: textValue, fileParts })
+                });
+                
+                const data = await result.json();
+                
+                if (result.ok && data.response) {
+                    // نمایش خروجی هوش مصنوعی بدون باگ undefined
+                    document.getElementById(currentAiId).innerHTML = `<b>D&T Ai-TECH</b><br>${data.response}`;
+                } else {
+                    document.getElementById(currentAiId).innerHTML = `<b>SYSTEM ERROR:</b> Unable to fetch response from server.`;
+                }
+            } catch (error) {
+                document.getElementById(currentAiId).innerHTML = `<b>CONNECTION ERROR:</b> Failed to reach Vercel network. Ensure you run this on your production URL.`;
+            }
+
+            fileInput.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
     </script>
+
 </body>
 </html>
