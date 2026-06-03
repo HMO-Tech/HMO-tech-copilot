@@ -1,46 +1,52 @@
-// api/chat.js (HMO-Tech Backend Engine)
+// api/chat.js (HMO-Tech Advanced Secured Backend)
 export default async function handler(req, res) {
-    // تنظیم هدرها برای جلوگیری از ارورهای CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
-
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
+    if (req.method === 'OPTIONS') return res.status(200).end();
+    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
     try {
         const { prompt } = req.body;
+        const apiKey = process.env.GROQ_API_KEY;
 
-        // اتصال به API پرسرعت و رایگان GROQ (مدل قدرتمند Llama-3)
+        if (!apiKey) {
+            return res.status(400).json({ error: 'GROQ_API_KEY is completely missing in Vercel settings.' });
+        }
+
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+                'Authorization': `Bearer ${apiKey.trim()}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'llama3-70b-8192', // یک مدل فوق‌العاده قوی با درک بالا از کدنویسی پایتون و زبان فارسی
+                model: 'llama3-70b-8192',
                 messages: [
                     {
                         role: 'system',
-                        content: 'You are HMO-TECH AI Co-Pilot, an expert assistant for Computer Engineering, Rhino 3D, and Grasshopper. You must support both Persian and English. When writing code, ALWAYS return it inside standard markdown code blocks like ```python ... ```. Be highly professional, helpful, and avoid generic or repetitive introductory phrases.'
+                        content: 'You are HMO-TECH AI Co-Pilot, an expert assistant for Computer Engineering, Rhino 3D, and Grasshopper. Answer in Persian if the user speaks Persian, and English if they speak English. Always put python codes in ```python ... ``` blocks.'
                     },
                     { role: 'user', content: prompt }
                 ],
-                temperature: 0.5
+                temperature: 0.6
             })
         });
 
         const data = await response.json();
-        const aiMessage = data.choices[0].message.content;
-        return res.status(200).json({ response: aiMessage });
+
+        if (data.error) {
+            return res.status(400).json({ error: `Groq API Error: ${data.error.message}` });
+        }
+
+        if (data.choices && data.choices[0] && data.choices[0].message) {
+            return res.status(200).json({ response: data.choices[0].message.content });
+        } else {
+            return res.status(500).json({ error: 'Unexpected response structure from Groq.' });
+        }
 
     } catch (error) {
-        return res.status(500).json({ error: 'Backend Server Error: ' + error.message });
+        return res.status(500).json({ error: 'Server Side Exception: ' + error.message });
     }
 }
