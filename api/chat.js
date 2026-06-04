@@ -1,4 +1,5 @@
 export default async function handler(req, res) {
+    // هدرهای لازم برای ارتباط بدون مشکل مرورگر
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -7,20 +8,25 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
     const { prompt, fileParts } = req.body;
+    const apiKey = process.env.GROQ_API_KEY;
+
+    if (!apiKey) {
+        return res.status(500).json({ response: "خطا: کلید GROQ_API_KEY در پنل ورسل یافت نشد." });
+    }
 
     try {
-        const apiKey = process.env.GROQ_API_KEY;
         let contentPayload = [];
 
-        // فرمت‌بندی استاندارد پیام به ساختار چندرسانه‌ای طبق مستندات Groq
-        if (fileParts && Array.isArray(fileParts) && fileParts.length > 0) {
+        // بررسی دقیق پارت‌های فایل ارسالی از فرانت‌اند شما
+        if (fileParts && Array.isArray(fileParts) && fileParts.length > 0 && fileParts[0].inlineData) {
             const base64Data = fileParts[0].inlineData.data;
             const mimeType = fileParts[0].inlineData.mimeType;
 
+            // ساختار مالتی‌مدیای استاندارد و بدون نقص برای لاما ۳.۲ بینایی
             contentPayload = [
                 {
                     type: "text",
-                    text: prompt || "Analyze this image and describe its visual elements."
+                    text: prompt || "Analyze this image and describe its style and elements."
                 },
                 {
                     type: "image_url",
@@ -30,6 +36,7 @@ export default async function handler(req, res) {
                 }
             ];
         } else {
+            // ساختار استاندارد پیام صرفاً متنی
             contentPayload = [
                 {
                     type: "text",
@@ -38,6 +45,7 @@ export default async function handler(req, res) {
             ];
         }
 
+        // فراخوانی مستقیم API رسمی Groq
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -46,27 +54,21 @@ export default async function handler(req, res) {
             },
             body: JSON.stringify({
                 model: 'llama-3.2-11b-vision-preview',
-                messages: [
-                    { 
-                        role: 'user', 
-                        content: contentPayload 
-                    }
-                ],
+                messages: [{ role: 'user', content: contentPayload }],
                 max_tokens: 1024
             })
         });
 
         const data = await response.json();
-        
-        // هندل کردن مستقیم ارور ساختاری سرور در صورت رخ دادن
+
         if (data.error) {
-            return res.status(400).json({ response: `Groq Error: ${data.error.message}` });
+            return res.status(200).json({ response: `خطای Groq: ${data.error.message}` });
         }
 
-        const aiText = data.choices?.[0]?.message?.content || "متأسفانه پاسخی دریافت نشد.";
+        const aiText = data.choices?.[0]?.message?.content || "پاسخ خالی از سرور دریافت شد.";
         return res.status(200).json({ response: aiText });
 
     } catch (error) {
-        return res.status(500).json({ response: `خطای سرور: ${error.message}` });
+        return res.status(200).json({ response: `خطای اتصال به سرور بک‌آند: ${error.message}` });
     }
 }
