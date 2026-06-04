@@ -1,4 +1,4 @@
-# 📐 hmo-tech-copilot
+# 📐 HMO-Tech-copilot
 
 > An AI-powered computational design web panel and conversational co-pilot tailored for generating Rhino & Grasshopper parametric Python scripts.
 
