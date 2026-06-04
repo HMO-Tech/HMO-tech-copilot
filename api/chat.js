@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-    // تنظیم هدرهای CORS برای ارتباط بدون مشکل مرورگر
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -7,16 +6,34 @@ export default async function handler(req, res) {
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-    const { prompt } = req.body;
-
-    if (!prompt) {
-        return res.status(400).json({ error: 'Prompt is required' });
-    }
+    const { prompt, fileParts } = req.body;
 
     try {
         const apiKey = process.env.GROQ_API_KEY;
         
-        // ارسال درخواست به سرور رسمی Groq با مدل بسیار هوشمند Llama 3
+        // تشخیص اینکه کاربر عکس فرستاده است یا فقط متن
+        let contentPayload = [];
+        
+        if (fileParts && Array.isArray(fileParts) && fileParts.length > 0) {
+            // اگر عکس فرستاده شده بود، آن را به فرمت استاندارد Groq تبدیل می‌کنیم
+            const base64Data = fileParts[0].inlineData.data;
+            const mimeType = fileParts[0].inlineData.mimeType;
+            
+            contentPayload = [
+                { type: "text", text: prompt || "این تصویر را تحلیل کن و جزئیات طراحی و سبک را شرح بده." },
+                {
+                    type: "image_url",
+                    image_url: {
+                        url: `data:${mimeType};base64,${base64Data}`
+                    }
+                }
+            ];
+        } else {
+            // درخواست‌های صرفاً متنی چت
+            contentPayload = [{ type: "text", text: prompt || "سلام" }];
+        }
+
+        // استفاده از مدل قدرتمند بینایی Groq (Llama 3.2 Vision)
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -24,8 +41,8 @@ export default async function handler(req, res) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'llama3-8b-8192', // مدل فوق‌العاده سریع و هوشمند لاما ۳
-                messages: [{ role: 'user', content: prompt }]
+                model: 'llama-3.2-11b-vision-preview', // مدل رسمی مجهز به سیستم پردازش تصویر Groq
+                messages: [{ role: 'user', content: contentPayload }]
             })
         });
 
