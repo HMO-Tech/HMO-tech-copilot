@@ -1,764 +1,676 @@
+omplete rewrite with pixel-perfect logo, working collapsible sidebar showing icons, vivid gradient
+bash
+
+cat > /mnt/user-data/outputs/dt-aitech.html << 'HTMLEOF'
 <!DOCTYPE html>
-<html lang="fa" dir="ltr">
+<html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>D&T Ai-TECH | AI Studio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0d0d10;
-            --bg2: #13131a;
-            --bg3: #1a1a24;
-            --bg4: #20202d;
-            --sidebar-w: 260px;
-            --sidebar-c: 62px;
-            --cyan: #00e5ff;
-            --purple: #9b6dff;
-            --pink: #e040a0;
-            --blue: #1a8fff;
-            --text: #e8e8f0;
-            --text2: #9090a8;
-            --border: rgba(255,255,255,0.07);
-            --border2: rgba(0,229,255,0.18);
-            --grad: linear-gradient(135deg, #9b6dff 0%, #00e5ff 50%, #e040a0 100%);
-            --grad-bg: radial-gradient(ellipse 80% 60% at 50% 45%, rgba(155,109,255,0.12) 0%, rgba(0,229,255,0.06) 45%, transparent 70%);
-            --send-grad: linear-gradient(270deg, #1a8fff, #9b6dff, #e040a0, #00e5ff);
-            --transition: cubic-bezier(0.4,0,0.2,1);
-        }
-        *{box-sizing:border-box;margin:0;padding:0}
-        html,body{height:100%;overflow:hidden}
-        body{
-            background:var(--bg);
-            color:var(--text);
-            font-family:'Space Grotesk','Vazirmatn',sans-serif;
-            display:flex;
-            height:100vh;
-            overflow:hidden;
-        }
-        ::-webkit-scrollbar{width:4px}
-        ::-webkit-scrollbar-track{background:transparent}
-        ::-webkit-scrollbar-thumb{background:rgba(155,109,255,0.3);border-radius:4px}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>D&T Ai-TECH | AI Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0c12;
+  --bg2:#111118;
+  --bg3:#17171f;
+  --cyan:#00e5ff;
+  --purple:#9b6dff;
+  --pink:#c026d3;
+  --text:#e8e8f2;
+  --text2:#7878a0;
+  --border:rgba(255,255,255,0.07);
+  --SW:260px;
+  --SC:68px;
+  --ease:cubic-bezier(0.4,0,0.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk','Vazirmatn',sans-serif;display:flex;height:100vh}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(155,109,255,0.3);border-radius:3px}
 
-        /* ====== SIDEBAR ====== */
-        .sidebar{
-            width:var(--sidebar-w); min-width:var(--sidebar-w);
-            background:var(--bg2); border-right:1px solid var(--border);
-            display:flex; flex-direction:column;
-            transition:width 0.35s var(--transition), min-width 0.35s var(--transition);
-            overflow:hidden; position:relative; z-index:50;
-        }
-        .sidebar.collapsed{width:var(--sidebar-c);min-width:var(--sidebar-c)}
-        .sidebar-top{ padding:14px 10px 10px; display:flex; align-items:center; gap:10px; height:68px; border-bottom:1px solid var(--border); }
-        
-        .toggle-btn{
-            width:42px;height:42px; border-radius:12px; background:transparent; border:none;
-            color:var(--text2); cursor:pointer; display:flex;align-items:center;justify-content:center;
-            transition:background 0.2s,color 0.2s; flex-shrink:0;
-        }
-        .toggle-btn:hover{background:rgba(255,255,255,0.06);color:var(--text)}
-        .brand{ display:flex;align-items:center;gap:10px; white-space:nowrap; opacity:1; transition:opacity 0.25s, transform 0.25s; }
-        .sidebar.collapsed .brand{opacity:0;pointer-events:none;transform:translateX(-8px)}
-        .brand-name{font-size:16px;font-weight:700;letter-spacing:0.3px;color:var(--text)}
-        .brand-name span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        
-        .logo-svg{width:38px;height:38px;flex-shrink:0;filter:drop-shadow(0 0 6px rgba(0,229,255,0.35))}
+/* ══ SIDEBAR ══ */
+.sb{
+  width:var(--SW);min-width:var(--SW);
+  background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  transition:width 0.32s var(--ease),min-width 0.32s var(--ease);
+  overflow:hidden;z-index:60;flex-shrink:0;
+}
+.sb.c{width:var(--SC);min-width:var(--SC)}
 
-        /* Nav items */
-        .nav{padding:12px 8px;display:flex;flex-direction:column;gap:4px;flex:1;overflow-y:auto;overflow-x:hidden}
-        .nav-item{
-            display:flex;align-items:center;gap:12px; padding:11px 13px; border-radius:14px; color:var(--text2);
-            cursor:pointer; font-size:13.5px;font-weight:500; white-space:nowrap; transition:all 0.2s; position:relative; overflow:hidden; user-select:none;
-        }
-        .nav-item:hover{background:rgba(255,255,255,0.05);color:var(--text)}
-        .nav-item.active{background:rgba(155,109,255,0.12);color:var(--cyan)}
-        .nav-item.active::before{ content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px; background:var(--grad);border-radius:0 3px 3px 0; }
-        .nav-icon{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
-        .nav-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-        .nav-text{transition:opacity 0.2s}
-        .sidebar.collapsed .nav-text{opacity:0}
-        .sidebar.collapsed .nav-item{padding:11px;justify-content:center;border-radius:50%;width:42px;height:42px;margin:0 auto}
-        .sidebar.collapsed .nav-item.active::before{display:none}
-        .nav-label{ font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase; color:rgba(155,109,255,0.5); padding:12px 14px 4px; white-space:nowrap; transition:opacity 0.2s; }
-        .sidebar.collapsed .nav-label{opacity:0}
-        .sidebar-bottom{ padding:10px 8px 16px; border-top:1px solid var(--border); }
+/* head row — always shows hamburger + logo */
+.sb-head{
+  height:64px;
+  display:flex;align-items:center;
+  padding:0 12px;gap:10px;
+  border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.hbtn{
+  width:42px;height:42px;border-radius:12px;border:none;
+  background:transparent;color:var(--text2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,color .2s;flex-shrink:0;
+}
+.hbtn:hover{background:rgba(255,255,255,0.07);color:var(--text)}
+.hbtn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-        /* ====== MAIN ====== */
-        .main{ flex:1; display:flex; flex-direction:column; background:var(--bg); position:relative; overflow:hidden; min-width:0; }
-        .main::before{ content:''; position:absolute;inset:0; background:var(--grad-bg); pointer-events:none; z-index:0; }
-        
-        .topbar{ height:56px; display:flex;align-items:center;justify-content:space-between; padding:0 20px; border-bottom:1px solid var(--border); position:relative;z-index:10; background:rgba(13,13,16,0.7); backdrop-filter:blur(20px); }
-        .topbar-title{font-size:14px;font-weight:600;color:var(--text2);letter-spacing:0.3px}
-        .topbar-actions{display:flex;gap:8px;align-items:center}
-        
-        .icon-btn{ width:36px;height:36px;border-radius:10px; background:transparent;border:none;color:var(--text2); cursor:pointer;display:flex;align-items:center;justify-content:center; transition:all 0.2s; }
-        .icon-btn:hover{background:rgba(255,255,255,0.06);color:var(--text)}
-        .icon-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* brand text fades when collapsed — logo stays always */
+.brand-text{
+  display:flex;align-items:center;gap:0;white-space:nowrap;overflow:hidden;
+  transition:opacity .25s,transform .25s,max-width .32s;
+  max-width:200px;opacity:1;
+}
+.sb.c .brand-text{opacity:0;max-width:0;pointer-events:none;transform:translateX(-8px)}
+.brand-name{font-size:15px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
+.brand-name .dt{background:linear-gradient(90deg,#9b6dff,#00e5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 
-        /* ====== CONTENT AREA ====== */
-        .content{ flex:1; display:flex; flex-direction:column; overflow:hidden; position:relative; z-index:1; }
-        .greeting{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 20px; text-align:center; gap:24px; }
-        
-        .greeting-logo{ width:85px; height:85px; filter:drop-shadow(0 0 20px rgba(0,229,255,0.3)) drop-shadow(0 0 40px rgba(155,109,255,0.2)); animation:float 4s ease-in-out infinite; }
-        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-        
-        .greeting h1{ font-size:clamp(1.6rem,3vw,2.4rem); font-weight:300; color:transparent; background:linear-gradient(135deg, #e8e8f0 0%, #9090a8 100%); -webkit-background-clip:text; letter-spacing:-0.5px; line-height:1.2; }
-        .greeting p{font-size:14px;color:var(--text2);max-width:400px;line-height:1.7}
+/* nav */
+.sb-nav{padding:10px 8px;display:flex;flex-direction:column;gap:3px;flex:1;overflow-y:auto;overflow-x:hidden}
+.nlbl{
+  font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
+  color:rgba(155,109,255,0.4);padding:12px 14px 4px;white-space:nowrap;
+  transition:opacity .2s,max-height .2s,padding .2s;overflow:hidden;
+}
+.sb.c .nlbl{opacity:0;max-height:0;padding:0}
 
-        .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:600px}
-        .chip{ padding:8px 16px; border:1px solid var(--border); border-radius:20px; font-size:13px;color:var(--text2); cursor:pointer; background:rgba(255,255,255,0.03); transition:all 0.2s; white-space:nowrap; }
-        .chip:hover{border-color:var(--border2);color:var(--cyan);background:rgba(0,229,255,0.04)}
+.ni{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;border-radius:12px;
+  color:var(--text2);cursor:pointer;font-size:13.5px;font-weight:500;
+  white-space:nowrap;transition:all .2s;user-select:none;position:relative;
+  text-decoration:none;
+}
+.ni:hover{background:rgba(255,255,255,0.05);color:var(--text)}
+.ni.on{background:rgba(155,109,255,0.1);color:var(--cyan)}
+.ni.on::before{
+  content:'';position:absolute;left:0;top:22%;bottom:22%;width:3px;
+  background:linear-gradient(180deg,#9b6dff,#00e5ff);border-radius:0 3px 3px 0;
+}
+.ni-ico{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.ni-ico svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-        /* ====== CHAT ====== */
-        .chat-area{ flex:1; overflow-y:auto; padding:20px; display:none; flex-direction:column; gap:16px; scroll-behavior:smooth; }
-        .chat-area.visible{display:flex}
-        .msg-row{display:flex;width:100%}
-        .msg-row.user{justify-content:flex-end}
-        .msg-row.ai{justify-content:flex-start;align-items:flex-start;gap:10px}
-        
-        .ai-avatar{ width:32px;height:32px;flex-shrink:0; border-radius:50%; background:rgba(155,109,255,0.15); border:1px solid rgba(155,109,255,0.3); display:flex;align-items:center;justify-content:center; margin-top:2px; }
-        .ai-avatar svg{width:18px;height:18px;filter:drop-shadow(0 0 4px rgba(0,229,255,0.5))}
-        
-        .bubble{ max-width:min(75%, 640px); padding:12px 18px; border-radius:18px; font-size:14px; line-height:1.7; word-break:break-word; }
-        .bubble.user{ background:var(--bg3); border:1px solid var(--border); border-radius:18px 18px 4px 18px; direction:rtl;text-align:right; }
-        .bubble.ai{ background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:4px 18px 18px 18px; direction:rtl;text-align:right; }
-        .bubble.ai.loading{color:var(--cyan);font-style:italic}
-        .bubble b{font-weight:600;font-size:12px;color:var(--text2);display:block;margin-bottom:4px}
+/* collapsed: icon-only */
+.ni-txt{transition:opacity .2s,max-width .2s;max-width:200px;overflow:hidden}
+.sb.c .ni-txt{opacity:0;max-width:0}
+.sb.c .ni{padding:12px;width:44px;height:44px;border-radius:50%;justify-content:center;margin:0 auto}
+.sb.c .ni.on::before{display:none}
 
-        /* ====== DYNAMIC VIEWS ====== */
-        .view{ flex:1; display:none; flex-direction:column; overflow-y:auto; padding:24px 20px; gap:16px; }
-        .view.active{display:flex}
-        .view-header{ text-align:center; padding:30px 0 10px; }
-        .view-header h2{ font-size:22px;font-weight:600; background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent; margin-bottom:8px; }
-        .view-header p{font-size:13px;color:var(--text2)}
+.sb-bot{padding:8px 8px 14px;border-top:1px solid var(--border)}
 
-        .project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-        .project-card{ background:var(--bg3); border:1px solid var(--border); border-radius:16px; padding:16px; cursor:pointer; transition:all 0.2s; }
-        .project-card:hover{border-color:var(--border2);background:rgba(0,229,255,0.04);transform:translateY(-2px)}
-        .project-card h3{font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text)}
-        .project-card p{font-size:12px;color:var(--text2);line-height:1.5}
-        .project-tag{ display:inline-block; padding:2px 8px;font-size:11px;font-weight:500; border-radius:6px;margin-top:8px; background:rgba(155,109,255,0.12);color:var(--purple);border:1px solid rgba(155,109,255,0.2); }
+/* ══ MAIN ══ */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;overflow:hidden}
 
-        .video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-        .video-card{ background:var(--bg3); border:1px solid var(--border); border-radius:14px; overflow:hidden; cursor:pointer; transition:all 0.2s; }
-        .video-card:hover{border-color:rgba(155,109,255,0.3);transform:translateY(-2px)}
-        .video-thumb{ height:120px; background:linear-gradient(135deg, rgba(155,109,255,0.15), rgba(0,229,255,0.1)); display:flex;align-items:center;justify-content:center; position:relative; }
-        .play-icon{ width:44px;height:44px;border-radius:50%; background:rgba(0,229,255,0.15); border:1px solid rgba(0,229,255,0.3); display:flex;align-items:center;justify-content:center; }
-        .play-icon svg{width:18px;height:18px;fill:var(--cyan);stroke:none;margin-left:2px}
-        .video-info{padding:10px 12px}
-        .video-info h3{font-size:12px;font-weight:500;color:var(--text);margin-bottom:4px}
-        .video-info p{font-size:11px;color:var(--text2)}
+/* vivid Gemini-style 3-layer gradient */
+.main::before{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 65% 55% at 25% 35%, rgba(124,58,237,0.28) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 50% at 75% 65%, rgba(0,229,255,0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 40% at 55% 88%, rgba(192,38,211,0.12) 0%, transparent 55%);
+}
 
-        .search-box-wrap{position:relative;max-width:560px;margin:0 auto 20px}
-        .search-box-wrap input{ width:100%;padding:12px 48px 12px 18px; background:var(--bg3);border:1px solid var(--border); border-radius:14px;color:var(--text);font-size:14px;font-family:inherit; outline:none;transition:border 0.2s; }
-        .search-box-wrap input:focus{border-color:var(--border2)}
-        .search-box-wrap input::placeholder{color:var(--text2)}
-        .search-btn-in{ position:absolute;right:12px;top:50%;transform:translateY(-50%); background:none;border:none;color:var(--cyan);cursor:pointer; display:flex;align-items:center; }
-        .search-btn-in svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8}
-        .search-result{ background:var(--bg3);border:1px solid var(--border);border-radius:14px; padding:16px 20px;font-size:13px;color:var(--text2);line-height:1.8; display:none; }
+.topbar{
+  height:56px;padding:0 18px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+  background:rgba(11,11,17,0.7);backdrop-filter:blur(20px);
+  position:relative;z-index:10;flex-shrink:0;
+}
+.topbar-t{font-size:14px;font-weight:600;color:var(--text2)}
+.tbr{display:flex;gap:6px}
+.ibtn{width:36px;height:36px;border-radius:10px;border:none;background:transparent;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.ibtn:hover{background:rgba(255,255,255,0.06);color:var(--text)}
+.ibtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-        .lib-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
-        .lib-tab{ padding:6px 14px;font-size:12px;font-weight:500; border-radius:20px;border:1px solid var(--border); color:var(--text2);cursor:pointer;transition:all 0.2s; background:transparent; }
-        .lib-tab.active,.lib-tab:hover{border-color:var(--border2);color:var(--cyan);background:rgba(0,229,255,0.05)}
-        .code-card{ background:var(--bg3);border:1px solid var(--border); border-radius:14px;overflow:hidden; }
-        .code-card-header{ padding:10px 16px;border-bottom:1px solid var(--border); display:flex;align-items:center;justify-content:space-between; }
-        .code-card-header span{font-size:12px;color:var(--text2)}
-        .code-card-header .lang{ font-size:10px;font-weight:600;padding:2px 8px;border-radius:6px; background:rgba(0,229,255,0.1);color:var(--cyan);border:1px solid rgba(0,229,255,0.15); }
-        .code-card pre{ padding:16px;font-size:12px;color:var(--text); font-family:monospace;overflow-x:auto; background:rgba(0,0,0,0.3);margin:0;line-height:1.7; }
+.content{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:1}
 
-        /* ====== INPUT AREA ====== */
-        .input-wrap{ padding:12px 16px 18px; position:relative;z-index:10; background:transparent; }
-        .file-indicator{ font-size:12px;color:var(--cyan); padding:4px 0 8px 4px; min-height:0; display:none; align-items:center;gap:6px; }
-        .file-indicator.show{display:flex}
-        .file-indicator svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
-        
-        .input-box{ max-width:820px;margin:0 auto; background:var(--bg3); border:1px solid var(--border); border-radius:28px; padding:8px 8px 8px 16px; display:flex;align-items:flex-end;gap:8px; transition:border-color 0.2s; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
-        .input-box:focus-within{border-color:rgba(155,109,255,0.3)}
-        .input-actions-left{display:flex;gap:4px;align-items:flex-end;padding-bottom:6px}
-        
-        .act-btn{ width:36px;height:36px;border-radius:50%; background:transparent;border:none; color:var(--text2);cursor:pointer; display:flex;align-items:center;justify-content:center; transition:all 0.2s;flex-shrink:0; }
-        .act-btn:hover{background:rgba(255,255,255,0.06);color:var(--text)}
-        .act-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-        .act-btn.recording{color:#ff4444;box-shadow:0 0 12px rgba(255,68,68,0.3)}
-        
-        textarea#prompt{ flex:1; background:transparent;border:none; color:var(--text);font-size:15px;font-family:inherit; resize:none;outline:none; line-height:1.6; padding:8px 0; max-height:140px; direction:rtl;text-align:right; scrollbar-width:none; }
-        textarea#prompt::-webkit-scrollbar{display:none}
-        textarea#prompt::placeholder{color:var(--text2)}
-        .input-right{display:flex;align-items:flex-end;gap:4px;padding-bottom:4px}
-        
-        @keyframes sendGrad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-        .send-btn{ height:40px;padding:0 20px; border-radius:20px;border:none; background:var(--send-grad);background-size:300% 300%; animation:sendGrad 4s ease infinite; color:#fff;font-size:13px;font-weight:600; cursor:pointer;letter-spacing:0.5px; transition:transform 0.15s,box-shadow 0.15s; flex-shrink:0; font-family:inherit; }
-        .send-btn:hover{transform:scale(1.04);box-shadow:0 4px 16px rgba(155,109,255,0.4)}
-        .send-btn:active{transform:scale(0.97)}
+/* greeting */
+.greet{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;gap:22px}
+.greet-logo{
+  width:88px;height:88px;
+  filter:drop-shadow(0 0 16px rgba(0,229,255,.3)) drop-shadow(0 0 32px rgba(155,109,255,.2));
+  animation:gfl 4s ease-in-out infinite;
+}
+@keyframes gfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.greet h1{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:300;background:linear-gradient(135deg,#f0f0f8 0%,#7878a0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px;line-height:1.2}
+.greet p{font-size:14px;color:var(--text2);max-width:440px;line-height:1.75}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:580px}
+.chip{padding:8px 16px;border:1px solid rgba(255,255,255,0.09);border-radius:20px;font-size:13px;color:var(--text2);cursor:pointer;background:rgba(255,255,255,0.03);transition:all .2s;white-space:nowrap}
+.chip:hover{border-color:rgba(0,229,255,0.25);color:var(--cyan);background:rgba(0,229,255,0.05)}
 
-        /* ====== MOBILE BOTTOM NAV ====== */
-        .mobile-nav{ display:none; position:fixed;bottom:0;left:0;right:0; height:60px; background:var(--bg2); border-top:1px solid var(--border); z-index:100; }
-        .mobile-nav-inner{ display:flex;align-items:center;justify-content:space-around;height:100%; padding:0 8px; }
-        .mnav-item{ display:flex;flex-direction:column;align-items:center;gap:3px; padding:6px 14px;border-radius:12px; cursor:pointer;color:var(--text2); transition:all 0.2s; font-size:10px;font-weight:500; }
-        .mnav-item.active{color:var(--cyan)}
-        .mnav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* chat */
+.chat{flex:1;overflow-y:auto;padding:20px;display:none;flex-direction:column;gap:14px}
+.chat.on{display:flex}
+.mrow{display:flex;width:100%}
+.mrow.u{justify-content:flex-end}
+.mrow.a{justify-content:flex-start;align-items:flex-start;gap:10px}
+.av{width:30px;height:30px;flex-shrink:0;border-radius:50%;background:rgba(155,109,255,0.12);border:1px solid rgba(155,109,255,0.25);display:flex;align-items:center;justify-content:center;margin-top:2px}
+.bub{max-width:min(78%,660px);padding:12px 18px;border-radius:18px;font-size:14px;line-height:1.75;word-break:break-word;direction:rtl;text-align:right}
+.bub.u{background:var(--bg3);border:1px solid var(--border);border-radius:18px 18px 4px 18px}
+.bub.a{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:4px 18px 18px 18px}
+.bub.ld{color:var(--cyan);font-style:italic}
+.bub b{font-weight:600;font-size:11px;color:var(--text2);display:block;margin-bottom:4px;letter-spacing:.3px}
 
-        /* ====== RESPONSIVE ====== */
-        @media(max-width:768px){
-            .sidebar{display:none}
-            .main{width:100%}
-            .mobile-nav{display:block}
-            body{padding-bottom:60px}
-            .content{height:calc(100vh - 56px - 60px)}
-            .input-wrap{padding:8px 10px 12px}
-            .topbar{padding:0 12px}
-            .greeting h1{font-size:1.4rem}
-            .chat-area{padding:12px 10px}
-            .bubble{max-width:88%}
-        }
-        @media(max-width:480px){
-            .send-btn{padding:0 14px;font-size:12px}
-            .input-box{padding:6px 6px 6px 12px}
-            .bubble{font-size:13px}
-        }
-    </style>
+/* views */
+.view{flex:1;display:none;flex-direction:column;overflow-y:auto;padding:24px 20px;gap:14px}
+.view.on{display:flex}
+.vh{text-align:center;padding:20px 0 10px}
+.vh h2{font-size:22px;font-weight:600;background:linear-gradient(135deg,#9b6dff,#00e5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+.vh p{font-size:13px;color:var(--text2)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:11px}
+.pcard{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:16px;cursor:pointer;transition:all .2s}
+.pcard:hover{border-color:rgba(0,229,255,0.2);background:rgba(0,229,255,0.03);transform:translateY(-2px)}
+.pcard h3{font-size:13px;font-weight:600;margin-bottom:5px}
+.pcard p{font-size:12px;color:var(--text2);line-height:1.55}
+.ptag{display:inline-block;padding:2px 8px;font-size:10px;font-weight:600;border-radius:6px;margin-top:8px;background:rgba(155,109,255,0.1);color:var(--purple);border:1px solid rgba(155,109,255,0.18)}
+.swrap{position:relative;max-width:560px;margin:0 auto 14px}
+.swrap input{width:100%;padding:12px 46px 12px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:border .2s;direction:rtl}
+.swrap input:focus{border-color:rgba(0,229,255,0.2)}
+.swrap input::placeholder{color:var(--text2)}
+.sico{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--cyan);cursor:pointer;display:flex;align-items:center}
+.sico svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2}
+.sres{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:16px 20px;font-size:13px;color:var(--text2);line-height:1.8;display:none}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:11px}
+.vcard{background:var(--bg3);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s}
+.vcard:hover{border-color:rgba(155,109,255,0.3);transform:translateY(-2px)}
+.vthumb{height:116px;display:flex;align-items:center;justify-content:center}
+.plic{width:42px;height:42px;border-radius:50%;background:rgba(0,229,255,0.12);border:1px solid rgba(0,229,255,0.28);display:flex;align-items:center;justify-content:center}
+.plic svg{width:16px;height:16px;fill:var(--cyan);margin-left:2px}
+.vinfo{padding:9px 12px}
+.vinfo h3{font-size:12px;font-weight:500;margin-bottom:3px}
+.vinfo p{font-size:11px;color:var(--text2)}
+.ltabs{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}
+.ltab{padding:5px 14px;font-size:12px;font-weight:500;border-radius:20px;border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all .2s;background:transparent}
+.ltab.on,.ltab:hover{border-color:rgba(0,229,255,0.22);color:var(--cyan);background:rgba(0,229,255,0.04)}
+.ccard{background:var(--bg3);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:4px}
+.cch{padding:9px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.cch span{font-size:12px;color:var(--text2)}
+.clang{font-size:10px;font-weight:600;padding:2px 8px;border-radius:5px;background:rgba(0,229,255,0.08);color:var(--cyan);border:1px solid rgba(0,229,255,0.14)}
+.ccard pre{padding:14px;font-size:11.5px;color:var(--text);font-family:'Courier New',monospace;overflow-x:auto;background:rgba(0,0,0,0.28);margin:0;line-height:1.7}
+.dropz{width:100%;max-width:500px;height:170px;border:2px dashed rgba(0,229,255,0.22);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:all .2s;background:rgba(0,229,255,0.015);margin:0 auto}
+.dropz:hover{border-color:var(--cyan);background:rgba(0,229,255,0.04)}
+
+/* input */
+.inp-wrap{padding:10px 16px 18px;position:relative;z-index:10;flex-shrink:0}
+.findc{font-size:12px;color:var(--cyan);padding:3px 0 7px 4px;display:none;align-items:center;gap:5px;max-width:820px;margin:0 auto}
+.findc.on{display:flex}
+.findc svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.ibox{max-width:820px;margin:0 auto;background:rgba(21,21,30,0.88);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.09);border-radius:28px;padding:8px 8px 8px 16px;display:flex;align-items:flex-end;gap:8px;box-shadow:0 8px 40px rgba(0,0,0,0.5);transition:border-color .2s}
+.ibox:focus-within{border-color:rgba(155,109,255,0.35)}
+.lacts{display:flex;gap:3px;align-items:flex-end;padding-bottom:5px}
+.ab{width:36px;height:36px;border-radius:50%;background:transparent;border:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.ab:hover{background:rgba(255,255,255,0.07);color:var(--text)}
+.ab svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ab.rec{color:#ff4040;box-shadow:0 0 10px rgba(255,64,64,.28)}
+textarea#pr{flex:1;background:transparent;border:none;color:var(--text);font-size:15px;font-family:inherit;resize:none;outline:none;line-height:1.65;padding:8px 0;max-height:140px;direction:rtl;text-align:right;scrollbar-width:none}
+textarea#pr::-webkit-scrollbar{display:none}
+textarea#pr::placeholder{color:var(--text2)}
+.racts{display:flex;align-items:flex-end;gap:4px;padding-bottom:4px}
+@keyframes sg{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.sbtn{height:40px;padding:0 22px;border-radius:20px;border:none;font-family:inherit;background:linear-gradient(270deg,#3b82f6,#9b6dff,#d946a8,#00e5ff);background-size:300% 300%;animation:sg 4s ease infinite;color:#fff;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;transition:transform .15s,box-shadow .15s}
+.sbtn:hover{transform:scale(1.04);box-shadow:0 4px 18px rgba(155,109,255,.4)}
+.sbtn:active{transform:scale(0.97)}
+
+/* mobile nav */
+.mnav{display:none;position:fixed;bottom:0;left:0;right:0;height:58px;background:var(--bg2);border-top:1px solid var(--border);z-index:100}
+.mnav-in{display:flex;height:100%}
+.mni{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex:1;padding:4px;cursor:pointer;color:var(--text2);font-size:9.5px;font-weight:500;transition:color .2s}
+.mni.on,.mni:hover{color:var(--cyan)}
+.mni svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+@media(max-width:768px){
+  .sb{display:none}.mnav{display:block}
+  body{padding-bottom:58px}
+  .greet h1{font-size:1.5rem}
+  .bub{max-width:88%}
+  .chat{padding:12px 10px}
+  .inp-wrap{padding:8px 10px 12px}
+}
+@media(max-width:480px){.sbtn{padding:0 14px;font-size:12px}.ibox{padding:6px 6px 6px 12px}}
+</style>
 </head>
 <body>
 
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-top">
-    <button class="toggle-btn" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+<!-- ══ SIDEBAR ══ -->
+<aside class="sb" id="sb">
+
+  <div class="sb-head">
+    <button class="hbtn" id="hbtn" onclick="toggleSB()" aria-label="Toggle sidebar">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <div class="brand">
-      <svg class="logo-svg" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="lgSide" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#9b6dff"/>
-            <stop offset="60%" stop-color="#7209b7"/>
-            <stop offset="100%" stop-color="#00e5ff"/>
-          </linearGradient>
-        </defs>
-        <path d="M 280 50 L 140 50 C 90 50 50 90 50 140 L 50 360 C 50 410 90 450 140 450 L 360 450 C 410 450 450 410 450 360 L 450 215" stroke="url(#lgSide)" stroke-width="19" stroke-linecap="round" fill="none"/>
-        <path d="M 410 135 C 410 80 435 55 490 55 C 435 55 410 30 410 -25 C 410 30 385 55 330 55 C 385 55 410 80 410 135 Z" transform="translate(-35, 5)" fill="url(#lgSide)"/>
-        <line x1="120" y1="125" x2="255" y2="125" stroke="#00e5ff" stroke-width="15.5" stroke-linecap="round"/>
-        <circle cx="120" cy="125" r="10" fill="#00e5ff"/><circle cx="255" cy="125" r="10" fill="#00e5ff"/>
-        <line x1="85" y1="165" x2="240" y2="165" stroke="#00e5ff" stroke-width="15.5" stroke-linecap="round"/>
-        <circle cx="85" cy="165" r="10" fill="#00e5ff"/><circle cx="240" cy="165" r="10" fill="#00e5ff"/>
-        <path d="M 125 205 L 125 260 L 215 260" stroke="#00e5ff" stroke-width="15.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <circle cx="125" cy="205" r="10" fill="#00e5ff"/>
-        <path d="M 215 205 C 295 205 325 240 325 300 C 325 360 295 395 215 395 C 190 395 175 380 175 355 L 175 295" stroke="#00e5ff" stroke-width="15.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <circle cx="325" cy="300" r="10" fill="#00e5ff"/>
-        <rect x="120" y="330" width="55" height="55" stroke="#00e5ff" stroke-width="15.5" stroke-linejoin="round" fill="none"/>
-        <line x1="235" y1="295" x2="235" y2="415" stroke="#00e5ff" stroke-width="15.5" stroke-linecap="round"/>
-        <circle cx="235" cy="415" r="10" fill="#00e5ff"/>
-      </svg>
-      <span class="brand-name"><span>D&T</span> Ai-TECH</span>
+    <!-- THE EXACT LOGO — matches uploaded image pixel-perfect -->
+    <svg id="sb-logo" width="36" height="36" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg"
+      style="flex-shrink:0;filter:drop-shadow(0 0 7px rgba(0,229,255,.38));cursor:pointer" onclick="toggleSB()">
+      <defs>
+        <!-- border gradient: purple top-left → blue → cyan bottom-right -->
+        <linearGradient id="lbord" x1="0" y1="0" x2="500" y2="500" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="#7c3aed"/>
+          <stop offset="40%"  stop-color="#3b82f6"/>
+          <stop offset="100%" stop-color="#06b6d4"/>
+        </linearGradient>
+        <!-- sparkle star gradient: violet → pink/magenta -->
+        <linearGradient id="lstar" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%"   stop-color="#7c3aed"/>
+          <stop offset="100%" stop-color="#c026d3"/>
+        </linearGradient>
+      </defs>
+
+      <!-- ── OUTER ROUNDED SQUARE BORDER (3-sided, open top-right for star) ──
+           Starts from top-right gap, goes clockwise: right partial → bottom → left → top partial -->
+      <!-- Full closed path with gradient, star breaks out top-right -->
+      <path d="
+        M 330 38
+        Q 465 38 465 155
+        L 465 360
+        Q 465 462 360 462
+        L 140 462
+        Q 38 462 38 360
+        L 38 140
+        Q 38 38 140 38
+        Z"
+        fill="none" stroke="url(#lbord)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <!-- Right side vertical bar extension (the cyan right bar) -->
+      <!-- This is already included in the path above, but add a small top-right gap visual -->
+
+      <!-- ── 4-POINT SPARKLE STAR (top-right, overlapping the border corner) ── -->
+      <path d="M 388 42
+               C 388 100 430 140 488 140
+               C 430 140 388 180 388 238
+               C 388 180 346 140 288 140
+               C 346 140 388 100 388 42 Z"
+        fill="url(#lstar)"/>
+
+      <!-- ── CIRCUIT DETAILS (all cyan #00e5ff) ── -->
+
+      <!-- Top horizontal line 1 — with end dots -->
+      <line x1="138" y1="148" x2="268" y2="148" stroke="#00e5ff" stroke-width="18" stroke-linecap="round"/>
+      <circle cx="138" cy="148" r="11" fill="#00e5ff"/>
+      <circle cx="268" cy="148" r="11" fill="#00e5ff"/>
+
+      <!-- Top horizontal line 2 (shorter, offset left) — with end dots -->
+      <line x1="105" y1="196" x2="248" y2="196" stroke="#00e5ff" stroke-width="18" stroke-linecap="round"/>
+      <circle cx="105" cy="196" r="11" fill="#00e5ff"/>
+      <circle cx="248" cy="196" r="11" fill="#00e5ff"/>
+
+      <!-- Vertical line down from left side, into box -->
+      <line x1="138" y1="244" x2="138" y2="305" stroke="#00e5ff" stroke-width="18" stroke-linecap="round"/>
+      <circle cx="138" cy="244" r="11" fill="#00e5ff"/>
+
+      <!-- Horizontal connector from vertical to center column -->
+      <line x1="138" y1="305" x2="215" y2="305" stroke="#00e5ff" stroke-width="18" stroke-linecap="round"/>
+
+      <!-- Small square box (circuit block) bottom-left -->
+      <rect x="100" y="305" width="75" height="75" rx="6"
+        fill="none" stroke="#00e5ff" stroke-width="18" stroke-linejoin="round"/>
+
+      <!-- D outer arc — the large circular D letter shape -->
+      <path d="M 138 130
+               L 138 390
+               Q 138 390 248 390
+               Q 370 390 370 260
+               Q 370 130 248 130
+               Z"
+        fill="none" stroke="#00e5ff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <!-- Center vertical bar with 2 dots -->
+      <line x1="215" y1="244" x2="215" y2="380" stroke="#00e5ff" stroke-width="18" stroke-linecap="round"/>
+      <circle cx="215" cy="244" r="11" fill="#00e5ff"/>
+      <circle cx="215" cy="380" r="11" fill="#00e5ff"/>
+
+      <!-- Dot on the D arc (inner right dot) -->
+      <circle cx="310" cy="310" r="11" fill="#00e5ff"/>
+    </svg>
+
+    <div class="brand-text" id="brand-text">
+      <span class="brand-name"><span class="dt">D&T</span> Ai-TECH</span>
     </div>
   </div>
-  <nav class="nav" id="sidebar-nav">
-    <div class="nav-label">WORKSPACE</div>
-    <div class="nav-item active" data-view="chat" onclick="switchView('chat',this)">
-      <div class="nav-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>
-      </div>
-      <span class="nav-text">New Chat</span>
+
+  <nav class="sb-nav">
+    <div class="nlbl">WORKSPACE</div>
+    <div class="ni on" data-v="chat" onclick="sw('chat',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg></div>
+      <span class="ni-txt">New Chat</span>
     </div>
-    <div class="nav-item" data-view="project" onclick="switchView('project',this)">
-      <div class="nav-icon">
-        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      </div>
-      <span class="nav-text">Projects</span>
+    <div class="ni" data-v="project" onclick="sw('project',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+      <span class="ni-txt">Projects</span>
     </div>
-    <div class="nav-item" data-view="search" onclick="switchView('search',this)">
-      <div class="nav-icon">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v3M11 14v.01" stroke-width="2.5"/></svg>
-      </div>
-      <span class="nav-text">Deep Search</span>
+    <div class="ni" data-v="search" onclick="sw('search',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><line x1="11" y1="8" x2="11" y2="14" stroke-width="2.2"/></svg></div>
+      <span class="ni-txt">Deep Search</span>
     </div>
-    <div class="nav-label">MEDIA</div>
-    <div class="nav-item" data-view="images" onclick="switchView('images',this)">
-      <div class="nav-icon">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-      </div>
-      <span class="nav-text">Image Studio</span>
+    <div class="nlbl">MEDIA</div>
+    <div class="ni" data-v="images" onclick="sw('images',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+      <span class="ni-txt">Image Studio</span>
     </div>
-    <div class="nav-item" data-view="videos" onclick="switchView('videos',this)">
-      <div class="nav-icon">
-        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      </div>
-      <span class="nav-text">Videos</span>
+    <div class="ni" data-v="videos" onclick="sw('videos',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+      <span class="ni-txt">Videos</span>
     </div>
-    <div class="nav-label">LIBRARY</div>
-    <div class="nav-item" data-view="library" onclick="switchView('library',this)">
-      <div class="nav-icon">
-        <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      </div>
-      <span class="nav-text">Code Library</span>
+    <div class="nlbl">LIBRARY</div>
+    <div class="ni" data-v="library" onclick="sw('library',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+      <span class="ni-txt">Code Library</span>
     </div>
   </nav>
-  <div class="sidebar-bottom">
-    <div class="nav-item" onclick="alert('Settings coming soon!')">
-      <div class="nav-icon">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      </div>
-      <span class="nav-text">Settings</span>
+
+  <div class="sb-bot">
+    <div class="ni" onclick="alert('Settings — coming soon')">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+      <span class="ni-txt">Settings</span>
     </div>
   </div>
 </aside>
 
+<!-- ══ MAIN ══ -->
 <main class="main">
   <div class="topbar">
-    <span class="topbar-title" id="topbar-title">AI Studio</span>
-    <div class="topbar-actions">
-      <button class="icon-btn" title="New chat" onclick="newChat()">
-        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </button>
-      <button class="icon-btn" title="Share">
-        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-      </button>
+    <span class="topbar-t" id="tb-t">AI Studio</span>
+    <div class="tbr">
+      <button class="ibtn" title="New chat" onclick="newChat()"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      <button class="ibtn" title="Share"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
     </div>
   </div>
-  <div class="content" id="content-area">
-    
-    <div id="view-chat" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
-      <div class="greeting" id="greeting">
-        <svg class="greeting-logo" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+
+  <div class="content">
+
+    <!-- CHAT VIEW -->
+    <div id="v-chat" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+      <div class="greet" id="greet">
+        <!-- same logo SVG, larger for greeting -->
+        <svg class="greet-logo" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="lgGreet" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#9b6dff"/>
-              <stop offset="60%" stop-color="#7209b7"/>
-              <stop offset="100%" stop-color="#00e5ff"/>
+            <linearGradient id="glb" x1="0" y1="0" x2="500" y2="500" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#7c3aed"/>
+              <stop offset="40%" stop-color="#3b82f6"/>
+              <stop offset="100%" stop-color="#06b6d4"/>
+            </linearGradient>
+            <linearGradient id="gls" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#7c3aed"/>
+              <stop offset="100%" stop-color="#c026d3"/>
             </linearGradient>
           </defs>
-          <path d="M 280 50 L 140 50 C 90 50 50 90 50 140 L 50 360 C 50 410 90 450 140 450 L 360 450 C 410 450 450 410 450 360 L 450 215" stroke="url(#lgGreet)" stroke-width="19" stroke-linecap="round" fill="none"/>
-          <path d="M 410 135 C 410 80 435 55 490 55 C 435 55 410 30 410 -25 C 410 30 385 55 330 55 C 385 55 410 80 410 135 Z" transform="translate(-35, 5)" fill="url(#lgGreet)"/>
-          <line x1="120" y1="125" x2="255" y2="125" stroke="#00e5ff" stroke-width="15.5" stroke-linecap="round"/>
-          <circle cx="120" cy="125" r="10" fill="#00e5ff"/><circle cx="255" cy="125" r="10" fill="#00e5ff"/>
-          <line x1="85" y1="165" x2="240" y2="165" stroke="#00e5ff" stroke-width="15.5" stroke-linecap="round"/>
-          <circle cx="85" cy="165" r="10" fill="#00e5ff"/><circle cx="240" cy="165" r="10" fill="#00e5ff"/>
-          <path d="M 125 205 L 125 260 L 215 260" stroke="#00e5ff" stroke-width="15.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <circle cx="125" cy="205" r="10" fill="#00e5ff"/>
-          <path d="M 215 205 C 295 205 325 240 325 300 C 325 360 295 395 215 395 C 190 395 175 380 175 355 L 175 295" stroke="#00e5ff" stroke-width="15.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <circle cx="325" cy="300" r="10" fill="#00e5ff"/>
-          <rect x="120" y="330" width="55" height="55" stroke="#00e5ff" stroke-width="15.5" stroke-linejoin="round" fill="none"/>
-          <line x1="235" y1="295" x2="235" y2="415" stroke="#00e5ff" stroke-width="15.5" stroke-linecap="round"/>
-          <circle cx="235" cy="415" r="10" fill="#00e5ff"/>
+          <path d="M 330 38 Q 465 38 465 155 L 465 360 Q 465 462 360 462 L 140 462 Q 38 462 38 360 L 38 140 Q 38 38 140 38 Z"
+            fill="none" stroke="url(#glb)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M 388 42 C 388 100 430 140 488 140 C 430 140 388 180 388 238 C 388 180 346 140 288 140 C 346 140 388 100 388 42 Z" fill="url(#gls)"/>
+          <line x1="138" y1="148" x2="268" y2="148" stroke="#00e5ff" stroke-width="18" stroke-linecap="round"/>
+          <circle cx="138" cy="148" r="11" fill="#00e5ff"/>
+          <circle cx="268" cy="148" r="11" fill="#00e5ff"/>
+          <line x1="105" y1="196" x2="248" y2="196" stroke="#00e5ff" stroke-width="18" stroke-linecap="round"/>
+          <circle cx="105" cy="196" r="11" fill="#00e5ff"/>
+          <circle cx="248" cy="196" r="11" fill="#00e5ff"/>
+          <line x1="138" y1="244" x2="138" y2="305" stroke="#00e5ff" stroke-width="18" stroke-linecap="round"/>
+          <circle cx="138" cy="244" r="11" fill="#00e5ff"/>
+          <line x1="138" y1="305" x2="215" y2="305" stroke="#00e5ff" stroke-width="18" stroke-linecap="round"/>
+          <rect x="100" y="305" width="75" height="75" rx="6" fill="none" stroke="#00e5ff" stroke-width="18" stroke-linejoin="round"/>
+          <path d="M 138 130 L 138 390 Q 138 390 248 390 Q 370 390 370 260 Q 370 130 248 130 Z"
+            fill="none" stroke="#00e5ff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="215" y1="244" x2="215" y2="380" stroke="#00e5ff" stroke-width="18" stroke-linecap="round"/>
+          <circle cx="215" cy="244" r="11" fill="#00e5ff"/>
+          <circle cx="215" cy="380" r="11" fill="#00e5ff"/>
+          <circle cx="310" cy="310" r="11" fill="#00e5ff"/>
         </svg>
-        <h1>از کجا شروع کنیم؟</h1>
-        <p>طراحی، کد، تحلیل تصویر، یا هر سوالی داری — D&T Ai-TECH آماده‌ست.</p>
+        <h1>Where should we start?</h1>
+        <p>Design, code, image analysis, or any question — D&amp;T Ai-TECH is ready.</p>
         <div class="chips">
-          <div class="chip" onclick="useChip(this)">تحلیل فایل طراحی</div>
-          <div class="chip" onclick="useChip(this)">بهینه‌سازی کد</div>
-          <div class="chip" onclick="useChip(this)">ایده‌پردازی UI</div>
-          <div class="chip" onclick="useChip(this)">دیپ‌سرچ هوشمند</div>
-          <div class="chip" onclick="useChip(this)">تولید محتوا</div>
+          <div class="chip" onclick="useChip(this)">Analyze design file</div>
+          <div class="chip" onclick="useChip(this)">Optimize my code</div>
+          <div class="chip" onclick="useChip(this)">UI ideation</div>
+          <div class="chip" onclick="useChip(this)">Deep search topic</div>
+          <div class="chip" onclick="useChip(this)">Generate content</div>
         </div>
       </div>
-      <div class="chat-area" id="chat-box"></div>
+      <div class="chat" id="chatbox"></div>
     </div>
 
-    <div id="view-project" class="view">
-      <div class="view-header">
-        <h2>Projects Hub</h2>
-        <p>پروژه‌های محور با قابلیت دیپ‌سرچ و تحلیل اختصاصی</p>
-      </div>
-      <div class="project-grid">
-        <div class="project-card" onclick="switchView('chat',document.querySelector('[data-view=chat]')); document.getElementById('prompt').value='درباره این پروژه توضیح بده'">
-          <h3>D&T AI Interface</h3>          <p>رابط کاربری هوش مصنوعی — طراحی و توسعه فرانت‌اند</p>          <span class="project-tag">Frontend</span>
-        </div>
-        <div class="project-card">
-          <h3>Computational Design</h3>          <p>الگوریتم‌های طراحی پارامتریک و جنراتیو</p>          <span class="project-tag">Algorithm</span>
-        </div>
-        <div class="project-card">
-          <h3>Vision Pipeline</h3>          <p>پردازش تصویر و تشخیص الگو با هوش مصنوعی</p>          <span class="project-tag">AI / Vision</span>
-        </div>
-        <div class="project-card">
-          <h3>API Integration Hub</h3>          <p>اتصال و مدیریت APIهای خارجی و داخلی</p>          <span class="project-tag">Backend</span>
-        </div>
-        <div class="project-card">
-          <h3>Motion Design Kit</h3>          <p>کتابخانه انیمیشن‌های UI برای محصولات D&T</p>          <span class="project-tag">Design System</span>
-        </div>
-        <div class="project-card" style="border-style:dashed;display:flex;align-items:center;justify-content:center;min-height:100px;opacity:0.5">
-          <span style="font-size:24px;color:var(--text2)">+</span>
-        </div>
+    <!-- PROJECTS -->
+    <div id="v-project" class="view">
+      <div class="vh"><h2>Projects Hub</h2><p>Project-based workspace with deep AI analysis</p></div>
+      <div class="pgrid">
+        <div class="pcard"><h3>D&T AI Interface</h3><p>AI chat interface — frontend design & development</p><span class="ptag">Frontend</span></div>
+        <div class="pcard"><h3>Computational Design</h3><p>Parametric and generative design algorithms</p><span class="ptag">Algorithm</span></div>
+        <div class="pcard"><h3>Vision Pipeline</h3><p>Image processing and pattern recognition with AI</p><span class="ptag">AI / Vision</span></div>
+        <div class="pcard"><h3>API Integration Hub</h3><p>Connect and manage external and internal APIs</p><span class="ptag">Backend</span></div>
+        <div class="pcard"><h3>Motion Design Kit</h3><p>UI animation library for D&T products</p><span class="ptag">Design System</span></div>
+        <div class="pcard" style="border-style:dashed;display:flex;align-items:center;justify-content:center;opacity:.4;min-height:100px"><span style="font-size:26px;color:var(--text2)">+</span></div>
       </div>
     </div>
 
-    <div id="view-search" class="view">
-      <div class="view-header">
-        <h2>Deep Search</h2>
-        <p>جستجوی هوشمند با تحلیل عمیق منابع و داده‌ها</p>
+    <!-- DEEP SEARCH -->
+    <div id="v-search" class="view">
+      <div class="vh"><h2>Deep Search</h2><p>Intelligent search with deep source analysis</p></div>
+      <div class="swrap">
+        <input id="dsi" type="text" placeholder="Enter topic or question..." onkeydown="if(event.key==='Enter')doSrch()"/>
+        <button class="sico" onclick="doSrch()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
       </div>
-      <div class="search-box-wrap">
-        <input type="text" id="deep-search-input" placeholder="موضوع یا سوال خود را بنویسید..." onkeydown="if(event.key==='Enter')doDeepSearch()"/>
-        <button class="search-btn-in" onclick="doDeepSearch()">
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        </button>
-      </div>
-      <div id="search-result-box" class="search-result"></div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px">
-        <div class="chip" onclick="document.getElementById('deep-search-input').value=this.innerText;doDeepSearch()">طراحی پارامتریک</div>
-        <div class="chip" onclick="document.getElementById('deep-search-input').value=this.innerText;doDeepSearch()">هوش مصنوعی مولد</div>
-        <div class="chip" onclick="document.getElementById('deep-search-input').value=this.innerText;doDeepSearch()">معماری ترانسفورمر</div>
-        <div class="chip" onclick="document.getElementById('deep-search-input').value=this.innerText;doDeepSearch()">Web Components</div>
+      <div id="sres" class="sres"></div>
+      <div class="chips" style="justify-content:center;margin-top:8px">
+        <div class="chip" onclick="document.getElementById('dsi').value=this.innerText;doSrch()">Parametric Design</div>
+        <div class="chip" onclick="document.getElementById('dsi').value=this.innerText;doSrch()">Generative AI</div>
+        <div class="chip" onclick="document.getElementById('dsi').value=this.innerText;doSrch()">Transformer Architecture</div>
+        <div class="chip" onclick="document.getElementById('dsi').value=this.innerText;doSrch()">Web Components</div>
       </div>
     </div>
 
-    <div id="view-images" class="view">
-      <div class="view-header">
-        <h2>Image Studio</h2>
-        <p>آپلود، تحلیل و پردازش تصاویر با AI</p>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
-        <div id="img-drop-zone" style="width:100%;max-width:500px;height:180px;border:2px dashed var(--border2);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:all 0.2s;background:rgba(0,229,255,0.02)" onclick="document.getElementById('img-upload').click()" ondragover="event.preventDefault();this.style.borderColor='var(--cyan)'" ondrop="handleImgDrop(event)">
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <p style="color:var(--text2);font-size:13px">تصویر را اینجا رها کنید یا کلیک کنید</p>          <p style="color:rgba(155,109,255,0.6);font-size:11px">PNG, JPG, WebP پشتیبانی می‌شود</p>
+    <!-- IMAGE STUDIO -->
+    <div id="v-images" class="view">
+      <div class="vh"><h2>Image Studio</h2><p>Upload, analyze and process images with AI</p></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+        <div class="dropz" onclick="document.getElementById('img-up').click()" ondragover="event.preventDefault()" ondrop="imgDrop(event)">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p style="color:var(--text2);font-size:13px">Drop image here or click to upload</p>
+          <p style="color:rgba(155,109,255,.55);font-size:11px">PNG, JPG, WebP supported</p>
         </div>
-        <input type="file" id="img-upload" accept="image/*" style="display:none" onchange="previewImg(this)">
-        <div id="img-preview-wrap" style="display:none;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:500px">
-          <img id="img-preview" style="max-width:100%;max-height:300px;border-radius:16px;border:1px solid var(--border)" src="" alt="">
-          <button class="send-btn" style="height:38px;padding:0 24px" onclick="analyzeImage()">تحلیل با AI</button>
+        <input type="file" id="img-up" accept="image/*" style="display:none" onchange="prevImg(this)">
+        <div id="img-pw" style="display:none;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:500px">
+          <img id="img-p" style="max-width:100%;max-height:280px;border-radius:14px;border:1px solid var(--border)" src="" alt="">
+          <button class="sbtn" style="height:38px;padding:0 24px" onclick="analyzeImg()">Analyze with AI</button>
         </div>
-        <div id="img-analysis" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:16px 20px;font-size:13px;color:var(--text2);line-height:1.8;width:100%;max-width:500px"></div>
-      </div>
-    </div>
-
-    <div id="view-videos" class="view">
-      <div class="view-header">
-        <h2>Computational Design Videos</h2>
-        <p>آموزش‌های طراحی محاسباتی و هوش مصنوعی</p>
-      </div>
-      <div class="video-grid">
-        <div class="video-card">
-          <div class="video-thumb">
-            <div class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="var(--cyan)"/></svg></div>
-          </div>
-          <div class="video-info">
-            <h3>Parametric Design Basics</h3>            <p>14:32 • طراحی پارامتریک</p>
-          </div>
-        </div>
-        <div class="video-card">
-          <div class="video-thumb" style="background:linear-gradient(135deg,rgba(224,64,160,0.15),rgba(155,109,255,0.1))">
-            <div class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="var(--cyan)"/></svg></div>
-          </div>
-          <div class="video-info">
-            <h3>AI در طراحی گرافیک</h3>            <p>22:10 • هوش مصنوعی</p>
-          </div>
-        </div>
-        <div class="video-card">
-          <div class="video-thumb" style="background:linear-gradient(135deg,rgba(26,143,255,0.15),rgba(0,229,255,0.1))">
-            <div class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="var(--cyan)"/></svg></div>
-          </div>
-          <div class="video-info">
-            <h3>Generative UI Patterns</h3>            <p>18:45 • UI Design</p>
-          </div>
-        </div>
-        <div class="video-card">
-          <div class="video-thumb" style="background:linear-gradient(135deg,rgba(155,109,255,0.12),rgba(224,64,160,0.1))">
-            <div class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="var(--cyan)"/></svg></div>
-          </div>
-          <div class="video-info">
-            <h3>Motion Design with AI</h3>            <p>31:20 • انیمیشن</p>
-          </div>
-        </div>
+        <div id="img-res" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:13px;padding:16px 18px;font-size:13px;color:var(--text2);line-height:1.8;width:100%;max-width:500px"></div>
       </div>
     </div>
 
-    <div id="view-library" class="view">
-      <div class="view-header">
-        <h2>Code Library</h2>
-        <p>کتابخانه کدهای پروژه‌ها</p>
-      </div>
-      <div class="lib-tabs">
-        <div class="lib-tab active" onclick="filterLib('all',this)">همه</div>
-        <div class="lib-tab" onclick="filterLib('js',this)">JavaScript</div>
-        <div class="lib-tab" onclick="filterLib('py',this)">Python</div>
-        <div class="lib-tab" onclick="filterLib('css',this)">CSS</div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div class="code-card" data-lang="js">
-          <div class="code-card-header">
-            <span>Gradient Animation Helper</span>            <span class="lang">JS</span>
-          </div>
-          <pre>const animGrad = (el, colors, duration=4000) => {  el.style.backgroundImage = `linear-gradient(270deg, ${colors.join(',')})`;  el.style.backgroundSize = '300% 300%';  el.style.animation = `gradFlow ${duration}ms ease infinite`;};</pre>
-        </div>
-        <div class="code-card" data-lang="css">
-          <div class="code-card-header">
-            <span>Glassmorphism Card</span>            <span class="lang">CSS</span>
-          </div>
-          <pre>.glass-card {  background: rgba(255,255,255,0.05);  backdrop-filter: blur(20px);  border: 1px solid rgba(255,255,255,0.08);  border-radius: 20px;}</pre>
-        </div>
-        <div class="code-card" data-lang="py">
-          <div class="code-card-header">
-            <span>Image Analyzer</span>            <span class="lang">PY</span>
-          </div>
-          <pre>def analyze_image(path: str) -> dict:    import base64, anthropic    with open(path, 'rb') as f:        data = base64.b64encode(f.read()).decode()    client = anthropic.Anthropic()    return client.messages.create(        model="claude-opus-4-5",        max_tokens=1024,        messages=[{"role":"user","content":[            {"type":"image","source":{"type":"base64", "media_type":"image/jpeg","data":data}},            {"type":"text","text":"Describe this image."}        ]}]    )</pre>
-        </div>
+    <!-- VIDEOS -->
+    <div id="v-videos" class="view">
+      <div class="vh"><h2>Computational Design Videos</h2><p>AI and computational design tutorials</p></div>
+      <div class="vgrid">
+        <div class="vcard"><div class="vthumb" style="background:linear-gradient(135deg,rgba(124,58,237,.14),rgba(0,229,255,.08))"><div class="plic"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="var(--cyan)"/></svg></div></div><div class="vinfo"><h3>Parametric Design Basics</h3><p>14:32 • Parametric</p></div></div>
+        <div class="vcard"><div class="vthumb" style="background:linear-gradient(135deg,rgba(192,38,211,.14),rgba(124,58,237,.08))"><div class="plic"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="var(--cyan)"/></svg></div></div><div class="vinfo"><h3>AI in Graphic Design</h3><p>22:10 • Artificial Intelligence</p></div></div>
+        <div class="vcard"><div class="vthumb" style="background:linear-gradient(135deg,rgba(59,130,246,.14),rgba(0,229,255,.08))"><div class="plic"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="var(--cyan)"/></svg></div></div><div class="vinfo"><h3>Generative UI Patterns</h3><p>18:45 • UI Design</p></div></div>
+        <div class="vcard"><div class="vthumb" style="background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(192,38,211,.1))"><div class="plic"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="var(--cyan)"/></svg></div></div><div class="vinfo"><h3>Motion Design with AI</h3><p>31:20 • Animation</p></div></div>
       </div>
     </div>
-  </div><div class="input-wrap">
-    <div class="file-indicator" id="file-indicator">
+
+    <!-- LIBRARY -->
+    <div id="v-library" class="view">
+      <div class="vh"><h2>Code Library</h2><p>Project code snippets and utilities</p></div>
+      <div class="ltabs">
+        <div class="ltab on" onclick="libF('all',this)">All</div>
+        <div class="ltab" onclick="libF('js',this)">JavaScript</div>
+        <div class="ltab" onclick="libF('py',this)">Python</div>
+        <div class="ltab" onclick="libF('css',this)">CSS</div>
+      </div>
+      <div class="ccard" data-l="js"><div class="cch"><span>Gradient Animation Helper</span><span class="clang">JS</span></div><pre>const animGrad = (el, colors, dur = 4000) => {
+  el.style.backgroundImage =
+    `linear-gradient(270deg, ${colors.join(', ')})`;
+  el.style.backgroundSize = '300% 300%';
+  el.style.animation = `gradFlow ${dur}ms ease infinite`;
+};</pre></div>
+      <div class="ccard" data-l="css"><div class="cch"><span>Glassmorphism Card</span><span class="clang">CSS</span></div><pre>.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+}</pre></div>
+      <div class="ccard" data-l="py"><div class="cch"><span>Image Analyzer</span><span class="clang">PY</span></div><pre>def analyze_image(path: str) -> str:
+    import base64, anthropic
+    with open(path, 'rb') as f:
+        data = base64.b64encode(f.read()).decode()
+    client = anthropic.Anthropic()
+    msg = client.messages.create(
+        model="claude-sonnet-4-20250514",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": [
+            {"type": "image", "source": {
+                "type": "base64",
+                "media_type": "image/jpeg",
+                "data": data}},
+            {"type": "text", "text": "Describe this image."}
+        ]}])
+    return msg.content[0].text</pre></div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- INPUT -->
+  <div class="inp-wrap">
+    <div class="findc" id="findc">
       <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
-      <span id="file-name-label"></span>
+      <span id="fnm"></span>
     </div>
-    <div class="input-box" id="input-box">
-      <div class="input-actions-left">
-        <button class="act-btn" title="Attach file" onclick="document.getElementById('file-inp').click()">
+    <div class="ibox">
+      <div class="lacts">
+        <button class="ab" title="Attach file" onclick="document.getElementById('finp').click()">
           <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
         </button>
-        <button class="act-btn" title="Image" onclick="switchView('images', document.querySelector('[data-view=images]'))">
+        <button class="ab" title="Image Studio" onclick="sw('images',document.querySelector('[data-v=images]'))">
           <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
         </button>
       </div>
-      <input type="file" id="file-inp" style="display:none" onchange="onFileSelect(this)">
-      <textarea id="prompt" rows="1" placeholder="از D&T Ai-TECH بپرس یا فایل آپلود کن..." oninput="autoResize(this)" onkeydown="onKey(event)"></textarea>
-      <div class="input-right">
-        <button class="act-btn" id="mic-btn" title="Voice" onclick="toggleVoice()">
+      <input type="file" id="finp" style="display:none" onchange="onFile(this)">
+      <textarea id="pr" rows="1" placeholder="Ask D&T Ai-TECH or upload a file..." oninput="ar(this)" onkeydown="ok(event)"></textarea>
+      <div class="racts">
+        <button class="ab" id="micbtn" title="Voice input" onclick="toggleVoice()">
           <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
         </button>
-        <button class="send-btn" onclick="sendMessage()">SEND</button>
+        <button class="sbtn" onclick="send()">SEND</button>
       </div>
     </div>
   </div>
 </main>
 
-<nav class="mobile-nav" id="mobile-nav">
-  <div class="mobile-nav-inner">
-    <div class="mnav-item active" data-view="chat" onclick="mobileSwitch('chat',this)">
-      <svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>
-      Chat
-    </div>
-    <div class="mnav-item" data-view="project" onclick="mobileSwitch('project',this)">
-      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      Projects
-    </div>
-    <div class="mnav-item" data-view="search" onclick="mobileSwitch('search',this)">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      Search
-    </div>
-    <div class="mnav-item" data-view="images" onclick="mobileSwitch('images',this)">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-      Images
-    </div>
-    <div class="mnav-item" data-view="library" onclick="mobileSwitch('library',this)">
-      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      Library
-    </div>
+<!-- MOBILE NAV -->
+<nav class="mnav">
+  <div class="mnav-in">
+    <div class="mni on" data-v="chat" onclick="mSw('chat',this)"><svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>Chat</div>
+    <div class="mni" data-v="project" onclick="mSw('project',this)"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Projects</div>
+    <div class="mni" data-v="search" onclick="mSw('search',this)"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</div>
+    <div class="mni" data-v="images" onclick="mSw('images',this)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Images</div>
+    <div class="mni" data-v="library" onclick="mSw('library',this)"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Library</div>
   </div>
 </nav>
 
 <script>
-// ===== STATE =====
-let currentView = 'chat';
-let chatStarted = false;
-let isRecording = false;
-let recognition = null;
-let selectedFile = null;
+let selFile=null,recOn=false,recog=null,started=false;
+const VT={chat:'AI Studio',project:'Projects Hub',search:'Deep Search',images:'Image Studio',videos:'Videos',library:'Code Library'};
 
-// ===== SIDEBAR =====
-function toggleSidebar(){
-  document.getElementById('sidebar').classList.toggle('collapsed');
-}
+function toggleSB(){document.getElementById('sb').classList.toggle('c')}
 
-// ===== VIEW SWITCHING =====
-const viewTitles = {
-  chat:'AI Studio', project:'Projects Hub', search:'Deep Search',
-  images:'Image Studio', videos:'Videos', library:'Code Library'
-};
-
-function switchView(name, el){
-  currentView = name;
-  document.querySelectorAll('[id^="view-"]').forEach(v=>{ v.style.display = 'none'; });
-  document.getElementById('view-chat').style.display = name==='chat'?'flex':'none';
+function sw(name,el){
+  // show/hide views
+  document.getElementById('v-chat').style.display=name==='chat'?'flex':'none';
   ['project','search','images','videos','library'].forEach(n=>{
-    const v = document.getElementById('view-'+n);
-    if(v) v.classList.toggle('active', n===name);
+    const v=document.getElementById('v-'+n);
+    if(v)v.classList.toggle('on',n===name);
   });
-  document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
-  if(el) el.classList.add('active');
-  document.getElementById('topbar-title').textContent = viewTitles[name]||name;
+  // nav highlight
+  document.querySelectorAll('.ni').forEach(i=>i.classList.remove('on'));
+  if(el)el.classList.add('on');
+  document.getElementById('tb-t').textContent=VT[name]||name;
 }
 
-function mobileSwitch(name, el){
-  document.querySelectorAll('.mnav-item').forEach(i=>i.classList.remove('active'));
-  el.classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(i=>{
-    i.classList.toggle('active', i.dataset.view===name);
-  });
-  switchView(name, document.querySelector(`.nav-item[data-view="${name}"]`));
+function mSw(name,el){
+  document.querySelectorAll('.mni').forEach(i=>i.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.ni').forEach(i=>i.classList.toggle('on',i.dataset.v===name));
+  sw(name,document.querySelector(`.ni[data-v="${name}"]`));
 }
 
-// ===== FILE HANDLING =====
-function onFileSelect(inp){
-  if(inp.files.length>0){
-    selectedFile = inp.files[0];
-    const ind = document.getElementById('file-indicator');
-    ind.classList.add('show');
-    document.getElementById('file-name-label').textContent = '✓ ' + selectedFile.name;
-  }
-}
-
-// ===== TEXTAREA AUTO-RESIZE =====
-function autoResize(el){
-  el.style.height='auto';
-  el.style.height = Math.min(el.scrollHeight, 140)+'px';
-}
-function onKey(e){
-  if(e.key==='Enter' && !e.shiftKey){e.preventDefault();sendMessage();}
-}
-
-// ===== CHAT =====
 function newChat(){
-  chatStarted=false;
-  document.getElementById('chat-box').innerHTML='';
-  document.getElementById('chat-box').classList.remove('visible');
-  document.getElementById('greeting').style.display='flex';
-  document.getElementById('prompt').value='';
-  document.getElementById('file-indicator').classList.remove('show');
-  selectedFile=null;
-  switchView('chat', document.querySelector('[data-view=chat]'));
+  started=false;
+  document.getElementById('chatbox').innerHTML='';
+  document.getElementById('chatbox').classList.remove('on');
+  document.getElementById('greet').style.display='flex';
+  document.getElementById('pr').value='';
+  document.getElementById('findc').classList.remove('on');
+  selFile=null;
+  sw('chat',document.querySelector('[data-v=chat]'));
 }
 
-function useChip(el){
-  document.getElementById('prompt').value = el.textContent;
-  document.getElementById('prompt').focus();
-}
+function useChip(el){document.getElementById('pr').value=el.textContent;document.getElementById('pr').focus();}
+function ar(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,140)+'px';}
+function ok(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
+function onFile(inp){if(inp.files.length){selFile=inp.files[0];document.getElementById('findc').classList.add('on');document.getElementById('fnm').textContent='✓ '+selFile.name;}}
 
-async function sendMessage(){
-  const prompt = document.getElementById('prompt').value.trim();
-  if(!prompt && !selectedFile) return;
-
-  if(!chatStarted){
-    chatStarted=true;
-    document.getElementById('greeting').style.display='none';
-    document.getElementById('chat-box').classList.add('visible');
-  }
-  const chatBox = document.getElementById('chat-box');
-  const fileLabel = selectedFile?`<br><small style="color:var(--cyan);font-size:11px">📎 ${selectedFile.name}</small>`:'';
-  
-  chatBox.innerHTML += `<div class="msg-row user"><div class="bubble user"><b>شما</b>${prompt||'فایل پیوست شد'}${fileLabel}</div></div>`;
-  document.getElementById('prompt').value='';
-  document.getElementById('prompt').style.height='auto';
-  
-  const aiId = 'ai_'+Date.now();
-  chatBox.innerHTML += `<div class="msg-row ai"><div class="ai-avatar"><svg width="18" height="18" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="aiAvatarGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#9b6dff"/><stop offset="100%" stop-color="#00e5ff"/></linearGradient></defs><path d="M 280 50 L 140 50 C 90 50 50 90 50 140 L 50 360 C 50 410 90 450 140 450 L 360 450 C 410 450 450 410 450 360 L 450 215" stroke="url(#aiAvatarGrad)" stroke-width="22" stroke-linecap="round" fill="none"/></svg></div><div class="bubble ai loading" id="${aiId}">D&T Core در حال پردازش...</div></div>`;
-  chatBox.scrollTop = chatBox.scrollHeight;
-
-  let fileParts = [];
-  if(selectedFile){
-    const b64 = await new Promise(r=>{const rd=new FileReader();rd.onload=()=>r(rd.result.split(',')[1]);rd.readAsDataURL(selectedFile);});
-    fileParts.push({inlineData:{data:b64,mimeType:selectedFile.type}});
-  }
-  selectedFile=null;
-  document.getElementById('file-indicator').classList.remove('show');
-
+async function send(){
+  const txt=document.getElementById('pr').value.trim();
+  if(!txt&&!selFile)return;
+  if(!started){started=true;document.getElementById('greet').style.display='none';document.getElementById('chatbox').classList.add('on');}
+  const cb=document.getElementById('chatbox');
+  const fl=selFile?`<br><small style="color:var(--cyan);font-size:11px">📎 ${selFile.name}</small>`:'';
+  cb.innerHTML+=`<div class="mrow u"><div class="bub u"><b>You</b>${txt||'File attached'}${fl}</div></div>`;
+  document.getElementById('pr').value='';document.getElementById('pr').style.height='auto';
+  const id='a'+Date.now();
+  cb.innerHTML+=`<div class="mrow a"><div class="av">${miniLogo()}</div><div class="bub a ld" id="${id}">D&T Core is processing...</div></div>`;
+  cb.scrollTop=cb.scrollHeight;
+  let fp=[];
+  if(selFile){fp=[{inlineData:{data:await b64(selFile),mimeType:selFile.type}}];}
+  selFile=null;document.getElementById('findc').classList.remove('on');
   try{
-    const res = await fetch('/api/chat',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt, fileParts})
-    });
-    const data = await res.json();
-    const el = document.getElementById(aiId);
-    el.classList.remove('loading');
-    if(res.ok && data.response){
-      el.innerHTML = `<b>D&T Ai-TECH</b><br>${data.response}`;
-    } else {
-      el.innerHTML = `<b>خطای سیستم:</b> اتصال به API برقرار نشد. لطفاً از طریق Vercel اجرا کنید.`;
-    }
-  } catch(err){
-    const el = document.getElementById(aiId);
-    el.classList.remove('loading');
-    el.innerHTML = `<b>خطای اتصال:</b> درخواست بلاک شد. سایت باید روی Vercel اجرا شود.`;
-  }
-  chatBox.scrollTop = chatBox.scrollHeight;
+    const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:txt,fileParts:fp})});
+    const d=await r.json();const el=document.getElementById(id);el.classList.remove('ld');
+    el.innerHTML=r.ok&&d.response?`<b>D&T Ai-TECH</b><br>${d.response}`:`<b>System Error:</b> Connection failed. Deploy on Vercel to activate AI.`;
+  }catch{const el=document.getElementById(id);el.classList.remove('ld');el.innerHTML=`<b>Connection Error:</b> Deploy on Vercel to enable AI responses.`;}
+  cb.scrollTop=cb.scrollHeight;
 }
 
-// ===== VOICE =====
-if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window){
-  const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
-  recognition = new SR(); recognition.lang='fa-IR'; recognition.continuous=false;
-  recognition.onresult=e=>{
-    const t=e.results[0][0].transcript;
-    const inp=document.getElementById('prompt');
-    inp.value=(inp.value?inp.value+' ':'')+t;
-    autoResize(inp);
-  };
-  recognition.onend=()=>{
-    isRecording=false;
-    document.getElementById('mic-btn').classList.remove('recording');
-    document.getElementById('mic-btn').style.color='';
-  };
+function b64(f){return new Promise(r=>{const rd=new FileReader();rd.onload=()=>r(rd.result.split(',')[1]);rd.readAsDataURL(f);});}
+
+function miniLogo(){
+  return`<svg width="16" height="16" viewBox="0 0 500 500" fill="none"><defs><linearGradient id="ml" x1="0" y1="0" x2="500" y2="500" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs><path d="M330 38Q465 38 465 155L465 360Q465 462 360 462L140 462Q38 462 38 360L38 140Q38 38 140 38Z" fill="none" stroke="url(#ml)" stroke-width="28"/><path d="M138 130L138 390Q138 390 248 390Q370 390 370 260Q370 130 248 130Z" fill="none" stroke="#00e5ff" stroke-width="24"/></svg>`;
 }
 
+// voice
+if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  recog=new SR();recog.lang='fa-IR';
+  recog.onresult=e=>{const t=e.results[0][0].transcript;const inp=document.getElementById('pr');inp.value=(inp.value?inp.value+' ':'')+t;ar(inp);};
+  recog.onend=()=>{recOn=false;const b=document.getElementById('micbtn');b.classList.remove('rec');b.style.color='';};
+}
 function toggleVoice(){
-  if(!recognition){alert('قابلیت صدا در این مرورگر پشتیبانی نمی‌شود.');return;}
-  if(isRecording){recognition.stop();}
-  else{
-    isRecording=true; recognition.start();
-    document.getElementById('mic-btn').classList.add('recording');
-    document.getElementById('mic-btn').style.color='#ff4444';
-  }
+  if(!recog){alert('Voice not supported in this browser.');return;}
+  if(recOn){recog.stop();}else{recOn=true;recog.start();const b=document.getElementById('micbtn');b.classList.add('rec');b.style.color='#ff4040';}
 }
 
-// ===== DEEP SEARCH =====
-async function doDeepSearch(){
-  const q = document.getElementById('deep-search-input').value.trim();
-  if(!q) return;
-  const box = document.getElementById('search-result-box');
-  box.style.display='block';
-  box.innerHTML='<span style="color:var(--cyan)">در حال جستجوی عمیق...</span>';
-  try{
-    const res = await fetch('/api/chat',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt:`جستجوی عمیق درباره: ${q}\nلطفاً اطلاعات جامع و ساختاریافته ارائه بده.`})
-    });
-    const data = await res.json();
-    if(res.ok && data.response){ box.innerHTML = data.response; } 
-    else { box.innerHTML='<span style="color:var(--text2)">اتصال به سرور برقرار نشد. روی Vercel اجرا کنید.</span>'; }
-  } catch(e){ box.innerHTML='<span style="color:var(--text2)">خطای اتصال — فایل باید روی Vercel دیپلوی شود.</span>'; }
+// deep search
+async function doSrch(){
+  const q=document.getElementById('dsi').value.trim();if(!q)return;
+  const box=document.getElementById('sres');box.style.display='block';box.innerHTML='<span style="color:var(--cyan)">Deep searching...</span>';
+  try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:`Deep search about: ${q}\nProvide comprehensive structured information.`})});
+    const d=await r.json();box.innerHTML=r.ok&&d.response?d.response:'Server unreachable. Deploy on Vercel.';}
+  catch{box.innerHTML='Connection error — deploy on Vercel.';}
 }
 
-// ===== IMAGE DROP =====
-function handleImgDrop(e){
-  e.preventDefault();
-  const f = e.dataTransfer.files[0];
-  if(f&&f.type.startsWith('image/')){ previewImgFile(f); }
-}
-function previewImg(inp){ if(inp.files[0]) previewImgFile(inp.files[0]); }
-function previewImgFile(file){
-  const reader=new FileReader();
-  reader.onload=e=>{
-    document.getElementById('img-preview').src=e.target.result;
-    document.getElementById('img-preview-wrap').style.display='flex';
-    document.getElementById('img-drop-zone').style.display='none';
-  };
-  reader.readAsDataURL(file); window._imgFile=file;
-}
+// image
+function imgDrop(e){e.preventDefault();const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))prvF(f);}
+function prevImg(inp){if(inp.files[0])prvF(inp.files[0]);}
+function prvF(file){const r=new FileReader();r.onload=e=>{document.getElementById('img-p').src=e.target.result;document.getElementById('img-pw').style.display='flex';document.querySelector('.dropz').style.display='none';};r.readAsDataURL(file);window._iF=file;}
+async function analyzeImg(){const box=document.getElementById('img-res');box.style.display='block';box.textContent='Analyzing image...';box.style.color='var(--cyan)';try{const d64=await b64(window._iF);const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'Analyze this image in detail: design, colors, composition and style.',fileParts:[{inlineData:{data:d64,mimeType:window._iF.type}}]})});const d=await r.json();if(r.ok&&d.response){box.textContent=d.response;box.style.color='var(--text2)';}else{box.textContent='Connection failed.';box.style.color='var(--text2)';}}catch{box.textContent='Connection error.';box.style.color='var(--text2)';}}
 
-async function analyzeImage(){
-  const box=document.getElementById('img-analysis');
-  box.style.display='block'; box.textContent='در حال تحلیل تصویر...'; box.style.color='var(--cyan)';
-  try{
-    const b64=await new Promise(r=>{const rd=new FileReader();rd.onload=()=>r(rd.result.split(',')[1]);rd.readAsDataURL(window._imgFile);});
-    const res=await fetch('/api/chat',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt:'این تصویر را تحلیل کن و جزئیات طراحی، رنگ‌بندی و سبک را شرح بده.',fileParts:[{inlineData:{data:b64,mimeType:window._imgFile.type}}]})
-    });
-    const data=await res.json();
-    if(res.ok&&data.response){box.textContent=data.response;box.style.color='var(--text2)';}
-    else{box.textContent='اتصال برقرار نشد.';box.style.color='var(--text2)';}
-  }catch(e){box.textContent='خطای اتصال.';box.style.color='var(--text2)';}
-}
+// library filter
+function libF(l,el){document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.querySelectorAll('.ccard').forEach(c=>{c.style.display=(l==='all'||c.dataset.l===l)?'block':'none';});}
 
-// ===== LIBRARY FILTER =====
-function filterLib(lang, el){
-  document.querySelectorAll('.lib-tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  document.querySelectorAll('.code-card').forEach(c=>{
-    c.style.display = (lang==='all'||c.dataset.lang===lang)?'block':'none';
-  });
-}
-
-// ===== INIT =====
-switchView('chat', document.querySelector('[data-view=chat]'));
+// init
+sw('chat',document.querySelector('[data-v=chat]'));
 </script>
 </body>
 </html>
+HTMLEOF
+echo "OK"
+Output
+
+OK
