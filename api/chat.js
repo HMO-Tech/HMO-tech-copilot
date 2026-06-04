@@ -10,17 +10,18 @@ export default async function handler(req, res) {
 
     try {
         const apiKey = process.env.GROQ_API_KEY;
-        
-        // تشخیص اینکه کاربر عکس فرستاده است یا فقط متن
         let contentPayload = [];
-        
+
+        // فرمت‌بندی استاندارد پیام به ساختار چندرسانه‌ای طبق مستندات Groq
         if (fileParts && Array.isArray(fileParts) && fileParts.length > 0) {
-            // اگر عکس فرستاده شده بود، آن را به فرمت استاندارد Groq تبدیل می‌کنیم
             const base64Data = fileParts[0].inlineData.data;
             const mimeType = fileParts[0].inlineData.mimeType;
-            
+
             contentPayload = [
-                { type: "text", text: prompt || "این تصویر را تحلیل کن و جزئیات طراحی و سبک را شرح بده." },
+                {
+                    type: "text",
+                    text: prompt || "Analyze this image and describe its visual elements."
+                },
                 {
                     type: "image_url",
                     image_url: {
@@ -29,11 +30,14 @@ export default async function handler(req, res) {
                 }
             ];
         } else {
-            // درخواست‌های صرفاً متنی چت
-            contentPayload = [{ type: "text", text: prompt || "سلام" }];
+            contentPayload = [
+                {
+                    type: "text",
+                    text: prompt || "سلام"
+                }
+            ];
         }
 
-        // استفاده از مدل قدرتمند بینایی Groq (Llama 3.2 Vision)
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -41,17 +45,28 @@ export default async function handler(req, res) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'llama-3.2-11b-vision-preview', // مدل رسمی مجهز به سیستم پردازش تصویر Groq
-                messages: [{ role: 'user', content: contentPayload }]
+                model: 'llama-3.2-11b-vision-preview',
+                messages: [
+                    { 
+                        role: 'user', 
+                        content: contentPayload 
+                    }
+                ],
+                max_tokens: 1024
             })
         });
 
         const data = await response.json();
-        const aiText = data.choices?.[0]?.message?.content || "متأسفانه پاسخی دریافت نشد.";
+        
+        // هندل کردن مستقیم ارور ساختاری سرور در صورت رخ دادن
+        if (data.error) {
+            return res.status(400).json({ response: `Groq Error: ${data.error.message}` });
+        }
 
+        const aiText = data.choices?.[0]?.message?.content || "متأسفانه پاسخی دریافت نشد.";
         return res.status(200).json({ response: aiText });
 
     } catch (error) {
-        return res.status(500).json({ response: `خطای سرور Groq: ${error.message}` });
+        return res.status(500).json({ response: `خطای سرور: ${error.message}` });
     }
 }
