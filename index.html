@@ -158,31 +158,35 @@
     <button class="hbtn" id="hbtn" onclick="toggleSB()" aria-label="Toggle sidebar">
       <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <svg id="sb-logo" width="36" height="36" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0; filter:drop-shadow(0 0 7px rgba(0,229,255,.38)); cursor:pointer" onclick="toggleSB()">
+    <svg id="sb-logo" width="36" height="36" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0; filter:drop-shadow(0 0 7px rgba(0,229,255,.38)); cursor:pointer" onclick="toggleSB()">
       <defs>
-        <linearGradient id="lbord" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#7c3aed"/>
-          <stop offset="50%" stop-color="#3b82f6"/>
-          <stop offset="100%" stop-color="#06b6d4"/>
+        <linearGradient id="frameGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#9d4edd" />
+          <stop offset="50%" stop-color="#3a86ff" />
+          <stop offset="100%" stop-color="#00f2fe" />
         </linearGradient>
-        <linearGradient id="lstar" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#7c3aed"/>
-          <stop offset="100%" stop-color="#c026d3"/>
+        <linearGradient id="innerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#00f5ff" />
+          <stop offset="100%" stop-color="#00e5ff" />
         </linearGradient>
       </defs>
-      <path d="M 115 22 L 54 22 C 36 22 22 36 22 54 L 22 146 C 22 164 36 178 54 178 L 146 178 C 164 178 178 164 178 146 L 178 88" stroke="url(#lbord)" stroke-width="9" stroke-linecap="round" fill="none"/>
-      <path d="M 152 54 C 152 32 169 16 191 16 C 169 16 152 0 152 -22 C 152 0 135 16 113 16 C 135 16 152 32 152 54 Z" transform="translate(4, 6)" fill="url(#lstar)"/>
-      <line x1="53" y1="53" x2="103" y2="53" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
-      <circle cx="53" cy="53" r="4.5" fill="#00e5ff"/><circle cx="103" cy="53" r="4.5" fill="#00e5ff"/>
-      <line x1="38" y1="71" x2="97" y2="71" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
-      <circle cx="38" cy="71" r="4.5" fill="#00e5ff"/><circle cx="97" cy="71" r="4.5" fill="#00e5ff"/>
-      <path d="M 54 88 L 54 110 L 88 110" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      <circle cx="54" cy="88" r="4.5" fill="#00e5ff"/>
-      <path d="M 88 88 C 122 88 135 103 135 128 C 135 153 122 168 88 168 C 77 168 71 162 71 151 L 71 128" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      <circle cx="135" cy="128" r="4.5" fill="#00e5ff"/>
-      <rect x="52" y="139" width="24" height="24" rx="2" stroke="#00e5ff" stroke-width="6.5" stroke-linejoin="round" fill="none"/>
-      <line x1="97" y1="126" x2="97" y2="176" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
-      <circle cx="97" cy="176" r="4.5" fill="#00e5ff"/>
+      <path d="M 530,170 L 200,170 A 100,100 0 0,0 100,270 L 100,800 A 100,100 0 0,0 200,900 L 730,900 A 100,100 0 0,0 830,800 L 830,450" fill="none" stroke="url(#frameGrad)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M 730,40 Q 730,260 950,260 Q 730,260 730,480 Q 730,260 510,260 Q 730,260 730,40" fill="url(#frameGrad)" />
+      <path d="M 260,260 L 470,260" fill="none" stroke="url(#innerGrad)" stroke-width="24" stroke-linecap="round" />
+      <circle cx="260" cy="260" r="18" fill="url(#innerGrad)" />
+      <circle cx="470" cy="260" r="18" fill="url(#innerGrad)" />
+      <path d="M 180,335 L 470,335" fill="none" stroke="url(#innerGrad)" stroke-width="24" stroke-linecap="round" />
+      <circle cx="180" cy="335" r="18" fill="url(#innerGrad)" />
+      <circle cx="470" cy="335" r="18" fill="url(#innerGrad)" />
+      <path d="M 405,395 C 555,395 680,480 680,600 C 680,720 560,790 470,790" fill="none" stroke="url(#innerGrad)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M 255,410 L 255,550 L 405,550 L 405,395" fill="none" stroke="url(#innerGrad)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="255" cy="410" r="18" fill="url(#innerGrad)" />
+      <path d="M 450,570 L 450,865" fill="none" stroke="url(#innerGrad)" stroke-width="24" stroke-linecap="round" />
+      <circle cx="450" cy="570" r="18" fill="url(#innerGrad)" />
+      <circle cx="450" cy="865" r="18" fill="url(#innerGrad)" />
+      <path d="M 510,640 L 510,720 C 510,750 485,770 470,770" fill="none" stroke="url(#innerGrad)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="510" cy="640" r="18" fill="url(#innerGrad)" />
+      <rect x="255" y="660" width="135" height="135" fill="none" stroke="url(#innerGrad)" stroke-width="24" stroke-linejoin="round" />
     </svg>
     <div class="brand-text" id="brand-text">
       <span class="brand-name"><span class="dt">D&T</span> Ai-TECH</span>
@@ -235,31 +239,35 @@
   <div class="content">
     <div id="v-chat" style="flex:1; display:flex; flex-direction:column; overflow:hidden">
       <div class="greet" id="greet">
-        <svg class="greet-logo" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="greet-logo" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="glb" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#7c3aed"/>
-              <stop offset="50%" stop-color="#3b82f6"/>
-              <stop offset="100%" stop-color="#06b6d4"/>
+            <linearGradient id="frameGradGreet" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#7c3aed" />
+              <stop offset="50%" stop-color="#3b82f6" />
+              <stop offset="100%" stop-color="#06b6d4" />
             </linearGradient>
-            <linearGradient id="gls" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#7c3aed"/>
-              <stop offset="100%" stop-color="#c026d3"/>
+            <linearGradient id="innerGradGreet" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00f5ff" />
+              <stop offset="100%" stop-color="#00e5ff" />
             </linearGradient>
           </defs>
-          <path d="M 115 22 L 54 22 C 36 22 22 36 22 54 L 22 146 C 22 164 36 178 54 178 L 146 178 C 164 178 178 164 178 146 L 178 88" stroke="url(#glb)" stroke-width="9" stroke-linecap="round" fill="none"/>
-          <path d="M 152 54 C 152 32 169 16 191 16 C 169 16 152 0 152 -22 C 152 0 135 16 113 16 C 135 16 152 32 152 54 Z" transform="translate(4, 6)" fill="url(#gls)"/>
-          <line x1="53" y1="53" x2="103" y2="53" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
-          <circle cx="53" cy="53" r="4.5" fill="#00e5ff"/><circle cx="103" cy="53" r="4.5" fill="#00e5ff"/>
-          <line x1="38" y1="71" x2="97" y2="71" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
-          <circle cx="38" cy="71" r="4.5" fill="#00e5ff"/><circle cx="97" cy="71" r="4.5" fill="#00e5ff"/>
-          <path d="M 54 88 L 54 110 L 88 110" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <circle cx="54" cy="88" r="4.5" fill="#00e5ff"/>
-          <path d="M 88 88 C 122 88 135 103 135 128 C 135 153 122 168 88 168 C 77 168 71 162 71 151 L 71 128" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <circle cx="135" cy="128" r="4.5" fill="#00e5ff"/>
-          <rect x="52" y="139" width="24" height="24" rx="2" stroke="#00e5ff" stroke-width="6.5" stroke-linejoin="round" fill="none"/>
-          <line x1="97" y1="126" x2="97" y2="176" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
-          <circle cx="97" cy="176" r="4.5" fill="#00e5ff"/>
+          <path d="M 530,170 L 200,170 A 100,100 0 0,0 100,270 L 100,800 A 100,100 0 0,0 200,900 L 730,900 A 100,100 0 0,0 830,800 L 830,450" fill="none" stroke="url(#frameGradGreet)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M 730,40 Q 730,260 950,260 Q 730,260 730,480 Q 730,260 510,260 Q 730,260 730,40" fill="url(#frameGradGreet)" />
+          <path d="M 260,260 L 470,260" fill="none" stroke="url(#innerGradGreet)" stroke-width="24" stroke-linecap="round" />
+          <circle cx="260" cy="260" r="18" fill="url(#innerGradGreet)" />
+          <circle cx="470" cy="260" r="18" fill="url(#innerGradGreet)" />
+          <path d="M 180,335 L 470,335" fill="none" stroke="url(#innerGradGreet)" stroke-width="24" stroke-linecap="round" />
+          <circle cx="180" cy="335" r="18" fill="url(#innerGradGreet)" />
+          <circle cx="470" cy="335" r="18" fill="url(#innerGradGreet)" />
+          <path d="M 405,395 C 555,395 680,480 680,600 C 680,720 560,790 470,790" fill="none" stroke="url(#innerGradGreet)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M 255,410 L 255,550 L 405,550 L 405,395" fill="none" stroke="url(#innerGradGreet)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" />
+          <circle cx="255" cy="410" r="18" fill="url(#innerGradGreet)" />
+          <path d="M 450,570 L 450,865" fill="none" stroke="url(#innerGradGreet)" stroke-width="24" stroke-linecap="round" />
+          <circle cx="450" cy="570" r="18" fill="url(#innerGradGreet)" />
+          <circle cx="450" cy="865" r="18" fill="url(#innerGradGreet)" />
+          <path d="M 510,640 L 510,720 C 510,750 485,770 470,770" fill="none" stroke="url(#innerGradGreet)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" />
+          <circle cx="510" cy="640" r="18" fill="url(#innerGradGreet)" />
+          <rect x="255" y="660" width="135" height="135" fill="none" stroke="url(#innerGradGreet)" stroke-width="24" stroke-linejoin="round" />
         </svg>
         <h1>Where should we start?</h1>
         <p>Design, code, image analysis, or any question — D&amp;T Ai-TECH is ready.</p>
@@ -333,7 +341,13 @@
       </div>
       <div class="ccard" data-l="js"><div class="cch"><span>Gradient Animation Helper</span><span class="clang">JS</span></div><pre>const animGrad = (el, colors, dur = 4000) => {  el.style.backgroundImage = `linear-gradient(270deg, ${colors.join(', ')})`;  el.style.backgroundSize = '300% 300%';  el.style.animation = `gradFlow ${dur}ms ease infinite`;};</pre></div>
       <div class="ccard" data-l="css"><div class="cch"><span>Glassmorphism Card</span><span class="clang">CSS</span></div><pre>.glass-card {  background: rgba(255, 255, 255, 0.04);  backdrop-filter: blur(20px);  border: 1px solid rgba(255, 255, 255, 0.08);  border-radius: 20px;}</pre></div>
-      <div class="ccard" data-l="py"><div class="cch"><span>Image Analyzer</span><span class="clang">PY</span></div><pre>def analyze_image(path: str) -> str:    import base64, anthropic    with open(path, 'rb') as f:        data = base64.b64encode(f.read()).decode()    client = anthropic.Anthropic()    msg = client.messages.create(        model="claude-sonnet-4-20250514",        max_tokens=1024,        messages=[{"role": "user", "content": [            {"type": "image", "source": {                "type": "base64",                "media_type": "image/jpeg",                "data": data}},            {"type": "text", "text": "Describe this image."}        ]}])    return msg.content[0].text</pre></div>
+      <div class="ccard" data-l="py"><div class="cch"><span>Image Analyzer</span><span class="clang">PY</span></div><pre>def analyze_image(path: str) -> str:    import base64, anthropic    with open(path, 'rb') as f:        data = base64.b64encode(f.read()).decode()    client = anthropic.Anthropic()    msg = client.messages.create(        model="claude-sonnet-4-20250514",        max_tokens=1024,        messages=[{"role": "user", "content": [
+            {"type": "image", "source": {
+                "type": "base64",
+                "media_type": "image/jpeg",
+                "data": data}},
+            {"type": "text", "text": "Describe this image."}
+        ]}])    return msg.content[0].text</pre></div>
     </div>
   </div>
   <div class="inp-wrap">
@@ -404,6 +418,8 @@ function useChip(el){document.getElementById('pr').value=el.textContent;document
 function ar(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,140)+'px';}
 function ok(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
 function onFile(inp){if(inp.files.length){selFile=inp.files[0];document.getElementById('findc').classList.add('on');document.getElementById('fnm').textContent='✓ '+selFile.name;}}
+
+// تغییر اول: هدایت ترافیک دکمه ارسال به فایل chat.mjs
 async function send(){
   const txt=document.getElementById('pr').value.trim();
   if(!txt&&!selFile) return;
@@ -419,7 +435,7 @@ async function send(){
   if(selFile){fp=[{inlineData:{data:await b64(selFile),mimeType:selFile.type}}];}
   selFile=null;document.getElementById('findc').classList.remove('on');
   try{
-    const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:txt,fileParts:fp})});
+    const r=await fetch('/api/chat.mjs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:txt,fileParts:fp})});
     const d=await r.json();const el=document.getElementById(id);el.classList.remove('ld');
     el.innerHTML=r.ok&&d.response?`<b>D&T Ai-TECH</b><br>${d.response}`:`<b>System Error:</b> Connection failed. Deploy on Vercel to activate AI.`;
   }catch{const el=document.getElementById(id);el.classList.remove('ld');el.innerHTML=`<b>Connection Error:</b> Deploy on Vercel to enable AI responses.`;}
@@ -439,19 +455,23 @@ function toggleVoice(){
   if(!recog){alert('Voice not supported in this browser.');return;}
   if(recOn){recog.stop();}else{recOn=true;recog.start();const b=document.getElementById('micbtn');b.classList.add('rec');b.style.color='#ff4040';}
 }
+
+// تغییر دوم: هدایت ترافیک بخش دیپ سرچ به فایل chat.mjs
 async function doSrch(){
   const q=document.getElementById('dsi').value.trim();if(!q)return;
   const box=document.getElementById('sres');box.style.display='block';box.innerHTML='<span style="color:var(--cyan)">Deep searching...</span>';
-  try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:`جستجوی عمیق درباره: ${q}\nلطفاً اطلاعات جامع ارائه بده.`})});
+  try{const r=await fetch('/api/chat.mjs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:`جستجوی عمیق درباره: ${q}\nلطفاً اطلاعات جامع ارائه بده.`})});
     const d=await r.json();box.innerHTML=r.ok&&d.response?d.response:'Server unreachable. Deploy on Vercel.';}
   catch{box.innerHTML='Connection error — deploy on Vercel.';}
 }
 function imgDrop(e){e.preventDefault();const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))prvF(f);}
 function prevImg(inp){if(inp.files[0])prvF(inp.files[0]);}
 function prvF(file){const r=new FileReader();r.onload=e=>{document.getElementById('img-p').src=e.target.result;document.getElementById('img-pw').style.display='flex';document.querySelector('.dropz').style.display='none';};r.readAsDataURL(file);window._iF=file;}
+
+// تغییر سوم: هدایت ترافیک بخش ایمیج استودیو به فایل chat.mjs
 async function analyzeImg(){
   const box=document.getElementById('img-res');box.style.display='block';box.textContent='Analyzing image...';box.style.color='var(--cyan)';
-  try{const d64=await b64(window._iF);const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'این تصویر را تحلیل کن و جزئیات طراحی و سبک را شرح بده.',fileParts:[{inlineData:{data:d64,mimeType:window._iF.type}}]})});
+  try{const d64=await b64(window._iF);const r=await fetch('/api/chat.mjs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'این تصویر را تحلیل کن و جزئیات طراحی و سبک را شرح بده.',fileParts:[{inlineData:{data:d64,mimeType:window._iF.type}}]})});
     const d=await r.json();if(r.ok&&d.response){box.textContent=d.response;box.style.color='var(--text2)';}else{box.textContent='Connection failed.';box.style.color='var(--text2)';}}
   catch{box.textContent='Connection error.';box.style.color='var(--text2)';}
 }
