@@ -151,41 +151,37 @@
         @media(max-width:480px){.sbtn{padding:0 14px; font-size:12px}.ibox{padding:6px 6px 6px 12px}}
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 <aside class="sb" id="sb">
   <div class="sb-head">
     <button class="hbtn" id="hbtn" onclick="toggleSB()" aria-label="Toggle sidebar">
       <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <svg id="sb-logo" width="36" height="36" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0; filter:drop-shadow(0 0 7px rgba(0,229,255,.38)); cursor:pointer" onclick="toggleSB()">
+    <svg id="sb-logo" width="36" height="36" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0; filter:drop-shadow(0 0 7px rgba(0,229,255,.38)); cursor:pointer" onclick="toggleSB()">
       <defs>
-        <linearGradient id="frameGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#9d4edd" />
-          <stop offset="50%" stop-color="#3a86ff" />
-          <stop offset="100%" stop-color="#00f2fe" />
+        <linearGradient id="lbord" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#7c3aed"/>
+          <stop offset="50%" stop-color="#3b82f6"/>
+          <stop offset="100%" stop-color="#06b6d4"/>
         </linearGradient>
-        <linearGradient id="innerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#00f5ff" />
-          <stop offset="100%" stop-color="#00e5ff" />
+        <linearGradient id="lstar" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#7c3aed"/>
+          <stop offset="100%" stop-color="#c026d3"/>
         </linearGradient>
       </defs>
-      <path d="M 530,170 L 200,170 A 100,100 0 0,0 100,270 L 100,800 A 100,100 0 0,0 200,900 L 730,900 A 100,100 0 0,0 830,800 L 830,450" fill="none" stroke="url(#frameGrad)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" />
-      <path d="M 730,40 Q 730,260 950,260 Q 730,260 730,480 Q 730,260 510,260 Q 730,260 730,40" fill="url(#frameGrad)" />
-      <path d="M 260,260 L 470,260" fill="none" stroke="url(#innerGrad)" stroke-width="24" stroke-linecap="round" />
-      <circle cx="260" cy="260" r="18" fill="url(#innerGrad)" />
-      <circle cx="470" cy="260" r="18" fill="url(#innerGrad)" />
-      <path d="M 180,335 L 470,335" fill="none" stroke="url(#innerGrad)" stroke-width="24" stroke-linecap="round" />
-      <circle cx="180" cy="335" r="18" fill="url(#innerGrad)" />
-      <circle cx="470" cy="335" r="18" fill="url(#innerGrad)" />
-      <path d="M 405,395 C 555,395 680,480 680,600 C 680,720 560,790 470,790" fill="none" stroke="url(#innerGrad)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" />
-      <path d="M 255,410 L 255,550 L 405,550 L 405,395" fill="none" stroke="url(#innerGrad)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" />
-      <circle cx="255" cy="410" r="18" fill="url(#innerGrad)" />
-      <path d="M 450,570 L 450,865" fill="none" stroke="url(#innerGrad)" stroke-width="24" stroke-linecap="round" />
-      <circle cx="450" cy="570" r="18" fill="url(#innerGrad)" />
-      <circle cx="450" cy="865" r="18" fill="url(#innerGrad)" />
-      <path d="M 510,640 L 510,720 C 510,750 485,770 470,770" fill="none" stroke="url(#innerGrad)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" />
-      <circle cx="510" cy="640" r="18" fill="url(#innerGrad)" />
-      <rect x="255" y="660" width="135" height="135" fill="none" stroke="url(#innerGrad)" stroke-width="24" stroke-linejoin="round" />
+      <path d="M 115 22 L 54 22 C 36 22 22 36 22 54 L 22 146 C 22 164 36 178 54 178 L 146 178 C 164 178 178 164 178 146 L 178 88" stroke="url(#lbord)" stroke-width="9" stroke-linecap="round" fill="none"/>
+      <path d="M 152 54 C 152 32 169 16 191 16 C 169 16 152 0 152 -22 C 152 0 135 16 113 16 C 135 16 152 32 152 54 Z" transform="translate(4, 6)" fill="url(#lstar)"/>
+      <line x1="53" y1="53" x2="103" y2="53" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
+      <circle cx="53" cy="53" r="4.5" fill="#00e5ff"/><circle cx="103" cy="53" r="4.5" fill="#00e5ff"/>
+      <line x1="38" y1="71" x2="97" y2="71" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
+      <circle cx="38" cy="71" r="4.5" fill="#00e5ff"/><circle cx="97" cy="71" r="4.5" fill="#00e5ff"/>
+      <path d="M 54 88 L 54 110 L 88 110" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="54" cy="88" r="4.5" fill="#00e5ff"/>
+      <path d="M 88 88 C 122 88 135 103 135 128 C 135 153 122 168 88 168 C 77 168 71 162 71 151 L 71 128" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="135" cy="128" r="4.5" fill="#00e5ff"/>
+      <rect x="52" y="139" width="24" height="24" rx="2" stroke="#00e5ff" stroke-width="6.5" stroke-linejoin="round" fill="none"/>
+      <line x1="97" y1="126" x2="97" y2="176" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
+      <circle cx="97" cy="176" r="4.5" fill="#00e5ff"/>
     </svg>
     <div class="brand-text" id="brand-text">
       <span class="brand-name"><span class="dt">D&T</span> Ai-TECH</span>
@@ -238,19 +234,240 @@
   <div class="content">
     <div id="v-chat" style="flex:1; display:flex; flex-direction:column; overflow:hidden">
       <div class="greet" id="greet">
-        <svg class="greet-logo" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="greet-logo" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="frameGradGreet" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#7c3aed" />
-              <stop offset="50%" stop-color="#3b82f6" />
-              <stop offset="100%" stop-color="#06b6d4" />
+            <linearGradient id="glb" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#7c3aed"/>
+              <stop offset="50%" stop-color="#3b82f6"/>
+              <stop offset="100%" stop-color="#06b6d4"/>
             </linearGradient>
-            <linearGradient id="innerGradGreet" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#00f5ff" />
-              <stop offset="100%" stop-color="#00e5ff" />
+            <linearGradient id="gls" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#7c3aed"/>
+              <stop offset="100%" stop-color="#c026d3"/>
             </linearGradient>
           </defs>
-          <path d="M 530,170 L 200,170 A 100,100 0 0,0 100,270 L 100,800 A 100,100 0 0,0 200,900 L 730,900 A 100,100 0 0,0 830,800 L 830,450" fill="none" stroke="url(#frameGradGreet)" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" />
-          <path d="M 730,40 Q 730,260 950,260 Q 730,260 730,480 Q 730,260 510,260 Q 730,260 730,40" fill="url(#frameGradGreet)" />
-          <path d="M 260,260 L 470,260" fill="none" stroke="url(#innerGradGreet)" stroke-width="24" stroke-linecap="round" />
-          <circle cx="260" cy="260" r
+          <path d="M 115 22 L 54 22 C 36 22 22 36 22 54 L 22 146 C 22 164 36 178 54 178 L 146 178 C 164 178 178 164 178 146 L 178 88" stroke="url(#glb)" stroke-width="9" stroke-linecap="round" fill="none"/>
+          <path d="M 152 54 C 152 32 169 16 191 16 C 169 16 152 0 152 -22 C 152 0 135 16 113 16 C 135 16 152 32 152 54 Z" transform="translate(4, 6)" fill="url(#gls)"/>
+          <line x1="53" y1="53" x2="103" y2="53" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
+          <circle cx="53" cy="53" r="4.5" fill="#00e5ff"/><circle cx="103" cy="53" r="4.5" fill="#00e5ff"/>
+          <line x1="38" y1="71" x2="97" y2="71" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
+          <circle cx="38" cy="71" r="4.5" fill="#00e5ff"/><circle cx="97" cy="71" r="4.5" fill="#00e5ff"/>
+          <path d="M 54 88 L 54 110 L 88 110" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="54" cy="88" r="4.5" fill="#00e5ff"/>
+          <path d="M 88 88 C 122 88 135 103 135 128 C 135 153 122 168 88 168 C 77 168 71 162 71 151 L 71 128" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="135" cy="128" r="4.5" fill="#00e5ff"/>
+          <rect x="52" y="139" width="24" height="24" rx="2" stroke="#00e5ff" stroke-width="6.5" stroke-linejoin="round" fill="none"/>
+          <line x1="97" y1="126" x2="97" y2="176" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
+          <circle cx="97" cy="176" r="4.5" fill="#00e5ff"/>
+        </svg>
+        <h1>Where should we start?</h1>
+        <p>Design, code, image analysis, or any question — D&amp;T Ai-TECH is ready.</p>
+        <div class="chips">
+          <div class="chip" onclick="useChip(this)">Analyze design file</div>
+          <div class="chip" onclick="useChip(this)">Optimize my code</div>
+          <div class="chip" onclick="useChip(this)">UI ideation</div>
+          <div class="chip" onclick="useChip(this)">Deep search topic</div>
+          <div class="chip" onclick="useChip(this)">Generate content</div>
+        </div>
+      </div>
+      <div class="chat" id="chatbox"></div>
+    </div>
+    <div id="v-project" class="view">
+      <div class="vh"><h2>Projects Hub</h2><p>Project-based workspace with deep AI analysis</p></div>
+      <div class="pgrid">
+        <div class="pcard"><h3>D&T AI Interface</h3><p>AI chat interface — frontend design & development</p><span class="ptag">Frontend</span></div>
+        <div class="pcard"><h3>Computational Design</h3><p>Parametric and generative design algorithms</p><span class="ptag">Algorithm</span></div>
+        <div class="pcard"><h3>Vision Pipeline</h3><p>Image processing and pattern recognition with AI</p><span class="ptag">AI / Vision</span></div>
+        <div class="pcard"><h3>API Integration Hub</h3><p>Connect and manage external and internal APIs</p><span class="ptag">Backend</span></div>
+        <div class="pcard"><h3>Motion Design Kit</h3><p>UI animation library for D&T products</p><span class="ptag">Design System</span></div>
+        <div class="pcard" style="border-style:dashed;display:flex;align-items:center;justify-content:center;opacity:.4;min-height:100px"><span style="font-size:26px;color:var(--text2)">+</span></div>
+      </div>
+    </div>
+    <div id="v-search" class="view">
+      <div class="vh"><h2>Deep Search</h2><p>Intelligent search with deep source analysis</p></div>
+      <div class="swrap">
+        <input id="dsi" type="text" placeholder="Enter topic or question..." onkeydown="if(event.key==='Enter')doSrch()"/>
+        <button class="sico" onclick="doSrch()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+      </div>
+      <div id="sres" class="sres"></div>
+      <div class="chips" style="justify-content:center;margin-top:8px">
+        <div class="chip" onclick="document.getElementById('dsi').value=this.innerText;doSrch()">Parametric Design</div>
+        <div class="chip" onclick="document.getElementById('dsi').value=this.innerText;doSrch()">Generative AI</div>
+        <div class="chip" onclick="document.getElementById('dsi').value=this.innerText;doSrch()">Transformer Architecture</div>
+        <div class="chip" onclick="document.getElementById('dsi').value=this.innerText;doSrch()">Web Components</div>
+      </div>
+    </div>
+    <div id="v-images" class="view">
+      <div class="vh"><h2>Image Studio</h2><p>Upload, analyze and process images with AI</p></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+        <div class="dropz" onclick="document.getElementById('img-up').click()" ondragover="event.preventDefault()" ondrop="imgDrop(event)">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p style="color:var(--text2);font-size:13px">Drop image here or click to upload</p>
+          <p style="color:rgba(155,109,255,.55);font-size:11px">PNG, JPG, WebP supported</p>
+        </div>
+        <input type="file" id="img-up" accept="image/*" style="display:none" onchange="prevImg(this)">
+        <div id="img-pw" style="display:none;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:500px">
+          <img id="img-p" style="max-width:100%;max-height:280px;border-radius:14px;border:1px solid var(--border)" src="" alt="">
+          <button class="sbtn" style="height:38px;padding:0 24px" onclick="analyzeImg()">Analyze with AI</button>
+        </div>
+        <div id="img-res" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:13px;padding:16px 18px;font-size:13px;color:var(--text2);line-height:1.8;width:100%;max-width:500px"></div>
+      </div>
+    </div>
+    <div id="v-videos" class="view">
+      <div class="vh"><h2>Computational Design Videos</h2><p>AI and computational design tutorials</p></div>
+      <div class="vgrid">
+        <div class="vcard"><div class="vthumb" style="background:linear-gradient(135deg,rgba(124,58,237,.14),rgba(0,229,255,.08))"><div class="plic"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="var(--cyan)"/></svg></div></div><div class="vinfo"><h3>Parametric Design Basics</h3><p>14:32 • Parametric</p></div></div>
+        <div class="vcard"><div class="vthumb" style="background:linear-gradient(135deg,rgba(192,38,211,.14),rgba(124,58,237,.08))"><div class="plic"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="var(--cyan)"/></svg></div></div><div class="vinfo"><h3>AI in Graphic Design</h3><p>22:10 • Artificial Intelligence</p></div></div>
+        <div class="vcard"><div class="vthumb" style="background:linear-gradient(135deg,rgba(59,130,246,.14),rgba(0,229,255,.08))"><div class="plic"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="var(--cyan)"/></svg></div></div><div class="vinfo"><h3>Generative UI Patterns</h3><p>18:45 • UI Design</p></div></div>
+        <div class="vcard"><div class="vthumb" style="background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(192,38,211,.1))"><div class="plic"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="var(--cyan)"/></svg></div></div><div class="vinfo"><h3>Motion Design with AI</h3><p>31:20 • Animation</p></div></div>
+      </div>
+    </div>
+    <div id="v-library" class="view">
+      <div class="vh"><h2>Code Library</h2><p>Project code snippets and utilities</p></div>
+      <div class="ltabs">
+        <div class="ltab on" onclick="libF('all',this)">All</div>
+        <div class="ltab" onclick="libF('js',this)">JavaScript</div>
+        <div class="ltab" onclick="libF('py',this)">Python</div>
+        <div class="ltab" onclick="libF('css',this)">CSS</div>
+      </div>
+      <div class="ccard" data-l="js"><div class="cch"><span>Gradient Animation Helper</span><span class="clang">JS</span></div><pre>const animGrad = (el, colors, dur = 4000) => {  el.style.backgroundImage = `linear-gradient(270deg, ${colors.join(', ')})`;  el.style.backgroundSize = '300% 300%';  el.style.animation = `gradFlow ${dur}ms ease infinite`;};</pre></div>
+      <div class="ccard" data-l="css"><div class="cch"><span>Glassmorphism Card</span><span class="clang">CSS</span></div><pre>.glass-card {  background: rgba(255, 255, 255, 0.04);  backdrop-filter: blur(20px);  border: 1px solid rgba(255, 255, 255, 0.08);  border-radius: 20px;}</pre></div>
+      <div class="ccard" data-l="py"><div class="cch"><span>Image Analyzer</span><span class="clang">PY</span></div><pre>def analyze_image(path: str) -> str:    import base64, anthropic    with open(path, 'rb') as f:        data = base64.b64encode(f.read()).decode()    client = anthropic.Anthropic()    msg = client.messages.create(        model="claude-sonnet-4-20250514",        max_tokens=1024,        messages=[{"role": "user", "content": [
+            {"type": "image", "source": {
+                "type": "base64",
+                "media_type": "image/jpeg",
+                "data": data}},
+            {"type": "text", "text": "Describe this image."}
+        ]}])    return msg.content[0].text</pre></div>
+    </div>
+  </div>
+  <div class="inp-wrap">
+    <div class="findc" id="findc">
+      <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+      <span id="fnm"></span>
+    </div>
+    <div class="ibox">
+      <div class="lacts">
+        <button class="ab" title="Attach file" onclick="document.getElementById('finp').click()">
+          <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        </button>
+        <button class="ab" title="Image Studio" onclick="sw('images',document.querySelector('[data-v=images]'))">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </button>
+      </div>
+      <input type="file" id="finp" style="display:none" onchange="onFile(this)">
+      <textarea id="pr" rows="1" placeholder="Ask D&T Ask D&T Ai-TECH or upload a file..." oninput="ar(this)" onkeydown="ok(event)"></textarea>
+      <div class="racts">
+        <button class="ab" id="micbtn" title="Voice input" onclick="toggleVoice()">
+          <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </button>
+        <button class="sbtn" onclick="send()">SEND</button>
+      </div>
+    </div>
+  </div>
+</main>
+<nav class="mnav">
+  <div class="mnav-in">
+    <div class="mni on" data-v="chat" onclick="mSw('chat',this)"><svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>Chat</div>
+    <div class="mni" data-v="project" onclick="mSw('project',this)"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Projects</div>
+    <div class="mni" data-v="search" onclick="mSw('search',this)"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</div>
+    <div class="mni" data-v="images" onclick="mSw('images',this)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Images</div>
+    <div class="mni" data-v="library" onclick="mSw('library',this)"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Library</div>
+  </div>
+</nav>
+<script>
+let selFile=null,recOn=false,recog=null,started=false;
+const VT={chat:'AI Studio',project:'Projects Hub',search:'Deep Search',images:'Image Studio',videos:'Videos',library:'Code Library'};
+function toggleSB(){document.getElementById('sb').classList.toggle('c')}
+function sw(name,el){
+  document.getElementById('v-chat').style.display=name==='chat'?'flex':'none';
+  ['project','search','images','videos','library'].forEach(n=>{
+    const v=document.getElementById('v-'+n);
+    if(v)v.classList.toggle('on',n===name);
+  });
+  document.querySelectorAll('.ni').forEach(i=>i.classList.remove('on'));
+  if(el)el.classList.add('on');
+  document.getElementById('tb-t').textContent=VT[name]||name;
+}
+function mSw(name,el){
+  document.querySelectorAll('.mni').forEach(i=>i.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.ni').forEach(i=>i.classList.toggle('on',i.dataset.v===name));
+  sw(name,document.querySelector(`.ni[data-v="${name}"]`));
+}
+function newChat(){
+  started=false;
+  document.getElementById('chatbox').innerHTML='';
+  document.getElementById('chatbox').classList.remove('on');
+  document.getElementById('greet').style.display='flex';
+  document.getElementById('pr').value='';
+  document.getElementById('findc').classList.remove('on');
+  selFile=null;
+  sw('chat',document.querySelector('[data-v=chat]'));
+}
+function useChip(el){document.getElementById('pr').value=el.textContent;document.getElementById('pr').focus();}
+function ar(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,140)+'px';}
+function ok(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
+function onFile(inp){if(inp.files.length){selFile=inp.files[0];document.getElementById('findc').classList.add('on');document.getElementById('fnm').textContent='✓ '+selFile.name;}}
+
+async function send(){
+  const txt=document.getElementById('pr').value.trim();
+  if(!txt&&!selFile) return;
+  if(!started){started=true;document.getElementById('greet').style.display='none';document.getElementById('chatbox').classList.add('on');}
+  const cb=document.getElementById('chatbox');
+  const fl=selFile?`<br><small style="color:var(--cyan);font-size:11px">📎 ${selFile.name}</small>`:'';
+  cb.innerHTML+=`<div class="mrow u"><div class="bub u"><b>شما</b>${txt||'File attached'}${fl}</div></div>`;
+  document.getElementById('pr').value='';document.getElementById('pr').style.height='auto';
+  const id='a'+Date.now();
+  cb.innerHTML+=`<div class="mrow a"><div class="av">${miniLogo()}</div><div class="bub a ld" id="${id}">D&T Core در حال پردازش...</div></div>`;
+  cb.scrollTop=cb.scrollHeight;
+  let fp=[];
+  if(selFile){fp=[{inlineData:{data:await b64(selFile),mimeType:selFile.type}}];}
+  selFile=null;document.getElementById('findc').classList.remove('on');
+  try{
+    const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:txt,fileParts:fp})});
+    const d=await r.json();const el=document.getElementById(id);el.classList.remove('ld');
+    el.innerHTML=r.ok&&d.response?`<b>D&T Ai-TECH</b><br>${d.response}`:`<b>System Error:</b> Connection failed. Deploy on Vercel to activate AI.`;
+  }catch{const el=document.getElementById(id);el.classList.remove('ld');el.innerHTML=`<b>Connection Error:</b> Deploy on Vercel to enable AI responses.`;}
+  cb.scrollTop=cb.scrollHeight;
+}
+function b64(f){return new Promise(r=>{const rd=new FileReader();rd.onload=()=>r(rd.result.split(',')[1]);rd.readAsDataURL(f);});}
+function miniLogo(){
+  return`<svg width="16" height="16" viewBox="0 0 200 200" fill="none"><defs><linearGradient id="ml" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs><path d="M 115 22 L 54 22 C 36 22 22 36 22 54 L 22 146 C 22 164 36 178 54 178 L 146 178 C 164 178 178 164 178 146 L 178 88" stroke="url(#ml)" stroke-width="12" stroke-linecap="round" fill="none"/><path d="M 88 88 C 122 88 135 103 135 128 C 135 153 122 168 88 168 C 77 168 71 162 71 151 L 71 128" stroke="#00e5ff" stroke-width="10" stroke-linecap="round" fill="none"/></svg>`;
+}
+if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  recog=new SR();recog.lang='fa-IR';
+  recog.onresult=e=>{const t=e.results[0][0].transcript;const inp=document.getElementById('pr');inp.value=(inp.value?inp.value+' ':'')+t;ar(inp);};
+  recog.onend=()=>{recOn=false;const b=document.getElementById('micbtn');b.classList.remove('rec');b.style.color='';};
+}
+function toggleVoice(){
+  if(!recog){alert('Voice not supported in this browser.');return;}
+  if(recOn){recog.stop();}else{recOn=true;recog.start();const b=document.getElementById('micbtn');b.classList.add('rec');b.style.color='#ff4040';}
+}
+async function doSrch(){
+  const q=document.getElementById('dsi').value.trim();if(!q)return;
+  const box=document.getElementById('sres');box.style.display='block';box.innerHTML='<span style="color:var(--cyan)">Deep searching...</span>';
+  try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:`جستجوی عمیق درباره: ${q}\nلطفاً اطلاعات جامع ارائه بده.`})});
+    const d=await r.json();box.innerHTML=r.ok&&d.response?d.response:'Server unreachable. Deploy on Vercel.';}
+  catch{box.innerHTML='Connection error — deploy on Vercel.';}
+}
+function imgDrop(e){e.preventDefault();const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))prvF(f);}
+function prevImg(inp){if(inp.files[0])prvF(inp.files[0]);}
+function prvF(file){const r=new FileReader();r.onload=e=>{document.getElementById('img-p').src=e.target.result;document.getElementById('img-pw').style.display='flex';document.querySelector('.dropz').style.display='none';};r.readAsDataURL(file);window._iF=file;}
+async function analyzeImg(){
+  const box=document.getElementById('img-res');box.style.display='block';box.textContent='Analyzing image...';box.style.color='var(--cyan)';
+  try{const d64=await b64(window._iF);const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'این تصویر را تحلیل کن و جزئیات طراحی و سبک را شرح بده.',fileParts:[{inlineData:{data:d64,mimeType:window._iF.type}}]})});
+    const d=await r.json();if(r.ok&&d.response){box.textContent=d.response;box.style.color='var(--text2)';}else{box.textContent='Connection failed.';box.style.color='var(--text2)';}}
+  catch{box.textContent='Connection error.';box.style.color='var(--text2)';}
+}
+function libF(l,el){document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.querySelectorAll('.ccard').forEach(c=>{c.style.display=(l==='all'||c.dataset.l===l)?'block':'none';});}
+document.addEventListener('keydown', function(e) {
+    if (e.keyCode == 123) { e.preventDefault(); return false; } 
+    if (e.ctrlKey && e.shiftKey && e.keyCode == 73) { e.preventDefault(); return false; } 
+    if (e.ctrlKey && e.shiftKey && e.keyCode == 67) { e.preventDefault(); return false; } 
+    if (e.ctrlKey && e.keyCode == 85) { e.preventDefault(); return false; } 
+});
+</script>
+</body>
+</html>
