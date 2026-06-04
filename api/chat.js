@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-    // هدرهای لازم برای ارتباط بدون مشکل مرورگر
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -17,12 +16,10 @@ export default async function handler(req, res) {
     try {
         let contentPayload = [];
 
-        // بررسی دقیق پارت‌های فایل ارسالی از فرانت‌اند شما
         if (fileParts && Array.isArray(fileParts) && fileParts.length > 0 && fileParts[0].inlineData) {
             const base64Data = fileParts[0].inlineData.data;
             const mimeType = fileParts[0].inlineData.mimeType;
 
-            // ساختار مالتی‌مدیای استاندارد و بدون نقص برای لاما ۳.۲ بینایی
             contentPayload = [
                 {
                     type: "text",
@@ -36,7 +33,6 @@ export default async function handler(req, res) {
                 }
             ];
         } else {
-            // ساختار استاندارد پیام صرفاً متنی
             contentPayload = [
                 {
                     type: "text",
@@ -45,7 +41,6 @@ export default async function handler(req, res) {
             ];
         }
 
-        // فراخوانی مستقیم API رسمی Groq
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -53,7 +48,7 @@ export default async function handler(req, res) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'llama-3.2-11b-vision-preview',
+                model: 'llama-3.2-11b-vision-instruct', // استفاده از مدل رسمی و پایدار به جای نسخه قدیمی
                 messages: [{ role: 'user', content: contentPayload }],
                 max_tokens: 1024
             })
