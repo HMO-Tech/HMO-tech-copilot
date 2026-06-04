@@ -7,207 +7,213 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root{
-            --bg:#0c0c12;
-            --bg2:#111118;
-            --bg3:#17171f;
+            --bg:#07070a;
+            --bg2:#0f0f15;
+            --bg3:#151522;
             --cyan:#00e5ff;
-            --purple:#9b6dff;
+            --blue:#3b82f6;
+            --purple:#7c3aed;
             --pink:#c026d3;
             --text:#e8e8f2;
             --text2:#7878a0;
-            --border:rgba(255,255,255,0.07);
+            --border:rgba(255,255,255,0.06);
             --SW:260px;
             --SC:68px;
             --ease:cubic-bezier(0.4,0,0.2,1);
+            
+            /* 🎨 گرادیان شیشه‌ای تلفیقی از رنگ‌های دقیق لوگوی شما (بنفش، آبی و سایان نئون) */
+            --glass-glow: 
+                radial-gradient(ellipse 60% 50% at 30% 40%, rgba(124, 58, 237, 0.22) 0%, transparent 65%),
+                radial-gradient(ellipse 50% 45% at 70% 60%, rgba(59, 130, 246, 0.18) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 50% 50%, rgba(0, 229, 255, 0.12) 0%, transparent 55%);
         }
-        *{box-sizing:border-box;margin:0;padding:0}
-        html,body{height:100%;overflow:hidden}
-        body{background:var(--bg);color:var(--text);font-family:'Space Grotesk','Vazirmatn',sans-serif;display:flex;height:100vh}
+        
+        /* 🔒 حفاظت از کدهای اختصاصی استودیو - غیرفعال کردن انتخاب متن */
+        * {
+            box-sizing:border-box; margin:0; padding:0;
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+        }
+        
+        html,body{height:100%; overflow:hidden}
+        body{background:var(--bg); color:var(--text); font-family:'Space Grotesk','Vazirmatn',sans-serif; display:flex; height:100vh}
         ::-webkit-scrollbar{width:3px}
         ::-webkit-scrollbar-track{background:transparent}
-        ::-webkit-scrollbar-thumb{background:rgba(155,109,255,0.3);border-radius:3px}
+        ::-webkit-scrollbar-thumb{background:rgba(0,229,255,0.2); border-radius:3px}
 
         /* ══ SIDEBAR ══ */
         .sb{
-            width:var(--SW);min-width:var(--SW);
-            background:var(--bg2);border-right:1px solid var(--border);
-            display:flex;flex-direction:column;
-            transition:width 0.32s var(--ease),min-width 0.32s var(--ease);
-            overflow:hidden;z-index:60;flex-shrink:0;
+            width:var(--SW); min-width:var(--SW); background:var(--bg2); border-right:1px solid var(--border);
+            display:flex; flex-direction:column; transition:width 0.32s var(--ease),min-width 0.32s var(--ease); overflow:hidden; z-index:60; flex-shrink:0;
         }
-        .sb.c{width:var(--SC);min-width:var(--SC)}
-        .sb-head{ height:64px; display:flex;align-items:center; padding:0 12px;gap:10px; border-bottom:1px solid var(--border);flex-shrink:0; }
+        .sb.c{width:var(--SC); min-width:var(--SC)}
+        .sb-head{ height:64px; display:flex; align-items:center; padding:0 12px; gap:10px; border-bottom:1px solid var(--border); flex-shrink:0; }
         
         .hbtn{
-            width:42px;height:42px;border-radius:12px;border:none;
-            background:transparent;color:var(--text2);cursor:pointer;
-            display:flex;align-items:center;justify-content:center;
-            transition:background .2s,color .2s;flex-shrink:0;
+            width:42px; height:42px; border-radius:12px; border:none; background:transparent; color:var(--text2); cursor:pointer;
+            display:flex; align-items:center; justify-content:center; transition:background .2s,color .2s; flex-shrink:0;
         }
-        .hbtn:hover{background:rgba(255,255,255,0.07);color:var(--text)}
-        .hbtn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+        .hbtn:hover{background:rgba(255,255,255,0.06); color:var(--text)}
+        .hbtn svg{width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
         
-        .brand-text{ display:flex;align-items:center;gap:0;white-space:nowrap;overflow:hidden; transition:opacity .25s,transform .25s,max-width .32s; max-width:200px;opacity:1; }
-        .sb.c .brand-text{opacity:0;max-width:0;pointer-events:none;transform:translateX(-8px)}
-        .brand-name{font-size:15px;font-weight:700;letter-spacing:.2px;white-space:nowrap}
-        .brand-name .dt{background:linear-gradient(90deg,#9b6dff,#00e5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .brand-text{ display:flex; align-items:center; gap:0; white-space:nowrap; overflow:hidden; transition:opacity .25s,transform .25s,max-width .32s; max-width:200px; opacity:1; }
+        .sb.c .brand-text{opacity:0; max-width:0; pointer-events:none; transform:translateX(-8px)}
+        .brand-name{font-size:15px; font-weight:700; letter-spacing:.2px; white-space:nowrap}
+        .brand-name .dt{background:linear-gradient(90deg,var(--purple),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent}
 
         /* nav */
-        .sb-nav{padding:10px 8px;display:flex;flex-direction:column;gap:3px;flex:1;overflow-y:auto;overflow-x:hidden}.nlbl{ font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase; color:rgba(155,109,255,0.4);padding:12px 14px 4px;white-space:nowrap; transition:opacity .2s,max-height .2s,padding .2s;overflow:hidden; }
-        .sb.c .nlbl{opacity:0;max-height:0;padding:0}
+        .sb-nav{padding:10px 8px; display:flex; flex-direction:column; gap:3px; flex:1; overflow-y:auto; overflow-x:hidden}
+        .nlbl{ font-size:10px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:rgba(155,109,255,0.35); padding:12px 14px 4px; white-space:nowrap; transition:opacity .2s,max-height .2s,padding .2s; overflow:hidden; }
+        .sb.c .nlbl{opacity:0; max-height:0; padding:0}
         
         .ni{
-            display:flex;align-items:center;gap:12px; padding:10px 14px;border-radius:12px;
-            color:var(--text2);cursor:pointer;font-size:13.5px;font-weight:500;
-            white-space:nowrap;transition:all .2s;user-select:none;position:relative; text-decoration:none;
+            display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius:12px; color:var(--text2); cursor:pointer; font-size:13.5px; font-weight:500;
+            white-space:nowrap; transition:all .2s; position:relative; text-decoration:none;
         }
-        .ni:hover{background:rgba(255,255,255,0.05);color:var(--text)}
-        .ni.on{background:rgba(155,109,255,0.1);color:var(--cyan)}
-        .ni.on::before{ content:'';position:absolute;left:0;top:22%;bottom:22%;width:3px; background:linear-gradient(180deg,#9b6dff,#00e5ff);border-radius:0 3px 3px 0; }
-        .ni-ico{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center}.ni-ico svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+        .ni:hover{background:rgba(255,255,255,0.04); color:var(--text)}
+        .ni.on{background:rgba(124,58,237,0.12); color:var(--cyan); border:1px solid rgba(0,229,255,0.05);}
+        .ni.on::before{ content:''; position:absolute; left:0; top:25%; bottom:25%; width:3px; background:linear-gradient(180deg,var(--purple),var(--cyan)); border-radius:0 3px 3px 0; }
+        .ni-ico{width:20px; height:20px; flex-shrink:0; display:flex; align-items:center; justify-content:center}
+        .ni-ico svg{width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
         
-        .ni-txt{transition:opacity .2s,max-width .2s;max-width:200px;overflow:hidden}
-        .sb.c .ni-txt{opacity:0;max-width:0}
-        .sb.c .ni{padding:12px;width:44px;height:44px;border-radius:50%;justify-content:center;margin:0 auto}
+        .ni-txt{transition:opacity .2s,max-width .2s; max-width:200px; overflow:hidden}
+        .sb.c .ni-txt{opacity:0; max-width:0}
+        .sb.c .ni{padding:12px; width:44px; height:44px; border-radius:50%; justify-content:center; margin:0 auto}
         .sb.c .ni.on::before{display:none}
-        .sb-bot{padding:8px 8px 14px;border-top:1px solid var(--border)}
+        .sb-bot{padding:8px 8px 14px; border-top:1px solid var(--border)}
 
-        /* ══ MAIN ══ */
-        .main{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;overflow:hidden}
+        /* ══ MAIN (پیاده‌سازی هاله نوری تلفیقی شیشه‌ای) ══ */
+        .main{flex:1; display:flex; flex-direction:column; min-width:0; position:relative; overflow:hidden}
         .main::before{
-            content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
-            background:
-                radial-gradient(ellipse 65% 55% at 25% 35%, rgba(124,58,237,0.28) 0%, transparent 65%),
-                radial-gradient(ellipse 55% 50% at 75% 65%, rgba(0,229,255,0.16) 0%, transparent 60%),
-                radial-gradient(ellipse 45% 40% at 55% 88%, rgba(192,38,211,0.12) 0%, transparent 55%);
+            content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+            background:var(--glass-glow);
         }
-        .topbar{ height:56px;padding:0 18px; display:flex;align-items:center;justify-content:space-between; border-bottom:1px solid var(--border); background:rgba(11,11,17,0.7);backdrop-filter:blur(20px); position:relative;z-index:10;flex-shrink:0; }
-        .topbar-t{font-size:14px;font-weight:600;color:var(--text2)}
-        .tbr{display:flex;gap:6px}
+        .topbar{ height:56px; padding:0 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); background:rgba(7,7,10,0.6); backdrop-filter:blur(25px); position:relative; z-index:10; flex-shrink:0; }
+        .topbar-t{font-size:14px; font-weight:600; color:var(--text2)}
+        .tbr{display:flex; gap:6px}
         
-        .ibtn{width:36px;height:36px;border-radius:10px;border:none;background:transparent;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
-        .ibtn:hover{background:rgba(255,255,255,0.06);color:var(--text)}
-        .ibtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-        .content{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:1}
+        .ibtn{width:36px; height:36px; border-radius:10px; border:none; background:transparent; color:var(--text2); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s}
+        .ibtn:hover{background:rgba(255,255,255,0.05); color:var(--text)}
+        .ibtn svg{width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
+        .content{flex:1; display:flex; flex-direction:column; overflow:hidden; position:relative; z-index:1}
 
         /* greeting */
-        .greet{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;gap:22px}
-        .greet-logo{ width:88px;height:88px; filter:drop-shadow(0 0 16px rgba(0,229,255,.3)) drop-shadow(0 0 32px rgba(155,109,255,.2)); animation:gfl 4s ease-in-out infinite; }
-        @keyframes gfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+        .greet{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 24px; text-align:center; gap:22px}
+        .greet-logo{ width:92px; height:92px; filter:drop-shadow(0 0 20px rgba(0,229,255,.35)); animation:gfl 4s ease-in-out infinite; }
+        @keyframes gfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
         
-        .greet h1{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:300;background:linear-gradient(135deg,#f0f0f8 0%,#7878a0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px;line-height:1.2}
-        .greet p{font-size:14px;color:var(--text2);max-width:440px;line-height:1.75}
-        .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:580px}
-        .chip{padding:8px 16px;border:1px solid rgba(255,255,255,0.09);border-radius:20px;font-size:13px;color:var(--text2);cursor:pointer;background:rgba(255,255,255,0.03);transition:all .2s;white-space:nowrap}
-        .chip:hover{border-color:rgba(0,229,255,0.25);color:var(--cyan);background:rgba(0,229,255,0.05)}
+        .greet h1{font-size:clamp(1.7rem,3.5vw,2.6rem); font-weight:300; background:linear-gradient(135deg,#f0f0f8 0%,#7878a0 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-.5px; line-height:1.2}
+        .greet p{font-size:14px; color:var(--text2); max-width:440px; line-height:1.75}
+        .chips{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; max-width:580px}
+        .chip{padding:8px 16px; border:1px solid rgba(255,255,255,0.08); border-radius:20px; font-size:13px; color:var(--text2); cursor:pointer; background:rgba(255,255,255,0.02); transition:all .2s; white-space:nowrap; backdrop-filter:blur(5px);}
+        .chip:hover{border-color:rgba(0,229,255,0.25); color:var(--cyan); background:rgba(0,229,255,0.04)}
 
         /* chat */
-        .chat{flex:1;overflow-y:auto;padding:20px;display:none;flex-direction:column;gap:14px}
+        .chat{flex:1; overflow-y:auto; padding:20px; display:none; flex-direction:column; gap:14px}
         .chat.on{display:flex}
-        .mrow{display:flex;width:100%}
+        .mrow{display:flex; width:100%}
         .mrow.u{justify-content:flex-end}
-        .mrow.a{justify-content:flex-start;align-items:flex-start;gap:10px}
+        .mrow.a{justify-content:flex-start; align-items:flex-start; gap:10px}
         
-        .av{width:30px;height:30px;flex-shrink:0;border-radius:50%;background:rgba(155,109,255,0.12);border:1px solid rgba(155,109,255,0.25);display:flex;align-items:center;justify-content:center;margin-top:2px}
-        .bub{max-width:min(78%,660px);padding:12px 18px;border-radius:18px;font-size:14px;line-height:1.75;word-break:break-word;direction:rtl;text-align:right;unicode-bidi:plaintext;}
-        .bub.u{background:var(--bg3);border:1px solid var(--border);border-radius:18px 18px 4px 18px}
-        .bub.a{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:4px 18px 18px 18px}
-        .bub.ld{color:var(--cyan);font-style:italic}
-        .bub b{font-weight:600;font-size:11px;color:var(--text2);display:block;margin-bottom:4px;letter-spacing:.3px}
+        .av{width:30px; height:30px; flex-shrink:0; border-radius:50%; background:rgba(0,229,255,0.08); border:1px solid rgba(0,229,255,0.2); display:flex; align-items:center; justify-content:center; margin-top:2px}
+        .bub{max-width:min(78%,660px); padding:12px 18px; border-radius:18px; font-size:14px; line-height:1.75; word-break:break-word; direction:rtl; text-align:right; unicode-bidi:plaintext;}
+        .bub.u{background:var(--bg3); border:1px solid var(--border); border-radius:18px 18px 4px 18px}
+        .bub.a{background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.04); border-radius:4px 18px 18px 18px; backdrop-filter:blur(10px);}
+        .bub.ld{color:var(--cyan); font-style:italic}
+        .bub b{font-weight:600; font-size:11px; color:var(--text2); display:block; margin-bottom:4px; letter-spacing:.3px}
 
         /* views */
-        .view{flex:1;display:none;flex-direction:column;overflow-y:auto;padding:24px 20px;gap:14px}
+        .view{flex:1; display:none; flex-direction:column; overflow-y:auto; padding:24px 20px; gap:14px}
         .view.on{display:flex}
-        .vh{text-align:center;padding:20px 0 10px}
-        .vh h2{font-size:22px;font-weight:600;background:linear-gradient(135deg,#9b6dff,#00e5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
-        .vh p{font-size:13px;color:var(--text2)}
+        .vh{text-align:center; padding:20px 0 10px}
+        .vh h2{font-size:22px; font-weight:600; background:linear-gradient(135deg,var(--purple),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:6px}
+        .vh p{font-size:13px; color:var(--text2)}
 
-        .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:11px}
-        .pcard{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:16px;cursor:pointer;transition:all .2s}
-        .pcard:hover{border-color:rgba(0,229,255,0.2);background:rgba(0,229,255,0.03);transform:translateY(-2px)}
-        .pcard h3{font-size:13px;font-weight:600;margin-bottom:5px}
-        .pcard p{font-size:12px;color:var(--text2);line-height:1.55}
-        .ptag{display:inline-block;padding:2px 8px;font-size:10px;font-weight:600;border-radius:6px;margin-top:8px;background:rgba(155,109,255,0.1);color:var(--purple);border:1px solid rgba(155,109,255,0.18)}
+        .pgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:11px}
+        .pcard{background:var(--bg3); border:1px solid var(--border); border-radius:16px; padding:16px; cursor:pointer; transition:all .2s; backdrop-filter:blur(5px);}
+        .pcard:hover{border-color:rgba(0,229,255,0.2); background:rgba(0,229,255,0.02); transform:translateY(-2px)}
+        .pcard h3{font-size:13px; font-weight:600; margin-bottom:5px}
+        .pcard p{font-size:12px; color:var(--text2); line-height:1.55}
+        .ptag{display:inline-block; padding:2px 8px; font-size:10px; font-weight:600; border-radius:6px; margin-top:8px; background:rgba(124,58,237,0.1); color:var(--purple); border:1px solid rgba(124,58,237,0.15)}
 
-        .swrap{position:relative;max-width:560px;margin:0 auto 14px}
-        .swrap input{width:100%;padding:12px 46px 12px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:border .2s;direction:rtl}
+        .swrap{position:relative; max-width:560px; margin:0 auto 14px}
+        .swrap input{width:100%; padding:12px 46px 12px 18px; background:var(--bg3); border:1px solid var(--border); border-radius:14px; color:var(--text); font-size:14px; font-family:inherit; outline:none; transition:border .2s; direction:rtl}
         .swrap input:focus{border-color:rgba(0,229,255,0.2)}
         .swrap input::placeholder{color:var(--text2)}
-        .sico{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--cyan);cursor:pointer;display:flex;align-items:center}
-        .sico svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2}
-        .sres{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:16px 20px;font-size:13px;color:var(--text2);line-height:1.8;display:none}
+        .sico{position:absolute; right:13px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--cyan); cursor:pointer; display:flex; align-items:center}
+        .sico svg{width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:2}
+        .sres{background:var(--bg3); border:1px solid var(--border); border-radius:14px; padding:16px 20px; font-size:13px; color:var(--text2); line-height:1.8; display:none}
 
-        .vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:11px}
-        .vcard{background:var(--bg3);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .2s}
-        .vcard:hover{border-color:rgba(155,109,255,0.3);transform:translateY(-2px)}
-        .vthumb{height:116px;display:flex;align-items:center;justify-content:center}
-        .plic{width:42px;height:42px;border-radius:50%;background:rgba(0,229,255,0.12);border:1px solid rgba(0,229,255,0.28);display:flex;align-items:center;justify-content:center}
-        .plic svg{width:16px;height:16px;fill:var(--cyan);margin-left:2px}
+        .vgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(195px,1fr)); gap:11px}
+        .vcard{background:var(--bg3); border:1px solid var(--border); border-radius:14px; overflow:hidden; cursor:pointer; transition:all .2s}
+        .vcard:hover{border-color:rgba(124,58,237,0.25); transform:translateY(-2px)}
+        .vthumb{height:116px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,0.01);}
+        .plic{width:42px; height:42px; border-radius:50%; background:rgba(0,229,255,0.1); border:1px solid rgba(0,229,255,0.2); display:flex; align-items:center; justify-content:center}
+        .plic svg{width:16px; height:16px; fill:var(--cyan); margin-left:2px}
         .vinfo{padding:9px 12px}
-        .vinfo h3{font-size:12px;font-weight:500;margin-bottom:3px}
-        .vinfo p{font-size:11px;color:var(--text2)}
+        .vinfo h3{font-size:12px; font-weight:500; margin-bottom:3px}
+        .vinfo p{font-size:11px; color:var(--text2)}
 
-        .ltabs{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}
-        .ltab{padding:5px 14px;font-size:12px;font-weight:500;border-radius:20px;border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all .2s;background:transparent}
-        .ltab.on,.ltab:hover{border-color:rgba(0,229,255,0.22);color:var(--cyan);background:rgba(0,229,255,0.04)}
-        .ccard{background:var(--bg3);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:4px}
-        .cch{padding:9px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-        .cch span{font-size:12px;color:var(--text2)}
-        .clang{font-size:10px;font-weight:600;padding:2px 8px;border-radius:5px;background:rgba(0,229,255,0.08);color:var(--cyan);border:1px solid rgba(0,229,255,0.14)}
-        .ccard pre{padding:14px;font-size:11.5px;color:var(--text);font-family:'Courier New',monospace;overflow-x:auto;background:rgba(0,0,0,0.28);margin:0;line-height:1.7}
+        .ltabs{display:flex; gap:7px; flex-wrap:wrap; justify-content:center; margin-bottom:14px}
+        .ltab{padding:5px 14px; font-size:12px; font-weight:500; border-radius:20px; border:1px solid var(--border); color:var(--text2); cursor:pointer; transition:all .2s; background:transparent}
+        .ltab.on,.ltab:hover{border-color:rgba(0,229,255,0.2); color:var(--cyan); background:rgba(0,229,255,0.03)}
         
-        .dropz{width:100%;max-width:500px;height:170px;border:2px dashed rgba(0,229,255,0.22);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:all .2s;background:rgba(0,229,255,0.015);margin:0 auto}
-        .dropz:hover{border-color:var(--cyan);background:rgba(0,229,255,0.04)}
+        /* 🔒 حفاظت از سورس کارت‌های کد */
+        .ccard{background:var(--bg3); border:1px solid var(--border); border-radius:13px; overflow:hidden; margin-bottom:4px}
+        .cch{padding:9px 15px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between}
+        .cch span{font-size:12px; color:var(--text2)}
+        .clang{font-size:10px; font-weight:600; padding:2px 8px; border-radius:5px; background:rgba(0,229,255,0.06); color:var(--cyan); border:1px solid rgba(0,229,255,0.12)}
+        .ccard pre{padding:14px; font-size:11.5px; color:var(--text); font-family:'Courier New',monospace; overflow-x:auto; background:rgba(0,0,0,0.22); margin:0; line-height:1.7}
+        
+        .dropz{width:100%; max-width:500px; height:170px; border:2px dashed rgba(0,229,255,0.18); border-radius:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; cursor:pointer; transition:all .2s; background:rgba(0,229,255,0.01); margin:0 auto}
+        .dropz:hover{border-color:var(--cyan); background:rgba(0,229,255,0.03)}
 
         /* input */
-        .inp-wrap{padding:10px 16px 18px;position:relative;z-index:10;flex-shrink:0}
-        .findc{font-size:12px;color:var(--cyan);padding:3px 0 7px 4px;display:none;align-items:center;gap:5px;max-width:820px;margin:0 auto}
+        .inp-wrap{padding:10px 16px 18px; position:relative; z-index:10; flex-shrink:0}
+        .findc{font-size:12px; color:var(--cyan); padding:3px 0 7px 4px; display:none; align-items:center; gap:5px; max-width:820px; margin:0 auto}
         .findc.on{display:flex}
-        .findc svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+        .findc svg{width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2}
         
-        .ibox{max-width:820px;margin:0 auto;background:rgba(21,21,30,0.88);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.09);border-radius:28px;padding:8px 8px 8px 16px;display:flex;align-items:flex-end;gap:8px;box-shadow:0 8px 40px rgba(0,0,0,0.5);transition:border-color .2s}
-        .ibox:focus-within{border-color:rgba(155,109,255,0.35)}
-        .lacts{display:flex;gap:3px;align-items:flex-end;padding-bottom:5px}
+        .ibox{max-width:820px; margin:0 auto; background:rgba(15,15,22,0.8); backdrop-filter:blur(30px); border:1px solid rgba(255,255,255,0.08); border-radius:28px; padding:8px 8px 8px 16px; display:flex; align-items:flex-end; gap:8px; box-shadow:0 8px 40px rgba(0,0,0,0.55); transition:border-color .2s}
+        .ibox:focus-within{border-color:rgba(124,58,237,0.3)}
+        .lacts{display:flex; gap:3px; align-items:flex-end; padding-bottom:5px}
         
-        .ab{width:36px;height:36px;border-radius:50%;background:transparent;border:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
-        .ab:hover{background:rgba(255,255,255,0.07);color:var(--text)}
-        .ab svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-        .ab.rec{color:#ff4040;box-shadow:0 0 10px rgba(255,64,64,.28)}
+        .ab{width:36px; height:36px; border-radius:50%; background:transparent; border:none; color:var(--text2); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; flex-shrink:0}
+        .ab:hover{background:rgba(255,255,255,0.05); color:var(--text)}
+        .ab svg{width:17px; height:17px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
+        .ab.rec{color:#ff4040; box-shadow:0 0 10px rgba(255,64,64,.25)}
         
-        textarea#pr{flex:1;background:transparent;border:none;color:var(--text);font-size:15px;font-family:inherit;resize:none;outline:none;line-height:1.65;padding:8px 0;max-height:140px;direction:rtl;text-align:right;scrollbar-width:none}
+        textarea#pr{flex:1; background:transparent; border:none; color:var(--text); font-size:15px; font-family:inherit; resize:none; outline:none; line-height:1.65; padding:8px 0; max-height:140px; direction:rtl; text-align:right; scrollbar-width:none}
         textarea#pr::-webkit-scrollbar{display:none}
         textarea#pr::placeholder{color:var(--text2)}
-        .racts{display:flex;align-items:flex-end;gap:4px;padding-bottom:4px}
+        .racts{display:flex; align-items:flex-end; gap:4px; padding-bottom:4px}
         
         @keyframes sg{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-        .sbtn{height:40px;padding:0 22px;border-radius:20px;border:none;font-family:inherit;background:linear-gradient(270deg,#3b82f6,#9b6dff,#d946a8,#00e5ff);background-size:300% 300%;animation:sg 4s ease infinite;color:#fff;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;transition:transform .15s,box-shadow .15s}
-        .sbtn:hover{transform:scale(1.04);box-shadow:0 4px 18px rgba(155,109,255,.4)}
+        .sbtn{height:40px; padding:0 22px; border-radius:20px; border:none; font-family:inherit; background:linear-gradient(270deg,var(--blue),var(--purple),var(--pink),var(--cyan)); background-size:300% 300%; animation:sg 4s ease infinite; color:#fff; font-size:13px; font-weight:700; cursor:pointer; letter-spacing:.5px; transition:transform .15s,box-shadow .15s}
+        .sbtn:hover{transform:scale(1.04); box-shadow:0 4px 18px rgba(124,58,237,.35)}
         .sbtn:active{transform:scale(0.97)}
 
         /* mobile nav */
-        .mnav{display:none;position:fixed;bottom:0;left:0;right:0;height:58px;background:var(--bg2);border-top:1px solid var(--border);z-index:100}
-        .mnav-in{display:flex;height:100%}
-        .mni{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex:1;padding:4px;cursor:pointer;color:var(--text2);font-size:9.5px;font-weight:500;transition:color .2s}
+        .mnav{display:none; position:fixed; bottom:0; left:0; right:0; height:58px; background:var(--bg2); border-top:1px solid var(--border); z-index:100}
+        .mnav-in{display:flex; height:100%}
+        .mni{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; flex:1; padding:4px; cursor:pointer; color:var(--text2); font-size:9.5px; font-weight:500; transition:color .2s}
         .mni.on,.mni:hover{color:var(--cyan)}
-        .mni svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+        .mni svg{width:21px; height:21px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round}
 
         @media(max-width:768px){ .sb{display:none}.mnav{display:block} body{padding-bottom:58px} .greet h1{font-size:1.5rem} .bub{max-width:88%} .chat{padding:12px 10px} .inp-wrap{padding:8px 10px 12px}}
-        @media(max-width:480px){.sbtn{padding:0 14px;font-size:12px}.ibox{padding:6px 6px 6px 12px}}
+        @media(max-width:480px){.sbtn{padding:0 14px; font-size:12px}.ibox{padding:6px 6px 6px 12px}}
     </style>
 </head>
-<body>
-
-<aside class="sb" id="sb">
+<body oncontextmenu="return false;"> <aside class="sb" id="sb">
   <div class="sb-head">
     <button class="hbtn" id="hbtn" onclick="toggleSB()" aria-label="Toggle sidebar">
       <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <svg id="sb-logo" width="36" height="36" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg"
-      style="flex-shrink:0;filter:drop-shadow(0 0 7px rgba(0,229,255,.38));cursor:pointer" onclick="toggleSB()">
+    <svg id="sb-logo" width="36" height="36" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg"
+      style="flex-shrink:0; filter:drop-shadow(0 0 7px rgba(0,229,255,.38)); cursor:pointer" onclick="toggleSB()">
       <defs>
-        <linearGradient id="lbord" x1="0" y1="0" x2="500" y2="500" gradientUnits="userSpaceOnUse">
+        <linearGradient id="lbord" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stop-color="#7c3aed"/>
-          <stop offset="40%" stop-color="#3b82f6"/>
+          <stop offset="50%" stop-color="#3b82f6"/>
           <stop offset="100%" stop-color="#06b6d4"/>
         </linearGradient>
         <linearGradient id="lstar" x1="0" y1="0" x2="1" y2="1">
@@ -215,19 +221,19 @@
           <stop offset="100%" stop-color="#c026d3"/>
         </linearGradient>
       </defs>
-      <path d="M 280 50 L 140 50 C 90 50 50 90 50 140 L 50 360 C 50 410 90 450 140 450 L 360 450 C 410 450 450 410 450 360 L 450 215" stroke="url(#lbord)" stroke-width="22" stroke-linecap="round" fill="none"/>
-      <path d="M 410 135 C 410 80 435 55 490 55 C 435 55 410 30 410 -25 C 410 30 385 55 330 55 C 385 55 410 80 410 135 Z" transform="translate(-35, 5)" fill="url(#lstar)"/>
-      <line x1="120" y1="125" x2="255" y2="125" stroke="#00e5ff" stroke-width="16" stroke-linecap="round"/>
-      <circle cx="120" cy="125" r="10" fill="#00e5ff"/><circle cx="255" cy="125" r="10" fill="#00e5ff"/>
-      <line x1="85" y1="165" x2="240" y2="165" stroke="#00e5ff" stroke-width="16" stroke-linecap="round"/>
-      <circle cx="85" cy="165" r="10" fill="#00e5ff"/><circle cx="240" cy="165" r="10" fill="#00e5ff"/>
-      <path d="M 125 205 L 125 260 L 215 260" stroke="#00e5ff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      <circle cx="125" cy="205" r="10" fill="#00e5ff"/>
-      <path d="M 215 205 C 295 205 325 240 325 300 C 325 360 295 395 215 395 C 190 395 175 380 175 355 L 175 295" stroke="#00e5ff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      <circle cx="325" cy="300" r="10" fill="#00e5ff"/>
-      <rect x="120" y="330" width="55" height="55" stroke="#00e5ff" stroke-width="16" stroke-linejoin="round" fill="none"/>
-      <line x1="235" y1="295" x2="235" y2="415" stroke="#00e5ff" stroke-width="16" stroke-linecap="round"/>
-      <circle cx="235" cy="415" r="10" fill="#00e5ff"/>
+      <path d="M 115 22 L 54 22 C 36 22 22 36 22 54 L 22 146 C 22 164 36 178 54 178 L 146 178 C 164 178 178 164 178 146 L 178 88" stroke="url(#lbord)" stroke-width="9" stroke-linecap="round" fill="none"/>
+      <path d="M 152 54 C 152 32 169 16 191 16 C 169 16 152 0 152 -22 C 152 0 135 16 113 16 C 135 16 152 32 152 54 Z" transform="translate(4, 6)" fill="url(#lstar)"/>
+      <line x1="53" y1="53" x2="103" y2="53" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
+      <circle cx="53" cy="53" r="4.5" fill="#00e5ff"/><circle cx="103" cy="53" r="4.5" fill="#00e5ff"/>
+      <line x1="38" y1="71" x2="97" y2="71" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
+      <circle cx="38" cy="71" r="4.5" fill="#00e5ff"/><circle cx="97" cy="71" r="4.5" fill="#00e5ff"/>
+      <path d="M 54 88 L 54 110 L 88 110" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="54" cy="88" r="4.5" fill="#00e5ff"/>
+      <path d="M 88 88 C 122 88 135 103 135 128 C 135 153 122 168 88 168 C 77 168 71 162 71 151 L 71 128" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="135" cy="128" r="4.5" fill="#00e5ff"/>
+      <rect x="52" y="139" width="24" height="24" rx="2" stroke="#00e5ff" stroke-width="6.5" stroke-linejoin="round" fill="none"/>
+      <line x1="97" y1="126" x2="97" y2="176" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
+      <circle cx="97" cy="176" r="4.5" fill="#00e5ff"/>
     </svg>
     <div class="brand-text" id="brand-text">
       <span class="brand-name"><span class="dt">D&T</span> Ai-TECH</span>
@@ -280,13 +286,13 @@
   </div>
   <div class="content">
     
-    <div id="v-chat" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+    <div id="v-chat" style="flex:1; display:flex; flex-direction:column; overflow:hidden">
       <div class="greet" id="greet">
-        <svg class="greet-logo" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="greet-logo" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="glb" x1="0" y1="0" x2="500" y2="500" gradientUnits="userSpaceOnUse">
+            <linearGradient id="glb" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stop-color="#7c3aed"/>
-              <stop offset="40%" stop-color="#3b82f6"/>
+              <stop offset="50%" stop-color="#3b82f6"/>
               <stop offset="100%" stop-color="#06b6d4"/>
             </linearGradient>
             <linearGradient id="gls" x1="0" y1="0" x2="1" y2="1">
@@ -294,19 +300,19 @@
               <stop offset="100%" stop-color="#c026d3"/>
             </linearGradient>
           </defs>
-          <path d="M 280 50 L 140 50 C 90 50 50 90 50 140 L 50 360 C 50 410 90 450 140 450 L 360 450 C 410 450 450 410 450 360 L 450 215" stroke="url(#glb)" stroke-width="22" stroke-linecap="round" fill="none"/>
-          <path d="M 410 135 C 410 80 435 55 490 55 C 435 55 410 30 410 -25 C 410 30 385 55 330 55 C 385 55 410 80 410 135 Z" transform="translate(-35, 5)" fill="url(#gls)"/>
-          <line x1="120" y1="125" x2="255" y2="125" stroke="#00e5ff" stroke-width="16" stroke-linecap="round"/>
-          <circle cx="120" cy="125" r="10" fill="#00e5ff"/><circle cx="255" cy="125" r="10" fill="#00e5ff"/>
-          <line x1="85" y1="165" x2="240" y2="165" stroke="#00e5ff" stroke-width="16" stroke-linecap="round"/>
-          <circle cx="85" cy="165" r="10" fill="#00e5ff"/><circle cx="240" cy="165" r="10" fill="#00e5ff"/>
-          <path d="M 125 205 L 125 260 L 215 260" stroke="#00e5ff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <circle cx="125" cy="205" r="10" fill="#00e5ff"/>
-          <path d="M 215 205 C 295 205 325 240 325 300 C 325 360 295 395 215 395 C 190 395 175 380 175 355 L 175 295" stroke="#00e5ff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <circle cx="325" cy="300" r="10" fill="#00e5ff"/>
-          <rect x="120" y="330" width="55" height="55" stroke="#00e5ff" stroke-width="16" stroke-linejoin="round" fill="none"/>
-          <line x1="235" y1="295" x2="235" y2="415" stroke="#00e5ff" stroke-width="16" stroke-linecap="round"/>
-          <circle cx="235" cy="415" r="10" fill="#00e5ff"/>
+          <path d="M 115 22 L 54 22 C 36 22 22 36 22 54 L 22 146 C 22 164 36 178 54 178 L 146 178 C 164 178 178 164 178 146 L 178 88" stroke="url(#glb)" stroke-width="9" stroke-linecap="round" fill="none"/>
+          <path d="M 152 54 C 152 32 169 16 191 16 C 169 16 152 0 152 -22 C 152 0 135 16 113 16 C 135 16 152 32 152 54 Z" transform="translate(4, 6)" fill="url(#gls)"/>
+          <line x1="53" y1="53" x2="103" y2="53" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
+          <circle cx="53" cy="53" r="4.5" fill="#00e5ff"/><circle cx="103" cy="53" r="4.5" fill="#00e5ff"/>
+          <line x1="38" y1="71" x2="97" y2="71" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
+          <circle cx="38" cy="71" r="4.5" fill="#00e5ff"/><circle cx="97" cy="71" r="4.5" fill="#00e5ff"/>
+          <path d="M 54 88 L 54 110 L 88 110" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="54" cy="88" r="4.5" fill="#00e5ff"/>
+          <path d="M 88 88 C 122 88 135 103 135 128 C 135 153 122 168 88 168 C 77 168 71 162 71 151 L 71 128" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="135" cy="128" r="4.5" fill="#00e5ff"/>
+          <rect x="52" y="139" width="24" height="24" rx="2" stroke="#00e5ff" stroke-width="6.5" stroke-linejoin="round" fill="none"/>
+          <line x1="97" y1="126" x2="97" y2="176" stroke="#00e5ff" stroke-width="6.5" stroke-linecap="round"/>
+          <circle cx="97" cy="176" r="4.5" fill="#00e5ff"/>
         </svg>
         <h1>Where should we start?</h1>
         <p>Design, code, image analysis, or any question — D&amp;T Ai-TECH is ready.</p>
@@ -471,7 +477,7 @@ async function send(){
   const cb=document.getElementById('chatbox');
   const fl=selFile?`<br><small style="color:var(--cyan);font-size:11px">📎 ${selFile.name}</small>`:'';
   
-  cb.innerHTML+=`<div class="mrow u"><div class="bub u"><b>شما</b>${txt||'فایل پیوست شد'}${fl}</div></div>`;
+  cb.innerHTML+=`<div class="mrow u"><div class="bub u"><b>شما</b>${txt||'File attached'}${fl}</div></div>`;
   document.getElementById('pr').value='';document.getElementById('pr').style.height='auto';
   
   const id='a'+Date.now();
@@ -493,7 +499,7 @@ async function send(){
 function b64(f){return new Promise(r=>{const rd=new FileReader();rd.onload=()=>r(rd.result.split(',')[1]);rd.readAsDataURL(f);});}
 
 function miniLogo(){
-  return`<svg width="16" height="16" viewBox="0 0 500 500" fill="none"><defs><linearGradient id="ml" x1="0" y1="0" x2="500" y2="500" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs><path d="M 280 50 L 140 50 C 90 50 50 90 50 140 L 50 360 C 50 410 90 450 140 450 L 360 450 C 410 450 450 410 450 360 L 450 215" stroke="url(#ml)" stroke-width="26" stroke-linecap="round" fill="none"/><path d="M 215 205 C 295 205 325 240 325 300 C 325 360 295 395 215 395 C 190 395 175 380 175 355 L 175 295" stroke="#00e5ff" stroke-width="22" stroke-linecap="round" fill="none"/></svg>`;
+  return`<svg width="16" height="16" viewBox="0 0 200 200" fill="none"><defs><linearGradient id="ml" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs><path d="M 115 22 L 54 22 C 36 22 22 36 22 54 L 22 146 C 22 164 36 178 54 178 L 146 178 C 164 178 178 164 178 146 L 178 88" stroke="url(#ml)" stroke-width="12" stroke-linecap="round" fill="none"/><path d="M 88 88 C 122 88 135 103 135 128 C 135 153 122 168 88 168 C 77 168 71 162 71 151 L 71 128" stroke="#00e5ff" stroke-width="10" stroke-linecap="round" fill="none"/></svg>`;
 }
 
 // voice
@@ -532,7 +538,13 @@ async function analyzeImg(){
 
 function libF(l,el){document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.querySelectorAll('.ccard').forEach(c=>{c.style.display=(l==='all'||c.dataset.l===l)?'block':'none';});}
 
-sw('chat',document.querySelector('[data-v=chat]'));
+/* 🔒 لایه‌های امنیتی قفل کردن کلیدهای میانبر Inspect Element صفحه */
+document.addEventListener('keydown', function(e) {
+    if (e.keyCode == 123) { e.preventDefault(); return false; } 
+    if (e.ctrlKey && e.shiftKey && e.keyCode == 73) { e.preventDefault(); return false; } 
+    if (e.ctrlKey && e.shiftKey && e.keyCode == 67) { e.preventDefault(); return false; } 
+    if (e.ctrlKey && e.keyCode == 85) { e.preventDefault(); return false; } 
+});
 </script>
 </body>
 </html>
