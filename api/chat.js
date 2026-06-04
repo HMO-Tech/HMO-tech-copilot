@@ -1,4 +1,7 @@
+import { GoogleGenAI } from "@google/generative-ai";
+
 export default async function handler(req, res) {
+    // تنظیم هدرهای CORS برای ارتباط ایمن فرانت‌اند و بک‌اند
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -7,45 +10,68 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
     const { prompt, fileParts } = req.body;
-    const apiKey = process.env.GROQ_API_KEY;
+    
+    // استفاده از کلید عمومی گوگل (حتماً باید GEMINI_API_KEY را در Environment Variables ورسل ست کنی)
+    const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-        return res.status(200).json({ response: "تنظیمات فنی: کلید واژه GROQ_API_KEY در پنل ورسل یافت نشد." });
+        return res.status(200).json({ 
+            response: "تنظیمات فنی: کلید واژه GEMINI_API_KEY در توکن‌های پنل ورسل یافت نشد. لطفاً آن را ست کنید." 
+        });
     }
 
     try {
-        // استفاده از مدل ۱۰۰٪ فعال و تست‌شده در لاگ‌های قبلی شما برای تضمین پایداری چت
-        const modelId = 'llama3-8b-8192'; 
-        let messageContent = prompt || "سلام";
+        // راه‌اندازی کلاینت هوش مصنوعی گوگل بر اساس پکیج نصب‌شده شما
+        const ai = new GoogleGenAI({ apiKey: apiKey });
+        
+        // آماده‌سازی آرایه محتوا برای پردازش چندوجهی
+        const contents = [];
 
-        // مدیریت ایمن فایل برای جلوگیری از خراب شدن درخواست‌های متنی
+        // ۱. اضافه کردن فایل یا تصویر در صورت وجود (پشتیبانی کامل از Image Studio)
         if (fileParts && Array.isArray(fileParts) && fileParts.length > 0) {
-            messageContent = `[تصویر ضمیمه شده] ${messageContent}`;
+            for (const part of fileParts) {
+                if (part.inlineData && part.inlineData.data && part.inlineData.mimeType) {
+                    contents.push({
+                        inlineData: {
+                            data: part.inlineData.data,
+                            mimeType: part.inlineData.mimeType
+                        }
+                    });
+                }
+            }
         }
 
-        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                model: modelId,
-                messages: [{ role: 'user', content: messageContent }],
-                max_tokens: 1024
-            })
+        // ۲. اضافه کردن متن پرامپت کاربر
+        contents.push({
+            text: prompt && prompt.trim() !== "" ? prompt : "Analyze the attached multimedia assets or say hello."
         });
 
-        const data = await response.json();
+        // ۳. دستورالعمل سیستم برای حفظ هویت برند و پاسخ‌دهی راست‌چین
+        const systemInstruction = 
+            "You are the D&T Ai-TECH Intelligent Core. You are an expert in graphic design, " +
+            "computational design, UI/UX, and code optimization. Always respond in an incredibly " +
+            "professional, supportive tone. Use Persian for the chat conversation, but keep code blocks " +
+            "clean and in English.";
 
-        if (data.error) {
-            return res.status(200).json({ response: `پیام سیستم: ${data.error.message}` });
-        }
+        // ارسال درخواست مستقیم به مدل زنده و چندوجهی جمنای
+        const modelResponse = await ai.models.generateContent({
+            model: "gemini-1.5-flash",
+            contents: contents,
+            config: {
+                systemInstruction: systemInstruction,
+                temperature: 0.5,
+                maxOutputTokens: 2048
+            }
+        });
 
-        const aiText = data.choices?.[0]?.message?.content || "پاسخی دریافت نشد.";
+        // استخراج متن پاسخ و ارسال به فرانت‌پند شیشه‌ای
+        const aiText = modelResponse.text || "پاسخی از هسته پردازش دریافت نشد.";
         return res.status(200).json({ response: aiText });
 
     } catch (error) {
-        return res.status(200).json({ response: `خطای ارتباطی سرور: ${error.message}` });
+        console.error("Gemini Core Error:", error);
+        return res.status(200).json({ 
+            response: `خطای ارتباطی در هسته پردازش جمنای: ${error.message}` 
+        });
     }
 }
