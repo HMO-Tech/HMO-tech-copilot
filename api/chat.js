@@ -16,20 +16,10 @@ export default async function handler(req, res) {
     }
 
     try {
-        // 🔒 استفاده از اندپوینت استاندارد v1
-        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=${apiKey}`;
-        
-        // 🧠 پرامپت سیستمی هوشمند و پویا متناسب با انتخاب زبان دشبورد شما
-        let systemRule = "System Rule: You are the D&T Ai-TECH Intelligent Core, engineered and maintained by HMO-Tech. You are a premium, world-class enterprise AI copilot. Help users generate advanced Grasshopper parametric Python code structures, analyze electronics circuit pipelines, and resolve general inquiries with utmost accuracy. Keep responses flawlessly precise, clean, and highly sophisticated.";
-        
-        if (lang === 'fa') {
-            systemInstructionText = "دستورالعمل سیستم: شما هسته پردازش مرکزی هوشمند D&T Ai-TECH هستید که توسط مجموعه‌ی HMO-Tech توسعه یافته و نگهداری می‌شود. شما یک دستیار هوش مصنوعی پیشرفته و مهندسی هستید که به سوالات پاسخ داده و اسکریپت‌های کاربردی پایتون در گراس‌هاپر و بردهای الکترونیکی تولید می‌کنید. لحن شما باید بسیار تخصصی، دقیق، محترمانه و حرفه‌ای باشد. همواره پاسخ‌های متنی را به زبان فارسی روان بدهید اما کدهای کامپیوتری و توابع پایتون را کاملاً انگلیسی بنویسید.";
-        }
-
-        // 🛠️ تزریق مستقیم پرامپت به ابتدای متن کاربر جهت دور زدن باگ پایپ‌لاین ساختار JSON گوگل
-        const combinedText = `${systemRule}\n\nUser Query: ${prompt && prompt.trim() !== "" ? prompt.trim() : "Execute workspace analysis."}`;
-        
+        // 🔒 استفاده از اندپوینت استاندارد و جهانی بدون ریسک ریجکت شدن کاتالوگ
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`;
         const parts = [];
+
         if (fileParts && Array.isArray(fileParts) && fileParts.length > 0) {
             fileParts.forEach(part => {
                 if (part.inlineData && part.inlineData.data && part.inlineData.mimeType) {
@@ -42,13 +32,24 @@ export default async function handler(req, res) {
                 }
             });
         }
+
+        const userText = prompt && prompt.trim() !== "" ? prompt.trim() : "Execute workspace analysis.";
+        parts.push({ text: userText });
+
+        // 🧠 دستورالعمل سیستمی پویا و اصلاح‌شده (رفع باگ عدم تعریف متغیر)
+        let systemInstructionText = "You are the D&T Ai-TECH Intelligent Core, engineered and maintained by HMO-Tech. You are a professional, premium architecture and computer engineering co-pilot. Help users generate advanced Grasshopper parametric Python scripts, analyze electronics circuit models, and build UI frameworks. Keep responses technical, flawlessly clean, and exceptionally professional.";
         
-        parts.push({ text: combinedText });
+        if (lang === 'fa') {
+            systemInstructionText = "شما هسته پردازش مرکزی هوشمند D&T Ai-TECH هستید که توسط مجموعه‌ی HMO-Tech توسعه یافته و نگهداری می‌شود. شما یک دستیار هوش مصنوعی پیشرفته و مهندسی هستید که به سوالات پاسخ داده و اسکریپت‌های کاربردی پایتون در گراس‌هاپر و بردهای الکترونیکی تولید می‌کنید. لحن شما باید بسیار تخصصی، دقیق، محترمانه و حرفه‌ای باشد. همواره پاسخ‌های متنی را به زبان فارسی روان بدهید اما کدهای کامپیوتری و توابع پایتون را کاملاً انگلیسی بنویسید.";
+        }
 
         const requestBody = {
             contents: [{ parts: parts }],
+            systemInstruction: {
+                parts: [{ text: systemInstructionText }]
+            },
             generationConfig: {
-                temperature: 0.15,
+                temperature: 0.2,
                 maxOutputTokens: 3500,
                 topP: 0.95
             }
