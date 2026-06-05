@@ -19,11 +19,12 @@
   --text2: #8282a5;
   --border: rgba(255,255,255,0.06);
   --sidebar-w: 260px;
+  --sidebar-c: 68px;
   --ease: cubic-bezier(0.25, 1, 0.5, 1);
   --gemini-glow: radial-gradient(ellipse 75% 60% at 50% 45%, rgba(124, 58, 237, 0.15) 0%, rgba(0, 229, 255, 0.06) 45%, transparent 70%);
 }
 
-*{box-sizing:border-box;margin:0;padding:0;-webkit-user-select:none;user-select:none}
+*{box-opacity:1; box-sizing:border-box;margin:0;padding:0;-webkit-user-select:none;user-select:none}
 html,body{height:100%;overflow:hidden;background:var(--bg)}
 body{
   color:var(--text);
@@ -46,6 +47,11 @@ body{
   flex-direction:column;
   z-index:50;
   flex-shrink:0;
+  transition: width 0.3s var(--ease), min-width 0.3s var(--ease);
+}
+.sidebar.collapsed {
+  width: var(--sidebar-c);
+  min-width: var(--sidebar-c);
 }
 .sidebar-top{
   padding:14px;
@@ -54,15 +60,18 @@ body{
   gap:12px;
   height:68px;
   border-bottom:1px solid var(--border);
+  overflow: hidden;
 }
 .brand{ display:flex;align-items:center;gap:12px;white-space:nowrap; }
+.brand-text { display: flex; align-items: center; transition: opacity 0.2s; opacity: 1; }
+.sidebar.collapsed .brand-text { opacity: 0; pointer-events: none; }
 .brand-name{font-size:15px;font-weight:700;letter-spacing:0.3px;}
 .brand-name span{background:linear-gradient(90deg, var(--purple), var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 
-/* نمایش لوگوی آپلود شده حسام در سایدبار */
+/* لود ایمن و مینی‌مال فایل اصلی لوگوی حسام در منوی سمت چپ */
 .logo-img-fix{
-  width:34px; height:34px; object-fit:contain;
-  filter:drop-shadow(0 0 8px rgba(0,229,255,0.25));
+  width:32px; height:32px; object-fit:contain; flex-shrink: 0;
+  filter:drop-shadow(0 0 6px rgba(0,229,255,0.2));
 }
 
 .nav{padding:12px 8px;display:flex;flex-direction:column;gap:4px;flex:1;overflow-y:auto;}
@@ -82,7 +91,12 @@ body{
 }
 .nav-icon{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .nav-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.nav-label{font-size:10px;font-weight:600;letter-spacing:1.2px;color:rgba(155,109,255,0.35);padding:12px 14px 4px;white-space:nowrap;}
+.nav-label{font-size:10px;font-weight:600;letter-spacing:1.2px;color:rgba(155,109,255,0.35);padding:12px 14px 4px;white-space:nowrap; transition: opacity 0.2s;}
+.sidebar.collapsed .nav-label { opacity: 0; }
+.sidebar.collapsed .nav-item { padding: 11px; justify-content: center; width: 44px; height: 44px; border-radius: 50%; margin: 0 auto; }
+.sidebar.collapsed .nav-item::before { display: none; }
+.sidebar.collapsed .nav-text { display: none; }
+
 .sidebar-bottom{padding:8px;border-top:1px solid var(--border)}
 
 /* ====== MAIN AREA ====== */
@@ -111,15 +125,15 @@ body{
 .icon-btn:hover{background:rgba(255,255,255,0.05);color:var(--text)}
 .icon-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
 
-.content{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:1;padding:24px;}
+.content{flex:1;display:flex;flex-direction:column;overflow-y:auto;position:relative;z-index:1;padding:24px;}
 
-/* لوگوی بزرگ مرکزی چت هوم حسام */
+/* گریتر مرکزی هوم چت */
 .greeting{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:40px 20px;text-align:center;gap:24px;
 }
 .main-logo-fix{
-  width:130px; height:130px; object-fit:contain;
+  width:130px; height:130px; object-fit:contain; flex-shrink: 0;
   filter:drop-shadow(0 0 25px rgba(0,229,255,0.35));
   animation:floatLog 4s ease-in-out infinite;
 }
@@ -140,37 +154,37 @@ body{
 }
 .chip:hover{border-color:rgba(0,229,255,0.3);background:rgba(0,229,255,0.05);transform:translateY(-1px)}
 
-/* Chat flow box */
+/* چت باکس یکپارچه و تراز */
 .chat-area{display:none;flex-direction:column;gap:18px;width:100%;max-width:740px;margin:0 auto;overflow-y:auto;flex:1;}
 .chat-area.visible{display:flex}
-.msg-row{display:flex;width:100%}
-.msg-row.user{justify-content:flex-end}
-.msg-row.ai{justify-content:flex-start;align-items:flex-start;gap:12px}
-.bubble{max-width:82%;padding:14px 20px;border-radius:20px;font-size:14.5px;line-height:1.7;word-break:break-word;}
-.bubble.user{background:var(--bg3);border:1px solid var(--border);border-radius:20px 20px 4px 20px;direction:rtl;text-align:right;}
-.bubble.ai{background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04);border-radius:4px 20px 20px 20px;backdrop-filter:blur(12px);direction:rtl;text-align:right;}
-.bubble.ai.loading{color:var(--cyan);font-style:italic;animation:pulseG 1.5s infinite;}
-.bubble b{font-weight:600;font-size:11px;color:var(--text2);display:block;margin-bottom:6px;}
+.mrow{display:flex;width:100%}
+.mrow.u{justify-content:flex-end}
+.mrow.a{justify-content:flex-start;align-items:flex-start;gap:12px}
+.bub{max-width:82%;padding:14px 20px;border-radius:20px;font-size:14.5px;line-height:1.7;word-break:break-word;}
+.bub.u{background:var(--bg3);border:1px solid var(--border);border-radius:20px 20px 4px 20px;direction:rtl;text-align:right;}
+.bub.a{background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04);border-radius:4px 20px 20px 20px;backdrop-filter:blur(12px);direction:rtl;text-align:right;}
+.bub.ld{color:var(--cyan);font-style:italic;animation:pulseG 1.5s infinite;}
+.bub b{font-weight:600;font-size:11px;color:var(--text2);display:block;margin-bottom:6px;}
 @keyframes pulseG { 0%,100% { opacity:0.6; } 50% { opacity:1; } }
 
 /* ====== VIEWS PANEL ====== */
 .view{display:none;flex-direction:column;width:100%;max-width:900px;margin:0 auto;gap:20px;height:100%;}
-.view.active{display:flex}
-.view-header{text-align:center;padding:10px 0;}
-.view-header h2{font-size:24px;font-weight:600;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;}
-.view-header p{font-size:13px;color:var(--text2)}
+.view.on{display:flex}
+.vh{text-align:center;padding:10px 0;}
+.vh h2{font-size:24px;font-weight:600;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;}
+.vh p{font-size:13px;color:var(--text2)}
 
-/* کادر هوشمند و کاملاً سنتر دیپ‌سرچ */
+/* کادر سنتر دیپ‌سرچ */
 .search-center-container { display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;max-width:600px;margin:auto;gap:20px; }
 .swrap{position:relative;width:100%;}
-.swrap input{width:100%;padding:16px 54px 16px 20px;background:var(--bg-card);border:1px solid var(--border);border-radius:18px;color:var(--text);font-size:15px;outline:none;transition:border-color 0.2s;direction:rtl;text-align:right;}
+.swrap input{width:100%;padding:16px 54px 16px 20px;background:var(--bg3);border:1px solid var(--border);border-radius:18px;color:var(--text);font-size:15px;outline:none;transition:border-color 0.2s;direction:rtl;text-align:right;}
 .swrap input:focus{border-color:rgba(0,229,255,0.3);}
 .sico{position:absolute;right:18px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--cyan);cursor:pointer;display:flex;align-items:center;}
 .sico svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2}
-.sres{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:20px;font-size:14px;color:var(--text);line-height:1.8;display:none;direction:rtl;text-align:right;}
+.sres{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:18px;padding:20px;font-size:14px;color:var(--text);line-height:1.8;display:none;direction:rtl;text-align:right;}
 
 .project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;width:100%;}
-.project-card{background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:18px;cursor:pointer;transition:all 0.2s var(--ease);backdrop-filter:blur(10px);}
+.project-card{background:var(--bg3);border:1px solid var(--border);border-radius:18px;padding:18px;cursor:pointer;transition:all 0.2s var(--ease);backdrop-filter:blur(10px);}
 .project-card:hover{border-color:rgba(0,229,255,0.2);transform:translateY(-2px);}
 .project-card h3{font-size:14px;font-weight:600;margin-bottom:6px;}
 .project-card p{font-size:12.5px;color:var(--text2);line-height:1.6;}
@@ -179,7 +193,7 @@ body{
 .lib-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:8px;}
 .lib-tab{padding:8px 18px;font-size:12.5px;font-weight:500;border-radius:30px;border:1px solid var(--border);color:var(--text2);cursor:pointer;transition:all 0.2s;background:transparent;}
 .lib-tab.active,.lib-tab:hover{border-color:rgba(0,229,255,0.3);color:var(--cyan);background:rgba(0,229,255,0.03);}
-.code-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:12px;width:100%;}
+.code-card{background:var(--bg3);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:12px;width:100%;}
 .code-card-header{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
 .clang{font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;background:rgba(0,229,255,0.06);color:var(--cyan);border:1px solid rgba(0,229,255,0.12);}
 .code-card pre{padding:18px;font-size:12px;color:var(--text);font-family:'Courier New',monospace;overflow-x:auto;background:rgba(0,0,0,0.2);line-height:1.75;}
@@ -187,7 +201,7 @@ body{
 .dropz{width:100%;max-width:520px;height:180px;border:2px dashed rgba(0,229,255,0.16);border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;background:rgba(0,229,255,0.01);margin:20px auto;}
 .dropz:hover{border-color:var(--cyan);background:rgba(0,229,255,0.03);}
 
-/* ====== COMMAND BOX ====== */
+/* ====== BOTTOM COMMAND AREA ====== */
 .input-wrap{padding:12px 24px 24px;position:relative;z-index:10;flex-shrink:0;width:100%;}
 .file-indicator{font-size:12px;color:var(--cyan);padding:4px 0 8px 4px;display:none;align-items:center;gap:6px;}
 .file-indicator.show{display:flex}
@@ -214,7 +228,7 @@ textarea#prompt{flex:1;background:transparent;border:none;color:var(--text);font
   .sidebar{display:none}
   .mnav{display:block}
   body{padding-bottom:64px}
-  .topbar{background:var(--bg-sub);height:56px;border-bottom:1px solid var(--border);}
+  .topbar{background:var(--bg2);height:56px;border-bottom:1px solid var(--border);}
   .greeting h1{font-size:1.6rem}
   .greeting p{font-size:13px}
   .bub{max-width:90%;font-size:13.5px}
@@ -237,12 +251,12 @@ textarea#prompt{flex:1;background:transparent;border:none;color:var(--text);font
   </div>
   <nav class="nav">
     <div class="nlbl">WORKSPACE</div>
-    <div class="ni on" data-v="chat" onclick="sw('chat',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12 L9 9L12 2Z"/></svg></div><span class="ni-txt">New Chat</span></div>
-    <div class="ni" data-v="project" onclick="sw('project',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><span class="ni-txt">Projects</span></div>
-    <div class="ni" data-v="search" onclick="sw('search',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div><span class="ni-txt">Deep Search</span></div>
+    <div class="ni on" data-v="chat" onclick="sw('chat',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12 L9 9L12 2Z"/></svg></div><span class="nav-text">New Chat</span></div>
+    <div class="ni" data-v="project" onclick="sw('project',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><span class="nav-text">Projects</span></div>
+    <div class="ni" data-v="search" onclick="sw('search',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div><span class="nav-text">Deep Search</span></div>
     <div class="nlbl">MEDIA &AMP; REPOS</div>
-    <div class="ni" data-v="images" onclick="sw('images',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><span class="ni-txt">Image Studio</span></div>
-    <div class="ni" data-v="library" onclick="sw('library',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><span class="ni-txt">Code Library</span></div>
+    <div class="ni" data-v="images" onclick="sw('images',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><span class="nav-text">Image Studio</span></div>
+    <div class="ni" data-v="library" onclick="sw('library',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><span class="nav-text">Code Library</span></div>
   </nav>
 </aside>
 
