@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        // 🔒 استفاده از اندپوینت استاندارد و جهانی بدون ریسک ریجکت شدن کاتالوگ
+        // 🔒 اصلاح نهایی اندپوینت کلاود بر اساس الگوی رسمی و پذیرفته‌شده سیستم سازنده گوگل
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`;
         const parts = [];
 
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
         const userText = prompt && prompt.trim() !== "" ? prompt.trim() : "Execute workspace analysis.";
         parts.push({ text: userText });
 
-        // 🧠 دستورالعمل سیستمی پویا و اصلاح‌شده (رفع باگ عدم تعریف متغیر)
+        // 🧠 دستورالعمل سیستمی متناسب با سوییچ زبان پلتفرم عمومی شما
         let systemInstructionText = "You are the D&T Ai-TECH Intelligent Core, engineered and maintained by HMO-Tech. You are a professional, premium architecture and computer engineering co-pilot. Help users generate advanced Grasshopper parametric Python scripts, analyze electronics circuit models, and build UI frameworks. Keep responses technical, flawlessly clean, and exceptionally professional.";
         
         if (lang === 'fa') {
@@ -71,6 +71,6 @@ export default async function handler(req, res) {
         return res.status(200).json({ response: aiText });
 
     } catch (error) {
-        return res.status(200).json({ response: `خطای بحرانی ساختار بک‌آند: ${error.message}` });
+        return res.status(200).json({ response: `خطای بحرانی لایه شبکه بک‌آند: ${error.message}` });
     }
 }
