@@ -102,7 +102,7 @@
         .chip { padding: 10px 18px; border: 1px solid var(--border); border-radius: 25px; font-size: 13px; color: var(--text); cursor: pointer; background: rgba(255, 255, 255, 0.02); transition: all 0.2s var(--ease); backdrop-filter: blur(10px); }
         .chip:hover { border-color: rgba(0, 229, 255, 0.3); background: rgba(0, 229, 255, 0.05); transform: translateY(-1px); }
 
-        /* Chat view log layout */
+        /* Chat view log */
         .chat-container { display: none; flex-direction: column; gap: 18px; width: 100%; max-width: 740px; margin: 0 auto; overflow-y: auto; flex: 1; }
         .chat-container.on { display: flex; }
         .mrow { display: flex; width: 100%; }
@@ -157,7 +157,7 @@
         .dropz { width: 100%; max-width: 520px; height: 180px; border: 2px dashed rgba(0, 229, 255, 0.16); border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; background: rgba(0, 229, 255, 0.01); margin: 20px auto; }
         .dropz:hover { border-color: var(--cyan); background: rgba(0, 229, 255, 0.03); }
 
-        /* Input Panel area bottom bar */
+        /* Command Box Input Control */
         .inp-wrap { padding: 12px 24px 24px; position: relative; z-index: 10; flex-shrink: 0; width: 100%; background: transparent; }
         .findc { font-size: 12px; color: var(--cyan); padding: 4px 0 8px 4px; display: none; align-items: center; gap: 6px; max-width: 760px; margin: 0 auto; }
         .findc.on { display: flex; }
@@ -217,7 +217,7 @@
     </nav>
     <div class="sidebar-bottom">
         <div class="ni" data-v="settings" onclick="sw('settings',this)">
-            <div class="ni-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+            <div class="ni-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1-2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
             <span class="ni-txt" id="m-settings">System Settings</span>
         </div>
     </div>
@@ -248,10 +248,10 @@
 
         <div id="v-project" class="view">
             <div class="vh"><h2 id="p-title">Projects Hub</h2><p id="p-desc">Manage advanced multi-dimensional computational workspaces</p></div>
-            <div class="pgrid">
-                <div class="pcard"><h3>D&T AI Interface</h3><p>Next-gen glassmorphic responsive front-end dashboard architecture</p><span class="ptag">Frontend</span></div>
-                <div class="pcard"><h3>Computational Geometry</h3><p>Generative parametric scripts mapping out RhinoCommon topology</p><span class="ptag">Rhino / GH</span></div>
-                <div class="pcard"><h3>Hardware Pipeline</h3><p>Embedded systems design focusing on microcontrollers and PCB layouts</p><span class="ptag">Electronics</span></div>
+            <div class="project-grid">
+                <div class="project-card"><h3>D&T AI Interface</h3><p>Next-gen glassmorphic responsive front-end dashboard architecture</p><span class="project-tag">Frontend</span></div>
+                <div class="project-card"><h3>Computational Geometry</h3><p>Generative parametric scripts mapping out RhinoCommon topology</p><span class="project-tag">Rhino / GH</span></div>
+                <div class="project-card"><h3>Hardware Pipeline</h3><p>Embedded systems design focusing on microcontrollers and PCB layouts</p><span class="project-tag">Electronics</span></div>
             </div>
         </div>
 
