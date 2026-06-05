@@ -11,12 +11,13 @@ export default async function handler(req, res) {
 
     if (!apiKey) {
         return res.status(200).json({ 
-            response: "سرور مرکزی: کلید واژه GEMINI_API_KEY در تنظیمات ورسل یافت نشد. لطفاً توکن معتبر کلاود خود را اضافه کنید." 
+            response: "سرور مرکزی: متغیر GEMINI_API_KEY در تنظیمات ورسل یافت نشد. لطفاً توکن معتبر خود را اضافه کنید." 
         });
     }
 
     try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`;
+        // 🔒 استفاده از شناسه رسمی و پایدار gemini-1.5-pro-latest برای حل خطای کاتالوگ گوگل کلاود
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${apiKey}`;
         const parts = [];
 
         if (fileParts && Array.isArray(fileParts) && fileParts.length > 0) {
@@ -32,14 +33,14 @@ export default async function handler(req, res) {
             });
         }
 
-        const userText = prompt && prompt.trim() !== "" ? prompt.trim() : "Execute workspace analysis.";
+        const userText = prompt && prompt.trim() !== "" ? prompt.trim() : "Execute architectural framework analysis.";
         parts.push({ text: userText });
 
-        // 🧠 پرامپت سیستمی داینامیک و عمومی متناسب با سوییچ زبان کاربر
-        let systemInstructionText = "You are the D&T Ai-TECH Intelligent Core, engineered and maintained by HMO-Tech. You are a premium, world-class enterprise AI copilot tailored for architectural computation, generating high-performance Rhino/Grasshopper parametric Python code structures, analyzing embedded circuit pipelines, and resolving general user inquiries with utmost accuracy. Keep responses flawlessly precise, clean, and highly sophisticated.";
+        // 🧠 دستورالعمل سیستمی کاملاً عمومی و منعطف بر اساس متغیر زبان فرانت‌آند
+        let systemInstructionText = "You are the D&T Ai-TECH Intelligent Core, engineered and maintained by HMO-Tech. You are a professional, premium architecture and computer engineering co-pilot. Help users generate advanced Grasshopper parametric Python scripts, analyze electronics circuit models, and build UI frameworks. Keep responses technical, flawlessly clean, and exceptionally professional.";
         
         if (lang === 'fa') {
-            systemInstructionText = "شما هسته پردازش مرکزی هوشمند D&T Ai-TECH هستید که توسط مجموعه‌ی HMO-Tech توسعه یافته و نگهداری می‌شود. شما یک دستیار هوش مصنوعی همه‌فن‌حریف، پیشرفته و مهندسی هستید که به سوالات کاربران پاسخ داده و اسکریپت‌های کاربردی پایتون در گراس‌هاپر و بردهای الکترونیکی تولید می‌کنید. لحن شما باید بسیار تخصصی، دقیق، محترمانه و حرفه‌ای باشد. همواره پاسخ‌های متنی را به زبان فارسی روان بدهید اما کدهای کامپیوتری و توابع پایتون را کاملاً انگلیسی بنویسید.";
+            systemInstructionText = "شما هسته پردازش مرکزی هوشمند D&T Ai-TECH هستید که توسط مجموعه‌ی HMO-Tech توسعه یافته و نگهداری می‌شود. شما یک دستیار هوش مصنوعی پیشرفته و مهندسی هستید که به سوالات کاربران پاسخ داده و اسکریپت‌های کاربردی پایتون در گراس‌هاپر و بردهای الکترونیکی تولید می‌کنید. لحن شما باید بسیار تخصصی، دقیق، محترمانه و حرفه‌ای باشد. همواره پاسخ‌های متنی را به زبان فارسی روان بدهید اما کدهای کامپیوتری و توابع پایتون را کاملاً انگلیسی بنویسید.";
         }
 
         const requestBody = {
@@ -66,10 +67,10 @@ export default async function handler(req, res) {
             return res.status(200).json({ response: `خطای لایه ابری گوگل: ${data.error?.message || response.statusText}` });
         }
 
-        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "پاسخی دریافت نشد.";
+        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "پاسخی از هسته مرکزی دریافت نشد.";
         return res.status(200).json({ response: aiText });
 
     } catch (error) {
-        return res.status(200).json({ response: `خطای بحرانی ساختار بک‌آند: ${error.message}` });
+        return res.status(200).json({ response: `خطای بحرانی لایه شبکه بک‌آند: ${error.message}` });
     }
 }
