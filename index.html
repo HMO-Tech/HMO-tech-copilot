@@ -1,324 +1,403 @@
 <!DOCTYPE html>
-<html lang="fa" dir="ltr">
+<html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>D&T Ai-TECH | AI Studio Core</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root{
-            --bg: #07070a;
-            --bg-sub: #0e0e14;
-            --bg-card: #141420;
-            --cyan: #00e5ff;
-            --blue: #3b82f6;
-            --purple: #7c3aed;
-            --pink: #c026d3;
-            --text: #f0f0f5;
-            --text-muted: #7a7a9a;
-            --border: rgba(255,255,255,0.06);
-            --SW: 260px;
-            --SC: 68px;
-            --ease: cubic-bezier(0.25, 1, 0.5, 1);
-            --gemini-glow: 
-                radial-gradient(circle at 50% 50%, rgba(124,58,237,0.15) 0%, transparent 65%),
-                radial-gradient(circle at 10% 20%, rgba(59,130,246,0.1) 0%, transparent 55%),
-                radial-gradient(circle at 90% 80%, rgba(0,229,255,0.08) 0%, transparent 50%);
-        }
-        
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-user-select: none; user-select: none; }
-        html, body { height: 100%; overflow: hidden; background: var(--bg); }
-        body { color: var(--text); font-family: 'Space Grotesk', 'Vazirmatn', sans-serif; display: flex; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>D&T Ai-TECH | AI Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {  
+  --bg: #040408;  
+  --bg2: #0a0a12;  
+  --bg3: #10101c;  
+  --bg4: #141424;  
+  --cyan: #00e5ff;  
+  --purple: #7c3aed;  
+  --blue: #3b82f6;  
+  --pink: #c026d3;  
+  --text: #e2e2f0;  
+  --text2: #6e6e98;  
+  --border: rgba(255,255,255,0.06);  
+  --border2: rgba(0,229,255,0.25);  
+  --SW: 258px;  
+  --SC: 70px;  
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-        /* ══ SIDEBAR (DESKTOP) ══ */
-        .sb {
-            width: var(--SW); min-width: var(--SW); background: var(--bg-sub); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; transition: width 0.3s var(--ease), min-width 0.3s var(--ease); overflow: hidden; z-index: 60; flex-shrink: 0;
-        }
-        .sb.c { width: var(--SC); min-width: var(--SC); }
-        .sb-head { height: 64px; display: flex; align-items: center; padding: 0 14px; gap: 12px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-        
-        .hbtn {
-            width: 40px; height: 40px; border-radius: 50%; border: none; background: transparent; color: var(--text-muted); cursor: pointer;
-            display: flex; align-items: center; justify-content: center; transition: background 0.2s, color 0.2s; flex-shrink: 0;
-        }
-        .hbtn:hover { background: rgba(255,255,255,0.05); color: var(--text); }
-        .hbtn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
-        
-        .brand { display: flex; align-items: center; gap: 10px; overflow: hidden; }
-        .brand-text { display: flex; align-items: center; white-space: nowrap; overflow: hidden; transition: opacity 0.2s; opacity: 1; }
-        .sb.c .brand-text { opacity: 0; pointer-events: none; }
-        .brand-name { font-size: 15px; font-weight: 700; letter-spacing: 0.3px; }
-        .brand-name .dt { background: linear-gradient(90deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 'Vazirmatn', sans-serif; }
+body { display: flex; height: 100vh; }
 
-        .sb-nav { padding: 12px 8px; display: flex; flex-direction: column; gap: 4px; flex: 1; overflow-y: auto; }
-        .nlbl { font-size: 10px; font-weight: 600; letter-spacing: 1.2px; color: rgba(155,109,255,0.35); padding: 12px 14px 4px; white-space: nowrap; transition: opacity 0.2s; }
-        .sb.c .nlbl { opacity: 0; }
-        
-        .ni {
-            display: flex; align-items: center; gap: 14px; padding: 11px 14px; border-radius: 14px; color: var(--text-muted); cursor: pointer; font-size: 13.5px; font-weight: 500;
-            white-space: nowrap; transition: all 0.2s var(--ease); position: relative;
-        }
-        .ni:hover { background: rgba(255,255,255,0.03); color: var(--text); }
-        .ni.on { background: rgba(124,58,237,0.1); color: var(--cyan); }
-        .ni.on::before { content: ''; position: absolute; left: 0; top: 25%; bottom: 25%; width: 3px; background: linear-gradient(180deg, var(--purple), var(--cyan)); border-radius: 0 4px 4px 0; }
-        .ni-ico { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        .ni-ico svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
-        
-        .sb.c .ni { padding: 11px; width: 44px; height: 44px; border-radius: 50%; justify-content: center; margin: 0 auto; }
-        .sb.c .ni::before { display: none; }
-        .sb.c .ni-txt { display: none; }
-        .sb-bot { padding: 8px; border-top: 1px solid var(--border); }
+/* ══════════════════ SIDEBAR ══════════════════ */
+.sb {  
+  width: var(--SW); min-width: var(--SW);  
+  background: var(--bg2); border-right: 1px solid var(--border);  
+  display: flex; flex-direction: column;  
+  transition: width 0.3s var(--ease), min-width 0.3s var(--ease);  
+  overflow: hidden; z-index: 60; flex-shrink: 0; position: relative;
+}
+.sb::before {  
+  content: ''; position: absolute; inset: 0; pointer-events: none;  
+  background: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(124,58,237,0.12) 0%, transparent 70%);
+}
+.sb.c { width: var(--SC); min-width: var(--SC); }
+.sb-head {  
+  height: 64px; display: flex; align-items: center; padding: 0 16px; gap: 12px;  
+  border-bottom: 1px solid var(--border); flex-shrink: 0; position: relative; z-index: 1;
+}
+.hbtn {  
+  width: 38px; height: 38px; border-radius: 10px; border: none; background: transparent;  
+  color: var(--text2); cursor: pointer; display: flex; align-items: center; justify-content: center;  
+  transition: background .2s, color .2s; flex-shrink: 0;
+}
+.hbtn:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+.hbtn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.brand-wrap {  
+  display: flex; align-items: center; gap: 9px; overflow: hidden; white-space: nowrap;  
+  transition: opacity .25s, transform .25s, max-width .3s; max-width: 190px; opacity: 1;
+}
+.sb.c .brand-wrap { opacity: 0; max-width: 0; pointer-events: none; transform: translateX(-6px); }
+.brand-name { font-size: 15px; font-weight: 700; letter-spacing: .2px; white-space: nowrap; }
+.brand-name .dt { background: linear-gradient(90deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* ══ MAIN WORKSPACE ══ */
-        .main { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; overflow: hidden; }
-        .main::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: var(--gemini-glow); }
-        
-        .topbar { height: 64px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(7,7,11,0.5); backdrop-filter: blur(25px); position: relative; z-index: 10; }
-        .topbar-t { font-size: 15px; font-weight: 500; color: var(--text-muted); }
-        .tbr { display: flex; gap: 8px; align-items: center; }
-        
-        .ibtn { width: 38px; height: 38px; border-radius: 50%; border: none; background: transparent; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-        .ibtn:hover { background: rgba(255,255,255,0.05); color: var(--text); }
-        .ibtn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
-        
-        .content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; z-index: 1; padding: 24px; }
+.sb-nav { padding: 8px; display: flex; flex-direction: column; gap: 2px; flex: 1; overflow-y: auto; overflow-x: hidden; position: relative; z-index: 1; }
+.nlbl { font-size: 10px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: rgba(124,58,237,0.4); padding: 14px 14px 4px; white-space: nowrap; transition: opacity .2s, max-height .2s; overflow: hidden; }
+.sb.c .nlbl { opacity: 0; max-height: 0; padding: 0; }
+.ni {  
+  display: flex; align-items: center; gap: 12px; padding: 10px 13px; border-radius: 12px;  
+  color: var(--text2); cursor: pointer; font-size: 13.5px; font-weight: 500;  
+  white-space: nowrap; transition: all .2s; user-select: none; position: relative;
+}
+.ni:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+.ni.on { background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(0,229,255,0.05)); color: var(--cyan); border: 1px solid rgba(0,229,255,0.08); }
+.ni.on::before { content: ''; position: absolute; left: 0; top: 24%; bottom: 24%; width: 3px; background: linear-gradient(180deg, var(--purple), var(--cyan)); border-radius: 0 3px 3px 0; }
+.ni-ico { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.ni-ico svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.ni-txt { transition: opacity .2s, max-width .2s; max-width: 180px; overflow: hidden; }
+.sb.c .ni-txt { opacity: 0; max-width: 0; }
+.sb.c .ni { padding: 12px; width: 44px; height: 44px; border-radius: 50%; justify-content: center; margin: 4px auto; border: none; }
+.sb.c .ni.on::before { display: none; }
+.sb-bot { padding: 8px 8px 14px; border-top: 1px solid var(--border); position: relative; z-index: 1; }
 
-        /* 🤖 هوم مرکزی */
-        .greet { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 24px; width: 100%; max-width: 720px; margin: 0 auto; }
-        .greet-logo-box { width: 130px; height: 130px; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 0 25px rgba(0,229,255,0.4)); animation: floatLog 4s ease-in-out infinite; }
-        @keyframes floatLog { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-        
-        .greet h1 { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 300; background: linear-gradient(135deg, #ffffff 40%, #71719c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; }
-        .greet p { font-size: 14.5px; color: var(--text-muted); max-width: 520px; line-height: 1.75; }
+/* ══════════════════ MAIN ══════════════════ */
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; overflow: hidden; }
+.main::before {  
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;  
+  background:    
+    radial-gradient(ellipse 75% 65% at 50% 12%, rgba(124,58,237,0.2) 0%, transparent 60%),    
+    radial-gradient(ellipse 60% 55% at 85% 75%, rgba(0,229,255,0.12) 0%, transparent 50%),    
+    radial-gradient(ellipse 50% 50% at 15% 85%, rgba(192,38,211,0.08) 0%, transparent 55%),    
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(59,130,246,0.06) 0%, transparent 60%);
+  filter: blur(40px);
+}
+.topbar {  
+  height: 56px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between;  
+  border-bottom: 1px solid var(--border); background: rgba(4,4,8,0.75); backdrop-filter: blur(24px);  
+  position: relative; z-index: 10; flex-shrink: 0;
+}
+.topbar-t { font-size: 14px; font-weight: 600; color: var(--text2); letter-spacing: .2px; }
+.tbr { display: flex; gap: 6px; }
+.ibtn {  
+  width: 36px; height: 36px; border-radius: 10px; border: none; background: transparent;  
+  color: var(--text2); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s;
+}
+.ibtn:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+.ibtn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.content { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 1; }
 
-        .chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 620px; width: 100%; }
-        .chip { padding: 10px 18px; border: 1px solid var(--border); border-radius: 25px; font-size: 13px; color: var(--text); cursor: pointer; background: rgba(255,255,255,0.02); transition: all 0.2s var(--ease); backdrop-filter: blur(10px); font-weight: 500; }
-        .chip:hover { border-color: rgba(0,229,255,0.3); background: rgba(0,229,255,0.05); transform: translateY(-1px); }
+/* GREETING */
+.greet { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; text-align: center; gap: 24px; }
+.greet-logo { width: 120px; height: 120px; filter: drop-shadow(0 0 25px rgba(0,229,255,.4)) drop-shadow(0 0 50px rgba(124,58,237,.2)); animation: gfl 4s ease-in-out infinite; }
+@keyframes gfl { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.greet h1 { font-size: clamp(1.8rem, 3.8vw, 2.6rem); font-weight: 300; background: linear-gradient(135deg, #f5f5fa 20%, #8a8ab0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -.5px; line-height: 1.25; }
+.greet p { font-size: 14px; color: var(--text2); max-width: 480px; line-height: 1.8; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 620px; }
+.chip { padding: 10px 20px; border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; font-size: 13px; color: var(--text2); cursor: pointer; background: rgba(255,255,255,0.02); transition: all .22s; white-space: nowrap; backdrop-filter: blur(8px); }
+.chip:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,229,255,0.04); box-shadow: 0 0 15px rgba(0,229,255,0.1); }
 
-        /* Chat view */
-        .chat { display: none; flex-direction: column; gap: 18px; width: 100%; max-width: 740px; margin: 0 auto; }
-        .chat.on { display: flex; }
-        .mrow { display: flex; width: 100%; }
-        .mrow.u { justify-content: flex-end; }
-        .mrow.a { justify-content: flex-start; gap: 12px; }
-        .bub { max-width: 82%; padding: 14px 20px; border-radius: 20px; font-size: 14.5px; line-height: 1.7; word-break: break-word; direction: rtl; text-align: right; }
-        .bub.u { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px 20px 4px 20px; }
-        .bub.a { background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); border-radius: 4px 20px 20px 20px; backdrop-filter: blur(12px); }
-        .bub.ld { color: var(--cyan); font-style: italic; animation: pulseG 1.5s infinite; }
-        .bub b { font-weight: 600; font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 6px; }
-        @keyframes pulseG { 0%,100% { opacity:0.6; } 50% { opacity:1; } }
+/* CHAT AREA */
+.chat { flex: 1; overflow-y: auto; padding: 22px 20px; display: none; flex-direction: column; gap: 14px; }
+.chat.on { display: flex; }
+.mrow { display: flex; width: 100%; }
+.mrow.u { justify-content: flex-end; }
+.mrow.a { justify-content: flex-start; align-items: flex-start; gap: 12px; }
+.av { width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.2); display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+.bub { max-width: min(80%, 700px); padding: 14px 20px; border-radius: 20px; font-size: 14.5px; line-height: 1.75; word-break: break-word; }
+.bub.u { background: var(--bg3); border: 1px solid var(--border); border-radius: 20px 20px 4px 20px; direction: rtl; text-align: right; unicode-bidi: plaintext; }
+.bub.a { background: rgba(24,24,38,0.45); border: 1px solid rgba(255,255,255,0.05); border-radius: 4px 20px 20px 20px; backdrop-filter: blur(14px); direction: rtl; text-align: right; unicode-bidi: plaintext; }
+.bub.ld { color: var(--cyan); font-style: italic; }
+.bub b { font-weight: 600; font-size: 11px; color: var(--text2); display: block; margin-bottom: 6px; letter-spacing: .3px; }
 
-        /* ══ VIEWS ══ */
-        .view { display: none; flex-direction: column; width: 100%; max-width: 900px; margin: 0 auto; gap: 20px; height: 100%; }
-        .view.on { display: flex; }
-        .vh { text-align: center; padding: 10px 0; }
-        .vh h2 { font-size: 24px; font-weight: 600; background: linear-gradient(135deg,var(--purple),var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; }
-        .vh p { font-size: 13px; color: var(--text-muted); }
+/* DEEP SEARCH (PERFECTLY CENTERED) */
+#v-search { justify-content: center; align-items: center; min-height: 75vh; }
+.search-wrap {  
+  max-width: 640px; width: 100%; margin: 0 auto 24px;  
+  background: rgba(16,16,28,0.75); border: 1px solid rgba(124,58,237,0.25);  
+  border-radius: 24px; padding: 24px; backdrop-filter: blur(16px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 30px rgba(124,58,237,0.05);
+}
+.search-inner { position: relative; width: 100%; }
+.search-inner input {  
+  width: 100%; padding: 14px 20px 14px 52px;  
+  background: var(--bg2); border: 1px solid var(--border);  
+  border-radius: 16px; color: var(--text); font-size: 15px;  
+  font-family: inherit; outline: none; transition: all .25s; direction: ltr;
+}
+.search-inner input:focus { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0,229,255,0.15); }
+.search-inner input::placeholder { color: var(--text2); }
+.sico {  
+  position: absolute; left: 16px; top: 50%; transform: translateY(-50%);  
+  background: none; border: none; color: var(--cyan); cursor: pointer; display: flex; align-items: center;
+}
+.sico svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
+.sres { font-size: 14px; color: var(--text); line-height: 1.8; display: none; padding: 18px 4px 6px; border-top: 1px solid var(--border); margin-top: 16px; direction: rtl; text-align: right; }
+.search-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 640px; margin: 0 auto; }
 
-        /* 🎯 مهار ابعاد دیپ‌سرچ در مرکز صفحه */
-        .search-center-container { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; max-width: 600px; margin: auto; gap: 20px; }
-        .swrap { position: relative; width: 100%; }
-        .swrap input { width: 100%; padding: 16px 54px 16px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; color: var(--text); font-size: 15px; outline: none; transition: border-color 0.2s; direction: rtl; text-align: right; }
-        .swrap input:focus { border-color: rgba(0,229,255,0.3); }
-        .sico { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--cyan); cursor: pointer; display: flex; align-items: center; }
-        .sico svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
-        .sres { width: 100%; background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; padding: 20px; font-size: 14px; color: var(--text); line-height: 1.8; display: none; direction: rtl; text-align: right; }
+/* VIEWS & GRIDS */
+.view { flex: 1; display: none; flex-direction: column; overflow-y: auto; padding: 24px 20px; gap: 14px; }
+.view.on { display: flex; }
+.pgrid, .vgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.pcard, .vcard { background: var(--bg3); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; cursor: pointer; transition: all .25s; }
+.pcard { padding: 20px; backdrop-filter: blur(6px); }
+.pcard:hover, .vcard:hover { border-color: var(--cyan); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+.pcard h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.pcard p { font-size: 12.5px; color: var(--text2); line-height: 1.6; }
+.ptag { display: inline-block; padding: 3px 10px; font-size: 10.5px; font-weight: 600; border-radius: 6px; margin-top: 10px; background: rgba(124,58,237,0.12); color: var(--purple); border: 1px solid rgba(124,58,237,0.2); }
+.vthumb { height: 130px; display: flex; align-items: center; justify-content: center; position: relative; background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(0,229,255,0.05)); }
+.vthumb-dur { position: absolute; bottom: 8px; right: 10px; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.85); background: rgba(0,0,0,0.65); padding: 3px 7px; border-radius: 6px; }
+.plic { width: 46px; height: 46px; border-radius: 50%; background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.3); display: flex; align-items: center; justify-content: center; transition: all .25s; }
+.vcard:hover .plic { transform: scale(1.1); background: rgba(0,229,255,0.2); box-shadow: 0 0 15px rgba(0,229,255,0.3); }
+.plic svg { width: 18px; height: 18px; fill: var(--cyan); margin-left: 2px; }
+.vinfo { padding: 12px 14px; }
+.vinfo h3 { font-size: 13px; font-weight: 600; margin-bottom: 4px; line-height: 1.4; }
+.vinfo p { font-size: 11.5px; color: var(--text2); }
+.dropz { width: 100%; max-width: 540px; height: 185px; border: 2px dashed rgba(0,229,255,0.25); border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: all .25s; background: rgba(0,229,255,0.01); margin: 0 auto; }
+.dropz:hover { border-color: var(--cyan); background: rgba(0,229,255,0.04); }
 
-        .pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; width: 100%; }
-        .pcard { background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; cursor: pointer; transition: all 0.2s var(--ease); backdrop-filter: blur(10px); }
-        .pcard:hover { border-color: rgba(0,229,255,0.2); transform: translateY(-2px); }
-        .pcard h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
-        .pcard p { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; }
-        .ptag { display: inline-block; padding: 3px 10px; font-size: 10px; font-weight: 700; border-radius: 8px; margin-top: 12px; background: rgba(124,58,237,0.12); color: var(--purple); border: 1px solid rgba(124,58,237,0.18); }
+/* GEMINI DYNAMIC INPUT BAR */
+.inp-wrap { padding: 12px 20px 24px; position: relative; z-index: 10; flex-shrink: 0; }
+.findc { font-size: 12px; color: var(--cyan); padding: 4px 0 8px 6px; display: none; align-items: center; gap: 6px; max-width: 850px; margin: 0 auto; }
+.findc.on { display: flex; }
+.findc svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+.ibox {  
+  max-width: 850px; margin: 0 auto; background: rgba(10,10,18,0.85); backdrop-filter: blur(32px);  
+  border: 1px solid rgba(124,58,237,0.25); border-radius: 32px; padding: 8px 10px 8px 18px;  
+  display: flex; align-items: center; gap: 10px; box-shadow: 0 12px 48px rgba(0,0,0,0.6); transition: all 0.25s ease;
+}
+.ibox:focus-within { border-color: var(--cyan); box-shadow: 0 12px 48px rgba(0,0,0,0.6), 0 0 25px rgba(0,229,255,0.12); }
+.lacts { display: flex; gap: 4px; align-items: center; flex-shrink: 0; }
+.ab { width: 38px; height: 38px; border-radius: 50%; background: transparent; border: none; color: var(--text2); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; flex-shrink: 0; }
+.ab:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+.ab svg { width: 19px; height: 19px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.ab.rec { color: #ff4343; box-shadow: 0 0 12px rgba(255,67,67,.3); animation: pulse 1.5s infinite; }
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+textarea#pr { flex: 1; background: transparent; border: none; color: var(--text); font-size: 15px; font-family: inherit; resize: none; outline: none; line-height: 1.65; padding: 10px 0; max-height: 140px; direction: rtl; text-align: right; scrollbar-width: none; }
+textarea#pr::-webkit-scrollbar { display: none; }
+textarea#pr::placeholder { color: var(--text2); }
+.racts { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+@keyframes sg { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+.sbtn {  
+  height: 42px; padding: 0 24px; border-radius: 21px; border: none; font-family: inherit;  
+  background: linear-gradient(270deg, var(--blue), var(--purple), var(--pink), var(--cyan));  
+  background-size: 300% 300%; animation: sg 4s ease infinite; color: #fff; font-size: 13.5px; font-weight: 700; cursor: pointer; letter-spacing: .4px; transition: transform .15s, box-shadow .15s;
+}
+.sbtn:hover { transform: scale(1.03); box-shadow: 0 4px 22px rgba(124,58,237,.45); }
 
-        .ltabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px; }
-        .ltab { padding: 8px 18px; font-size: 12.5px; font-weight: 500; border-radius: 30px; border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; transition: all 0.2s; background: transparent; }
-        .ltab.on, .ltab:hover { border-color: rgba(0,229,255,0.3); color: var(--cyan); background: rgba(0,229,255,0.03); }
-        .ccard { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 12px; width: 100%; }
-        .cch { padding: 12px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-        .clang { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 6px; background: rgba(0,229,255,0.06); color: var(--cyan); border: 1px solid rgba(0,229,255,0.12); }
-        .ccard pre { padding: 18px; font-size: 12px; color: var(--text); font-family: 'Courier New', monospace; overflow-x: auto; background: rgba(0,0,0,0.2); line-height: 1.75; }
+/* TOAST NOTIFICATIONS */
+.toast-container { position: fixed; top: 20px; right: 20px; z-index: 999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+.toast { background: rgba(16, 16, 30, 0.85); backdrop-filter: blur(12px); border-left: 4px solid var(--cyan); padding: 12px 20px; border-radius: 8px; color: var(--text); font-size: 13.5px; font-weight: 500; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 15px rgba(0,229,255,0.1); transform: translateX(120%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: auto; }
+.toast.show { transform: translateX(0); }
+.toast.success { border-left-color: var(--cyan); }
+.toast.error { border-left-color: #ff4343; }
 
-        .dropz { width: 100%; max-width: 520px; height: 180px; border: 2px dashed rgba(0,229,255,0.16); border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; transition: all 0.2s; background: rgba(0,229,255,0.01); margin: 20px auto; }
-        .dropz:hover { border-color: var(--cyan); background: rgba(0,229,255,0.03); }
+/* RESPONSIVE & MODALS */
+.mnav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: var(--bg2); border-top: 1px solid var(--border); z-index: 100; }
+.mnav-in { display: flex; height: 100%; }
+.mni { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; flex: 1; padding: 4px; cursor: pointer; color: var(--text2); font-size: 10px; font-weight: 500; }
+.mni.on, .mni:hover { color: var(--cyan); }
+.mni svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+.modal-bg.on { display: flex; }
+.modal-box { background: var(--bg3); border: 1px solid rgba(0,229,255,0.3); border-radius: 24px; padding: 28px; max-width: 500px; width: 92%; text-align: center; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.7); }
+.modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: var(--text2); cursor: pointer; font-size: 24px; }
+.modal-close:hover { color: var(--cyan); }
+.modal-box h3 { font-size: 17px; margin-bottom: 10px; font-weight: 600; }
+.modal-box p { font-size: 13.5px; color: var(--text2); line-height: 1.75; margin-bottom: 12px; }
+.modal-box .dur { display: inline-block; font-size: 12px; color: var(--cyan); border: 1px solid rgba(0,229,255,0.25); padding: 4px 12px; border-radius: 12px; }
 
-        /* Command Box Input */
-        .inp-wrap { padding: 12px 24px 24px; position: relative; z-index: 10; flex-shrink: 0; width: 100%; }
-        .ibox { max-width: 760px; margin: 0 auto; background: rgba(18,18,26,0.8); backdrop-filter: blur(35px); border: 1px solid rgba(255,255,255,0.08); border-radius: 32px; padding: 8px 8px 8px 18px; display: flex; align-items: flex-end; gap: 10px; box-shadow: 0 12px 48px rgba(0,0,0,0.6); }
-        .lacts { display: flex; gap: 4px; align-items: center; padding-bottom: 4px; }
-        
-        .ab { width: 38px; height: 38px; border-radius: 50%; border: none; background: transparent; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
-        .ab:hover { background: rgba(255,255,255,0.05); color: var(--text); }
-        .ab svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
-        .ab.rec { color: #ff4040; box-shadow: 0 0 12px rgba(255,64,64,0.25); }
-        
-        textarea#pr { flex: 1; background: transparent; border: none; color: var(--text); font-size: 15px; font-family: inherit; resize: none; outline: none; line-height: 1.65; padding: 8px 0; max-height: 140px; direction: rtl; text-align: right; }
-        .racts { display: flex; align-items: center; gap: 6px; padding-bottom: 3px; }
-        
-        .sbtn { height: 40px; padding: 0 24px; border-radius: 20px; border: none; font-family: inherit; background: linear-gradient(270deg, var(--blue), var(--purple), var(--pink), var(--cyan)); background-size: 300% 300%; animation: gradientS 4s ease infinite; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: transform 0.15s; }
-        .sbtn:hover { transform: scale(1.03); }
-
-        /* ══ MOBILE BOT NAV ══ */
-        .mnav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: 64px; background: rgba(12,12,18,0.9); backdrop-filter: blur(30px); border-top: 1px solid var(--border); z-index: 100; }
-        .mnav-in { display: flex; height: 100%; }
-        .mni { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; flex: 1; cursor: pointer; color: var(--text-muted); font-size: 10px; font-weight: 500; transition: color 0.2s; }
-        .mni.on { color: var(--cyan); }
-        .mni svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; }
-
-        @media(max-width:768px){ 
-            .sb { display: none; }
-            .mnav { display: block; } 
-            body { padding-bottom: 64px; } 
-            .topbar { background: var(--bg-sub); height: 56px; border-bottom: 1px solid var(--border); }
-            .greet h1 { font-size: 1.6rem; } 
-            .greet p { font-size: 13px; }
-            .bub { max-width: 90%; font-size: 13.5px; } 
-            .chat { padding: 4px 0; } 
-            .inp-wrap { padding: 10px; }
-            .ibox { border-radius: 24px; padding: 6px 6px 6px 12px; }
-            .sbtn { height: 36px; padding: 0 16px; font-size: 12px; border-radius: 18px; }
-            .content { padding: 12px; height: calc(100vh - 56px - 64px) !important; overflow-y: auto; }
-            .search-center-container { margin: 20px auto; }
-        }
-    </style>
+@media(max-width:768px){ .sb { display: none; } .mnav { display: block; } body { padding-bottom: 60px; } .pgrid, .vgrid { grid-template-columns: 1fr 1fr; } }
+@media(max-width:480px){ .pgrid, .vgrid { grid-template-columns: 1fr; } }
+</style>
 </head>
 <body>
 
+<div class="toast-container" id="toastPortal"></div>
+
 <aside class="sb" id="sb">
   <div class="sb-head">
-    <button class="hbtn" onclick="toggleSB()" aria-label="Toggle sidebar">
+    <button class="hbtn" onclick="toggleSB()" aria-label="Toggle">
       <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <div class="brand">
-      <svg width="34" height="34" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block; width: 34px; height: 34px;">
-        <defs>
-          <linearGradient id="lbord" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#7c3aed"/><stop offset="50%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#06b6d4"/>
-          </linearGradient>
-          <linearGradient id="lstar" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#c026d3"/>
-          </linearGradient>
-        </defs>
-        <path d="M 112 24 L 54 24 C 36 24 22 38 22 56 L 22 146 C 22 164 36 178 54 178 L 146 178 C 164 178 178 164 178 146 L 178 88" stroke="url(#lbord)" stroke-width="10" stroke-linecap="round" fill="none"/>
-        <path d="M 152 54 C 152 32 169 16 191 16 C 169 16 152 0 152 -22 C 152 0 135 16 113 16 C 135 16 152 32 152 54 Z" transform="translate(4, 6)" fill="url(#lstar)"/>
-        <line x1="53" y1="55" x2="103" y2="55" stroke="#00e5ff" stroke-width="6" stroke-linecap="round"/>
-        <circle cx="53" cy="55" r="4.5" fill="#00e5ff"/><circle cx="103" cy="55" r="4.5" fill="#00e5ff"/>
-        <line x1="38" y1="73" x2="97" y2="73" stroke="#00e5ff" stroke-width="6" stroke-linecap="round"/>
-        <circle cx="38" cy="73" r="4.5" fill="#00e5ff"/><circle cx="97" cy="73" r="4.5" fill="#00e5ff"/>
-        <path d="M 54 90 L 54 112 L 85 112" stroke="#00e5ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <circle cx="54" cy="90" r="4.5" fill="#00e5ff"/>
-        <path d="M 85 90 C 122 90 135 105 135 128 C 135 151 122 166 85 166 C 73 166 69 158 69 148 L 69 128" stroke="#00e5ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <circle cx="135" cy="128" r="4.5" fill="#00e5ff"/>
-        <rect x="52" y="139" width="24" height="24" rx="2" stroke="#00e5ff" stroke-width="6" stroke-linejoin="round" fill="none"/>
-        <line x1="97" y1="124" x2="97" y2="174" stroke="#00e5ff" stroke-width="6" stroke-linecap="round"/>
-        <circle cx="97" cy="174" r="4.5" fill="#00e5ff"/>
-      </svg>
-      <div class="brand-text"><span class="brand-name"><span class="dt">D&T</span> Ai-TECH</span></div>
+    
+    <svg id="sb-logo" width="36" height="36" viewBox="0 0 1500 1500" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0; filter:drop-shadow(0 0 8px rgba(0,229,255,.45)); cursor:pointer" onclick="toggleSB()">
+      <defs>
+        <linearGradient id="mainGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#7c3aed"/>
+          <stop offset="50%" stop-color="#3b82f6"/>
+          <stop offset="100%" stop-color="#00e5ff"/>
+        </linearGradient>
+        <linearGradient id="starGlow" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#6d28d9"/>
+          <stop offset="100%" stop-color="#c026d3"/>
+        </linearGradient>
+      </defs>
+      <path d="M 540,150 C 720,150 820,250 820,430 L 820,770 C 820,830 770,880 710,880 L 290,880 C 170,880 150,860 150,740 L 150,290 C 150,170 170,150 290,150 Z" fill="none" stroke="url(#mainGlow)" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M 820,530 L 820,810" fill="none" stroke="#00e5ff" stroke-width="38" stroke-linecap="round"/>
+      <path d="M 340,390 L 340,790 C 340,790 530,790 530,590 C 530,390 340,390 340,390 Z" fill="none" stroke="#00e5ff" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="340" y1="480" x2="520" y2="480" stroke="#00e5ff" stroke-width="26" stroke-linecap="round"/>
+      <circle cx="340" cy="480" r="18" fill="#00e5ff"/><circle cx="520" cy="480" r="18" fill="#00e5ff"/>
+      <line x1="240" y1="550" x2="470" y2="550" stroke="#00e5ff" stroke-width="26" stroke-linecap="round"/>
+      <circle cx="240" cy="550" r="18" fill="#00e5ff"/><circle cx="470" cy="550" r="18" fill="#00e5ff"/>
+      <line x1="510" y1="680" x2="510" y2="790" stroke="#00e5ff" stroke-width="26" stroke-linecap="round"/>
+      <circle cx="510" cy="680" r="16" fill="#00e5ff"/><circle cx="510" cy="790" r="16" fill="#00e5ff"/>
+      <rect x="340" y="670" width="110" height="100" rx="10" fill="none" stroke="#00e5ff" stroke-width="26" stroke-linejoin="round"/>
+      <circle cx="630" cy="630" r="18" fill="#00e5ff"/>
+      <path d="M 820,380 C 820,250 850,220 980,220 C 850,220 820,190 820,60 C 820,190 790,220 660,220 C 790,220 820,250 820,380 Z" fill="url(#starGlow)"/>
+    </svg>
+    <div class="brand-wrap" id="brand-wrap">
+      <span class="brand-name"><span class="dt">D&T</span> Ai-TECH</span>
     </div>
   </div>
+  
   <nav class="sb-nav">
     <div class="nlbl">WORKSPACE</div>
-    <div class="ni on" data-v="chat" onclick="sw('chat',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg></div><span class="ni-txt">New Chat</span></div>
-    <div class="ni" data-v="project" onclick="sw('project',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><span class="ni-txt">Projects</span></div>
-    <div class="ni" data-v="search" onclick="sw('search',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div><span class="ni-txt">Deep Search</span></div>
-    <div class="nlbl">MEDIA &AMP; REPOS</div>
-    <div class="ni" data-v="images" onclick="sw('images',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><span class="ni-txt">Image Studio</span></div>
-    <div class="ni" data-v="library" onclick="sw('library',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><span class="ni-txt">Code Library</span></div>
+    <div class="ni on" data-v="chat" onclick="sw('chat',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg></div>
+      <span class="ni-txt">New Chat</span>
+    </div>
+    <div class="ni" data-v="project" onclick="sw('project',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+      <span class="ni-txt">Projects</span>
+    </div>
+    <div class="ni" data-v="search" onclick="sw('search',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+      <span class="ni-txt">Deep Search</span>
+    </div>
+    
+    <div class="nlbl">MEDIA</div>
+    <div class="ni" data-v="images" onclick="sw('images',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+      <span class="ni-txt">Image Studio</span>
+    </div>
+    <div class="ni" data-v="videos" onclick="sw('videos',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+      <span class="ni-txt">Videos</span>
+    </div>
   </nav>
+  
+  <div class="sb-bot">
+    <div class="ni" onclick="openSettings()">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+      <span class="ni-txt">Settings</span>
+    </div>
+  </div>
 </aside>
 
 <main class="main">
   <div class="topbar">
-    <button class="hbtn" style="display: none;" id="menu-toggle-mob"><svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
     <span class="topbar-t" id="tb-t">AI Studio</span>
-    <div class="tbr"><button class="ibtn" title="New chat" onclick="newChat()"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+    <div class="tbr">
+      <button class="ibtn" title="New chat" onclick="newChat()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </div>
   </div>
   
   <div class="content">
-    <div id="v-chat" style="flex:1; display:flex; flex-direction:column; overflow:hidden">
+    <div id="v-chat" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
       <div class="greet" id="greet">
-        <div class="greet-logo-box">
-          <svg width="120" height="120" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block; width: 120px; height: 120px;">
-            <path d="M 112 24 L 54 24 C 36 24 22 38 22 56 L 22 146 C 22 164 36 178 54 178 L 146 178 C 164 178 178 164 178 146 L 178 88" stroke="url(#glb)" stroke-width="10" stroke-linecap="round" fill="none"/>
-            <path d="M 152 54 C 152 32 169 16 191 16 C 169 16 152 0 152 -22 C 152 0 135 16 113 16 C 135 16 152 32 152 54 Z" transform="translate(4, 6)" fill="url(#gls)"/>
-            <line x1="53" y1="55" x2="103" y2="55" stroke="#00e5ff" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="53" cy="55" r="4.5" fill="#00e5ff"/><circle cx="103" cy="55" r="4.5" fill="#00e5ff"/>
-            <line x1="38" y1="73" x2="97" y2="73" stroke="#00e5ff" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="38" cy="73" r="4.5" fill="#00e5ff"/><circle cx="97" cy="73" r="4.5" fill="#00e5ff"/>
-            <path d="M 54 90 L 54 112 L 85 112" stroke="#00e5ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            <circle cx="54" cy="90" r="4.5" fill="#00e5ff"/>
-            <path d="M 85 90 C 122 90 135 105 135 128 C 135 151 122 166 85 166 C 73 166 69 158 69 148 L 69 128" stroke="#00e5ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            <circle cx="135" cy="128" r="4.5" fill="#00e5ff"/>
-            <rect x="52" y="139" width="24" height="24" rx="2" stroke="#00e5ff" stroke-width="6" stroke-linejoin="round" fill="none"/>
-            <line x1="97" y1="124" x2="97" y2="174" stroke="#00e5ff" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="97" cy="174" r="4.5" fill="#00e5ff"/>
-          </svg>
-        </div>
+        <svg class="greet-logo" viewBox="0 0 1500 1500" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 540,150 C 720,150 820,250 820,430 L 820,770 C 820,830 770,880 710,880 L 290,880 C 170,880 150,860 150,740 L 150,290 C 150,170 170,150 290,150 Z" fill="none" stroke="url(#mainGlow)" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M 820,530 L 820,810" fill="none" stroke="#00e5ff" stroke-width="38" stroke-linecap="round"/>
+          <path d="M 340,390 L 340,790 C 340,790 530,790 530,590 C 530,390 340,390 340,390 Z" fill="none" stroke="#00e5ff" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="340" y1="480" x2="520" y2="480" stroke="#00e5ff" stroke-width="26" stroke-linecap="round"/>
+          <circle cx="340" cy="480" r="18" fill="#00e5ff"/><circle cx="520" cy="480" r="18" fill="#00e5ff"/>
+          <line x1="240" y1="550" x2="470" y2="550" stroke="#00e5ff" stroke-width="26" stroke-linecap="round"/>
+          <circle cx="240" cy="550" r="18" fill="#00e5ff"/><circle cx="470" cy="550" r="18" fill="#00e5ff"/>
+          <line x1="510" y1="680" x2="510" y2="790" stroke="#00e5ff" stroke-width="26" stroke-linecap="round"/>
+          <circle cx="510" cy="680" r="16" fill="#00e5ff"/><circle cx="510" cy="790" r="16" fill="#00e5ff"/>
+          <rect x="340" y="670" width="110" height="100" rx="10" fill="none" stroke="#00e5ff" stroke-width="26" stroke-linejoin="round"/>
+          <circle cx="630" cy="630" r="18" fill="#00e5ff"/>
+          <path d="M 820,380 C 820,250 850,220 980,220 C 850,220 820,190 820,60 C 820,190 790,220 660,220 C 790,220 820,250 820,380 Z" fill="url(#starGlow)"/>
+        </svg>
         <h1>Where should we start?</h1>
-        <p>پنل محاسباتی هوش مصنوعی و دستیار فنی توسعه الگوریتم‌های Grasshopper Python و مهندسی الکترونیک.</p>
+        <p>Design, computer science, electronics, 3D parametric workflows, or any technical analysis — D&T Engine is fully operational.</p>
         <div class="chips">
-          <div class="chip" onclick="useChip(this)">Generate Grasshopper Python Script</div>
-          <div class="chip" onclick="useChip(this)">Optimize Electronics Circuit</div>
-          <div class="chip" onclick="useChip(this)">Parametric Geometry Logic</div>
+          <div class="chip" onclick="useChip(this)">Write Grasshopper Python component</div>
+          <div class="chip" onclick="useChip(this)">Analyze computational circuit logic</div>
+          <div class="chip" onclick="useChip(this)">Optimize Python script automation</div>
+          <div class="chip" onclick="useChip(this)">Generate RhinoCommon curve vector</div>
         </div>
       </div>
       <div class="chat" id="chatbox"></div>
     </div>
-
+    
     <div id="v-project" class="view">
-      <div class="vh"><h2>Projects Hub</h2><p>مدیریت پروژه‌ها و کنترل مخازن محاسباتی</p></div>
+      <div class="vh"><h2>Projects Hub</h2><p>Project-based workspace with deep AI analysis</p></div>
       <div class="pgrid">
-        <div class="pcard"><h3>D&T AI Interface</h3><p>طراحی و توسعه رابط کاربری هوشمند شیشه‌ای فرانت‌بند</p><span class="ptag">Frontend</span></div>
-        <div class="pcard"><h3>Computational Geometry</h3><p>تولید اسکریپت‌های پارامتریک برای Rhino Common API</p><span class="ptag">Rhino / GH</span></div>
-        <div class="pcard"><h3>Hardware Core Pipeline</h3><p>آنالیز معماری مدارات چاپی و میکروکنترلرهای ESP32</p><span class="ptag">Electronics</span></div>
+        <div class="pcard" onclick="openProject('D&T AI Hub')">
+          <h3>D&T AI Core Interface</h3><p>Main advanced LLM multi-agent engineering platform panel system.</p>
+          <span class="ptag">System Core</span>
+        </div>
+        <div class="pcard" onclick="openProject('Parametric Mesh Automation')">
+          <h3>Parametric Mesh Automation</h3><p>Procedural RhinoCommon generation scripts for matrix pipelines.</p>
+          <span class="ptag">Rhino/3D</span>
+        </div>
       </div>
     </div>
-
+    
     <div id="v-search" class="view">
-      <div class="vh"><h2>Deep Search Core</h2><p>جستجوی عمیق و هوشمند در مستندات مهندسی</p></div>
-      <div class="search-center-container">
-        <div class="swrap">
-          <input id="dsi" type="text" placeholder="موضوع یا سوال خود را بنویسید..." onkeydown="if(event.key==='Enter')doSrch()"/>
+      <div class="vh" style="width:100%; max-width:600px;"><h2>Deep Search</h2><p>Intelligent deep search with structured analysis</p></div>
+      <div class="search-wrap">
+        <div class="search-inner">
+          <input id="dsi" type="text" placeholder="Search tech specs, codebases, architectures..." onkeydown="handleSearchKey(event)"/>
           <button class="sico" onclick="doSrch()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
         </div>
         <div id="sres" class="sres"></div>
-        <div class="chips">
-          <div class="chip" onclick="document.getElementById('dsi').value=this.innerText;doSrch()">RhinoCommon API</div>
-          <div class="chip" onclick="document.getElementById('dsi').value=this.innerText;doSrch()">Parametric Python</div>
-        </div>
+      </div>
+      <div class="search-chips">
+        <div class="chip" onclick="document.getElementById('dsi').value=this.innerText; doSrch();">Grasshopper Python Core</div>
+        <div class="chip" onclick="document.getElementById('dsi').value=this.innerText; doSrch();">Hardware Architecture</div>
       </div>
     </div>
-
+    
     <div id="v-images" class="view">
-      <div class="vh"><h2>Image Studio</h2><p>آپلود طرح‌ها، اسکیس‌ها یا نقشه مدارها جهت تحلیل مهندسی</p></div>
-      <div style="display:flex; flex-direction:column; align-items:center; gap:14px; width:100%;">
-        <div class="dropz" onclick="document.getElementById('img-up').click()" ondragover="event.preventDefault()" ondrop="imgDrop(event)">
+      <div class="vh"><h2>Image Studio</h2><p>Upload, analyze and process images with AI</p></div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:14px">
+        <div class="dropz" onclick="document.getElementById('img-up').click()">
           <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <p style="color:var(--text-muted); font-size:13px">تصویر را اینجا رها کنید یا کلیک کنید</p>
+          <p style="color:var(--text2); font-size:13px">Click to upload structural schematic blueprints</p>
         </div>
         <input type="file" id="img-up" accept="image/*" style="display:none" onchange="prevImg(this)">
-        <div id="img-pw" style="display:none; flex-direction:column; align-items:center; gap:12px; width:100%; max-width:500px">
-          <img id="img-p" style="max-width:100%; max-height:280px; border-radius:14px; border:1px solid var(--border)" src="" alt="">
-          <button class="sbtn" style="height:38px; padding:0 24px" onclick="analyzeImg()">Analyze Framework</button>
+        <div id="img-pw" style="display:none; flex-direction:column; align-items:center; gap:12px; width:100%; max-width:520px">
+          <img id="img-p" style="max-width:100%; max-height:280px; border-radius:16px;" src="" alt="">
+          <button class="sbtn" onclick="analyzeImg()">Analyze Framework</button>
         </div>
-        <div id="img-res" style="display:none; background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:16px 18px; font-size:13px; color:var(--text-muted); line-height:1.8; width:100%; max-width:500px"></div>
+        <div id="img-res" style="display:none; background:var(--bg3); border:1px solid var(--border); border-radius:14px; padding:16px; font-size:13px; width:100%; max-width:520px"></div>
       </div>
     </div>
-
-    <div id="v-library" class="view">
-      <div class="vh"><h2>Code Library</h2><p>کتابخانه کدهای توسعه و اسکریپت‌های مادر</p></div>
-      <div class="ltabs">
-        <div class="ltab on" onclick="libF('all',this)">All</div>
-        <div class="ltab" onclick="libF('gh',this)">Rhino / GH</div>
-        <div class="ltab" onclick="libF('hw',this)">Electronics</div>
+    
+    <div id="v-videos" class="view">
+      <div class="vh"><h2>Computational Design Videos</h2><p>AI and computational design tutorials</p></div>
+      <div class="vgrid">
+        <div class="vcard" onclick="openVideo('Grasshopper Masterclass','Advanced spatial vectors, matrix logic data trees, and geometric algorithms inside Rhino 3D ecosystem.','45:12')">
+          <div class="vthumb">
+            <div class="plic"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+            <span class="vthumb-dur">45:12</span>
+          </div>
+          <div class="vinfo"><h3>Grasshopper Matrix Data Trees</h3><p>Algorithms • Advanced</p></div>
+        </div>
       </div>
-      <div class="ccard" data-l="gh"><div class="cch"><span>Grasshopper Point Grid Generator</span><span class="clang">Python</span></div><pre>import Rhino.Geometry as rg
-import math
-pts = []
-for i in range(10):
-    z = math.sin(i) * 2
-    pts.append(rg.Point3d(i, 0, z))</pre></div>
     </div>
   </div>
 
@@ -329,147 +408,285 @@ for i in range(10):
     </div>
     <div class="ibox">
       <div class="lacts">
-        <button class="ab" title="Attach file" onclick="document.getElementById('finp').click()">
+        <button class="ab" title="Attach blueprint file" onclick="document.getElementById('finp').click()">
           <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
-        </button>
-        <button class="ab" title="Image Studio" onclick="sw('images',document.querySelector('[data-v=images]'))">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
         </button>
       </div>
       <input type="file" id="finp" style="display:none" onchange="onFile(this)">
-      <textarea id="pr" rows="1" placeholder="از D&T Ai-TECH بپرس یا فایل آپلود کن..." oninput="ar(this)" onkeydown="ok(event)"></textarea>
+      <textarea id="pr" rows="1" placeholder="Ask D&T Ai-TECH or upload code scripts..." oninput="ar(this)" onkeydown="ok(event)"></textarea>
       <div class="racts">
-        <button class="ab" id="micbtn" title="Voice Input" onclick="toggleVoice()">
-          <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-        </button>
         <button class="sbtn" onclick="send()">SEND</button>
       </div>
     </div>
   </div>
 </main>
 
-<nav class="mnav">
-  <div class="mnav-in">
-    <div class="mni on" data-v="chat" onclick="mSw('chat',this)"><svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>Chat</div>
-    <div class="mni" data-v="project" onclick="mSw('project',this)"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Projects</div>
-    <div class="mni" data-v="search" onclick="mSw('search',this)"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</div>
-    <div class="mni" data-v="images" onclick="mSw('images',this)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Images</div>
-    <div class="mni" data-v="library" onclick="mSw('library',this)"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Library</div>
+<div class="modal-bg" id="settingsModal" onclick="if(event.target===this)closeSettings()">
+  <div class="modal-box" style="text-align: left; direction: ltr;">
+    <button class="modal-close" onclick="closeSettings()">×</button>
+    <h3 style="color: var(--cyan); margin-bottom: 16px;">D&T Ai-TECH Core Systems</h3>
+    <p style="font-size: 13px; color: var(--text2); margin-bottom: 12px;">Configure active engine and parameters:</p>
+    <div style="margin: 15px 0; display: flex; flex-direction: column; gap: 12px;">
+      <label style="font-size: 13px; display: flex; justify-content: space-between; align-items: center;">
+        <span>Active Model Engine:</span>
+        <select id="engineSelect" style="background: var(--bg2); color: var(--text); border: 1px solid var(--border); padding: 6px; border-radius: 6px; outline: none;">
+          <option value="pro">Gemini 1.5 Pro (Heavy Computational)</option>
+          <option value="flash">Gemini 1.5 Flash (Lightweight Chat)</option>
+        </select>
+      </label>
+      <label style="font-size: 13px; display: flex; justify-content: space-between; align-items: center;">
+        <span>System Mode:</span>
+        <select id="modeSelect" style="background: var(--bg2); color: var(--text); border: 1px solid var(--border); padding: 6px; border-radius: 6px; outline: none;">
+          <option value="copilot">Co-Pilot Design Synchronizer</option>
+          <option value="general">General Expert Assistance</option>
+        </select>
+      </label>
+    </div>
+    <button class="sbtn" style="width: 100%; height: 40px; margin-top: 10px;" onclick="saveSettings()">Save & Sync Engine</button>
   </div>
-</nav>
+</div>
+
+<div class="modal-bg" id="vmodal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h3 id="vmodal-title" style="color: var(--cyan);">Video Title</h3>
+    <p id="vmodal-desc" style="margin-top:8px; font-size:13px; color: var(--text2);"></p>
+    <span class="dur" id="vmodal-dur"></span>
+    <br><br>
+    <button class="sbtn" style="height:36px; padding:0 20px;" onclick="showToast('Streaming algorithm module...', 'success')">▶ Play Engine Footage</button>
+  </div>
+</div>
 
 <script>
-let selFile=null,recOn=false,recog=null,started=false;
-const VT={chat:'AI Studio',project:'Projects Hub',search:'Deep Search',images:'Image Studio',library:'Code Library'};
+let selFile = null, started = false;
+const VT = {chat: 'AI Studio', project: 'Projects Hub', search: 'Deep Search', images: 'Image Studio', videos: 'Videos'};
 
-function toggleSB(){document.getElementById('sb').classList.toggle('c')}
+// ════ FUNCTIONAL TOAST SYSTEM ════
+function showToast(message, type = 'success') {
+  const portal = document.getElementById('toastPortal');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+    <span>${message}</span>
+  `;
+  portal.appendChild(toast);
+  setTimeout(() => toast.classList.add('show'), 50);
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+}
 
-function sw(name,el){
-  document.getElementById('v-chat').style.display=name==='chat'?'flex':'none';
-  ['project','search','images','library'].forEach(n=>{
-    const v=document.getElementById('v-'+n);
-    if(v)v.classList.toggle('on',n===name);
+// ════ FUNCTIONAL SIDEBAR TOGGLE ════
+function toggleSB(){
+  document.getElementById('sb').classList.toggle('c');
+}
+
+// ════ NAVIGATION MANAGER ════
+function sw(name, el){
+  document.getElementById('v-chat').style.display = name === 'chat' ? 'flex' : 'none';
+  ['project', 'search', 'images', 'videos'].forEach(n => {
+    const v = document.getElementById('v-' + n);
+    if(v) v.classList.toggle('on', n === name);
   });
-  document.querySelectorAll('.ni').forEach(i=>i.classList.remove('on'));
-  const targetNi = document.querySelector(`.ni[data-v="${name}"]`);
-  if(targetNi) targetNi.classList.add('on');
-  document.getElementById('tb-t').textContent=VT[name]||name;
+  document.querySelectorAll('.ni').forEach(i => i.classList.remove('on'));
+  if(el) el.classList.add('on');
+  else {
+    const backupEl = document.querySelector(`.ni[data-v="${name}"]`);
+    if(backupEl) backupEl.classList.add('on');
+  }
+  document.getElementById('tb-t').textContent = VT[name] || name;
 }
-
-function mSw(name,el){
-  document.querySelectorAll('.mni').forEach(i=>i.classList.remove('on'));
+function mSw(name, el){
+  document.querySelectorAll('.mni').forEach(i => i.classList.remove('on'));
   el.classList.add('on');
-  sw(name,null);
+  document.querySelectorAll('.ni').forEach(i => i.classList.toggle('on', i.dataset.v === name));
+  sw(name, document.querySelector(`.ni[data-v="${name}"]`));
 }
 
+// ════ CHAT ENGINE ════
 function newChat(){
-  started=false;
-  document.getElementById('chatbox').innerHTML='';
+  started = false;
+  document.getElementById('chatbox').innerHTML = '';
   document.getElementById('chatbox').classList.remove('on');
-  document.getElementById('greet').style.display='flex';
-  document.getElementById('pr').value='';
+  document.getElementById('greet').style.display = 'flex';
+  document.getElementById('pr').value = '';
   document.getElementById('findc').classList.remove('on');
-  selFile=null;
-  sw('chat',null);
+  selFile = null;
+  sw('chat');
 }
-
-function useChip(el){document.getElementById('pr').value=el.textContent;document.getElementById('pr').focus();}
-function ar(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,140)+'px';}
-function ok(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
-
-function onFile(inp){if(inp.files.length){selFile=inp.files[0];document.getElementById('findc').classList.add('on');document.getElementById('fnm').textContent='✓ '+selFile.name;}}
+function useChip(el){
+  document.getElementById('pr').value = el.textContent;
+  document.getElementById('pr').focus();
+  sw('chat');
+}
+function ar(el){el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 140) + 'px';}
+function ok(e){if(e.key === 'Enter' && !e.shiftKey){e.preventDefault(); send();}}
+function onFile(inp){
+  if(inp.files.length){
+    selFile = inp.files[0];
+    document.getElementById('findc').classList.add('on');
+    document.getElementById('fnm').textContent = '✓ ' + selFile.name;
+    showToast('File selected: ' + selFile.name, 'success');
+  }
+}
 
 async function send(){
-  const txt=document.getElementById('pr').value.trim();
-  if(!txt&&!selFile) return;
-  if(!started){started=true;document.getElementById('greet').style.display='none';document.getElementById('chatbox').classList.add('on');}
-  const cb=document.getElementById('chatbox');
-  const fl=selFile?`<br><small style="color:var(--cyan);font-size:11px">📎 ${selFile.name}</small>`:'';
+  const txt = document.getElementById('pr').value.trim();
+  if(!txt && !selFile) return;
+  if(!started){
+    started = true;
+    document.getElementById('greet').style.display = 'none';
+    document.getElementById('chatbox').classList.add('on');
+  }
+  sw('chat');
+  const cb = document.getElementById('chatbox');
+  const fl = selFile ? `<br><small style="color:var(--cyan);font-size:11px">📎 ${selFile.name}</small>` : '';
+  cb.innerHTML += `<div class="mrow u"><div class="bub u"><b>You</b>${txt || 'Processing file pipeline attachment...'}${fl}</div></div>`;
+  document.getElementById('pr').value = '';
+  document.getElementById('pr').style.height = 'auto';
+  const id = 'a' + Date.now();
+  cb.innerHTML += `<div class="mrow a"><div class="av">${miniLogo()}</div><div class="bub a ld" id="${id}">D&T Core Pipeline processing system node...</div></div>`;
+  cb.scrollTop = cb.scrollHeight;
+  let fp = [];
+  if(selFile){fp = [{inlineData: {data: await b64(selFile), mimeType: selFile.type}}];}
+  selFile = null;
+  document.getElementById('findc').classList.remove('on');
   
-  cb.innerHTML+=`<div class="mrow u"><div class="bub u"><b>شما</b>${txt||'فایل پیوست شد'}${fl}</div></div>`;
-  document.getElementById('pr').value='';document.getElementById('pr').style.height='auto';
-  
-  const id='a'+Date.now();
-  cb.innerHTML+=`<div class="mrow a"><div class="av">${miniLogo()}</div><div class="bub a ld" id="${id}">D&T Core در حال پردازش...</div></div>`;
-  cb.scrollTop=cb.scrollHeight;
-  
-  let fp=[];
-  if(selFile){fp=[{inlineData:{data:await b64(selFile),mimeType:selFile.type}}];}
-  selFile=null;document.getElementById('findc').classList.remove('on');
-  
-  try{
-    const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:txt,fileParts:fp})});
-    const d=await r.json();const el=document.getElementById(id);el.classList.remove('ld');
-    el.innerHTML=r.ok&&d.response?`<b>D&T Ai-TECH</b><br>${d.response}`:`<b>System Error:</b> Connection failed. Check your Gemini API Deployment on Vercel.`;
-  }catch{const el=document.getElementById(id);el.classList.remove('ld');el.innerHTML=`<b>Connection Error:</b> Check Vercel logs metric.`;}
-  cb.scrollTop=cb.scrollHeight;
+  const payloadMessages = [
+    { role: 'user', content: txt || 'File attachment upload analysis query.' }
+  ];
+
+  try {
+    const r = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ messages: payloadMessages, fileParts: fp })
+    });
+    const d = await r.json();
+    const el = document.getElementById(id);
+    el.classList.remove('ld');
+    
+    const rawAiText = d.text || d.response || '';
+    if(r.ok && rawAiText){
+      let resp = rawAiText.replace(/```(\w+)?\n?([\s\S]*?)```/g, (_, lang, code) => `
+        <div style="margin:12px 0; background:rgba(0,0,0,0.5); border:1px solid var(--border); border-radius:12px; overflow:hidden">
+          <div style="padding:6px 14px; font-size:11px; color:var(--cyan); background:rgba(255,255,255,0.02); border-bottom:1px solid var(--border); font-family:monospace; display:flex; justify-content:space-between; align-items:center;">
+            <span>${lang || 'code script'}</span>
+            <button onclick="copyToClipboard(this)" style="background:none; border:none; color:var(--text2); cursor:pointer; font-size:11px;">Copy</button>
+          </div>
+          <pre style="padding:14px; font-size:12.5px; font-family:monospace; overflow-x:auto; margin:0; line-height:1.75; color:#aaccff;">${code.trim()}</pre>
+        </div>
+      `);
+      el.innerHTML = `<b>D&T Ai-TECH</b><br>${resp}`;
+    } else {
+      el.innerHTML = `<b>System Error:</b> Connection failed. Check Vercel API environment variables dashboard deployment settings configuration.`;
+    }
+  } catch(e) {
+    const el = document.getElementById(id);
+    el.classList.remove('ld');
+    el.innerHTML = `<b>Connection Error:</b> Server terminal node unreachable. Build architecture deployment configuration failed.`;
+  }
+  cb.scrollTop = cb.scrollHeight;
 }
 
-function b64(f){return new Promise(r=>{const rd=new FileReader();rd.onload=()=>r(rd.result.split(',')[1]);rd.readAsDataURL(f);});}
-
+function b64(f){return new Promise(r => {const rd = new FileReader(); rd.onload = () => r(rd.result.split(',')[1]); rd.readAsDataURL(f);});}
 function miniLogo(){
-  return`<svg width="16" height="16" viewBox="0 0 200 200" fill="none"><path d="M 112 24 L 54 24 C 36 24 22 38 22 56 L 22 146 C 22 164 36 178 54 178 L 146 178 C 164 178 178 164 178 146 L 178 88" stroke="#00e5ff" stroke-width="12" stroke-linecap="round" fill="none"/></svg>`;
+  return `<svg width="18" height="18" viewBox="0 0 1500 1500"><path d="M 340,390 L 340,790 C 340,790 530,790 530,590 C 530,390 340,390 340,390 Z" fill="none" stroke="#00e5ff" stroke-width="70"/></svg>_`;
 }
 
-if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  recog=new SR();recog.lang='fa-IR';
-  recog.onresult=e=>{const t=e.results[0][0].transcript;const inp=document.getElementById('pr');inp.value=(inp.value?inp.value+' ':'')+t;ar(inp);};
-  recog.onend=()=>{recOn=false;const b=document.getElementById('micbtn');b.classList.remove('rec');b.style.color='';};
+function copyToClipboard(btn) {
+  const pre = btn.parentElement.nextElementSibling;
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
 }
 
-function toggleVoice(){
-  if(!recog){alert('Voice input not supported.');return;}
-  if(recOn){recog.stop();}else{recOn=true;recog.start();const b=document.getElementById('micbtn');b.classList.add('rec');b.style.color='#ff4040';}
+// ════ FUNCTIONAL DEEP SEARCH INTERFACE ════
+function handleSearchKey(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    doSrch();
+  }
 }
-
 async function doSrch(){
-  const q=document.getElementById('dsi').value.trim();if(!q)return;
-  const box=document.getElementById('sres');box.style.display='block';box.innerHTML='<span style="color:var(--cyan)">Deep searching databases...</span>';
-  try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:`جستجوی عمیق درباره: ${q}\nلطفاً مستندات مهندسی دقیق ارائه بده.`})});
-    const d=await r.json();box.innerHTML=r.ok&&d.response?d.response:'Server unreachable.';}
-  catch{box.innerHTML='Connection error.';}
+  const q = document.getElementById('dsi').value.trim(); if(!q) return;
+  const box = document.getElementById('sres');
+  box.style.display = 'block';
+  box.innerHTML = '<span style="color:var(--cyan)">Querying network matrices... Deep scanning global engineering systems...</span>';
+  
+  const payloadMessages = [
+    { role: 'user', content: `Execute structural deep search analysis for theme: "${q}"\nProvide meticulous and detailed documentation breakdown.` }
+  ];
+
+  try {
+    const r = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ messages: payloadMessages })
+    });
+    const d = await r.json();
+    const rawAiText = d.text || d.response || '';
+    box.innerHTML = r.ok && rawAiText ? rawAiText : '<span style="color:var(--text2)">Deployment stream terminal off. Check Vercel keys dashboard configuration.</span>';
+  } catch(e) { box.innerHTML = '<span style="color:var(--text2)">Hardware node interface link failed. Check pipeline system status.</span>'; }
 }
 
-function imgDrop(e){e.preventDefault();const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))prvF(f);}
-function prevImg(inp){if(inp.files[0])prvF(inp.files[0]);}
-function prvF(file){const r=new FileReader();r.onload=e=>{document.getElementById('img-p').src=e.target.result;document.getElementById('img-pw').style.display='flex';document.querySelector('.dropz').style.display='none';};r.readAsDataURL(file);window._iF=file;}
-
+// ════ IMAGE STUDIO MODULE ════
+function prevImg(inp){
+  if(inp.files[0]){
+    const rd = new FileReader();
+    rd.onload = e => {
+      document.getElementById('img-p').src = e.target.result;
+      document.getElementById('img-pw').style.display = 'flex';
+      document.querySelector('.dropz').style.display = 'none';
+    };
+    rd.readAsDataURL(inp.files[0]);
+    window._iF = inp.files[0];
+  }
+}
 async function analyzeImg(){
-  const box=document.getElementById('img-res');box.style.display='block';box.textContent='Analyzing framework metrics...';box.style.color='var(--cyan)';
-  try{const d64=await b64(window._iF);const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'این تصویر یا طرح فنی را از لحاظ ساختار جئومتری، کدهای پایتون و الکترونیک تحلیل کن.',fileParts:[{inlineData:{data:d64,mimeType:window._iF.type}}]})});
-    const d=await r.json();if(r.ok&&d.response){box.textContent=d.response;box.style.color='var(--text-muted)';}else{box.textContent='Analysis dispatch failed.';box.style.color='var(--text-muted)';}}
-  catch{box.textContent='Connection error.';box.style.color='var(--text-muted)';}
+  const box = document.getElementById('img-res');
+  box.style.display = 'block'; box.textContent = 'Decoding matrix pixels... Analyzing structural design systems layer rules...'; box.style.color = 'var(--cyan)';
+  try {
+    const d64 = await b64(window._iF);
+    const payloadMessages = [
+      { role: 'user', content: 'Execute rigorous architectural analysis on this file layout representation.' }
+    ];
+    const r = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ messages: payloadMessages, fileParts: [{inlineData: {data: d64, mimeType: window._iF.type}}]})
+    });
+    const d = await r.json();
+    const rawAiText = d.text || d.response || '';
+    box.textContent = r.ok && rawAiText ? rawAiText : 'Matrix analysis failed.';
+    box.style.color = 'var(--text)';
+  } catch(e) { box.textContent = 'Communication pipeline frame dropped.'; box.style.color = 'var(--text2)'; }
 }
 
-function libF(l,el){document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.querySelectorAll('.ccard').forEach(c=>{c.style.display=(l==='all'||c.dataset.l===l)?'block':'none';});}
+// ════ VIEW TRIGGER INTERFACES ════
+function openProject(name){
+  newChat();
+  document.getElementById('pr').value = `Initialize blueprint workspace context pipeline documentation for project: "${name}"`;
+  document.getElementById('pr').focus();
+}
+function openVideo(title, desc, dur){
+  document.getElementById('vmodal-title').textContent = title;
+  document.getElementById('vmodal-desc').textContent = desc;
+  document.getElementById('vmodal-dur').textContent = 'Duration Timeline Framework: ' + dur;
+  document.getElementById('vmodal').classList.add('on');
+}
+function closeModal(){document.getElementById('vmodal').classList.remove('on');}
+function openSettings(){document.getElementById('settingsModal').classList.add('on');}
+function closeSettings(){document.getElementById('settingsModal').classList.remove('on');}
 
-document.addEventListener('keydown', function(e) {
-    if (e.keyCode == 123) { e.preventDefault(); return false; } 
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 73) { e.preventDefault(); return false; } 
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 67) { e.preventDefault(); return false; } 
-    if (e.ctrlKey && e.keyCode == 85) { e.preventDefault(); return false; } 
-});
+function saveSettings() {
+  const engine = document.getElementById('engineSelect').value;
+  showToast(`Systems Synchronized: ${engine.toUpperCase()} Engine Active`, 'success');
+  closeSettings();
+}
 </script>
 </body>
 </html>
