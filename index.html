@@ -20,7 +20,6 @@
   --border: rgba(255,255,255,0.06);
   --sidebar-w: 260px;
   --ease: cubic-bezier(0.25, 1, 0.5, 1);
-  /* 🎨 بک‌گراند اورورا و نئونی شیک و ملایم الهام گرفته شده از جمنای گوگل */
   --gemini-glow: radial-gradient(ellipse 75% 60% at 50% 45%, rgba(124, 58, 237, 0.15) 0%, rgba(0, 229, 255, 0.06) 45%, transparent 70%);
 }
 
@@ -60,7 +59,7 @@ body{
 .brand-name{font-size:15px;font-weight:700;letter-spacing:0.3px;}
 .brand-name span{background:linear-gradient(90deg, var(--purple), var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 
-/* بارگذاری تصویر فیکس‌شده فینال حسام در ابعاد استاندارد سایدبار */
+/* نمایش لوگوی آپلود شده حسام در سایدبار */
 .logo-img-fix{
   width:34px; height:34px; object-fit:contain;
   filter:drop-shadow(0 0 8px rgba(0,229,255,0.25));
@@ -114,7 +113,7 @@ body{
 
 .content{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:1;padding:24px;}
 
-/* گریتر مرکزی و نمایش آرم فاینال صادر شده از کورل */
+/* لوگوی بزرگ مرکزی چت هوم حسام */
 .greeting{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:40px 20px;text-align:center;gap:24px;
@@ -161,7 +160,7 @@ body{
 .view-header h2{font-size:24px;font-weight:600;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;}
 .view-header p{font-size:13px;color:var(--text2)}
 
-/* 🎯 کادر هوشمند و تراز کاملاً وسط‌چین دیپ‌سرچ */
+/* کادر هوشمند و کاملاً سنتر دیپ‌سرچ */
 .search-center-container { display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;max-width:600px;margin:auto;gap:20px; }
 .swrap{position:relative;width:100%;}
 .swrap input{width:100%;padding:16px 54px 16px 20px;background:var(--bg-card);border:1px solid var(--border);border-radius:18px;color:var(--text);font-size:15px;outline:none;transition:border-color 0.2s;direction:rtl;text-align:right;}
@@ -210,7 +209,7 @@ textarea#prompt{flex:1;background:transparent;border:none;color:var(--text);font
 .mni.on{color:var(--cyan);}
 .mni svg {width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;}
 
-/* ====== RESPONSIVE FIX (۱۰۰٪ تضمینی برای حل مشکل سایز موبایل) ====== */
+/* ====== RESPONSIVE FIX ====== */
 @media(max-width:768px){
   .sidebar{display:none}
   .mnav{display:block}
@@ -232,13 +231,13 @@ textarea#prompt{flex:1;background:transparent;border:none;color:var(--text);font
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-top">
     <div class="brand">
-      <img src="/D&T logo%D9%81%D8%A7%DB%8C%D9%86%D8%A7%D9%84%20cdr.png" class="logo-img-fix" alt="D&T Logo">
+      <img src="/D&T%20logo%20cdr.png" class="logo-img-fix" alt="D&T Logo">
       <div class="brand-text"><span class="brand-name"><span class="dt">D&T</span> Ai-TECH</span></div>
     </div>
   </div>
   <nav class="nav">
     <div class="nlbl">WORKSPACE</div>
-    <div class="ni on" data-v="chat" onclick="sw('chat',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg></div><span class="ni-txt">New Chat</span></div>
+    <div class="ni on" data-v="chat" onclick="sw('chat',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12 L9 9L12 2Z"/></svg></div><span class="ni-txt">New Chat</span></div>
     <div class="ni" data-v="project" onclick="sw('project',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><span class="ni-txt">Projects</span></div>
     <div class="ni" data-v="search" onclick="sw('search',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div><span class="ni-txt">Deep Search</span></div>
     <div class="nlbl">MEDIA &AMP; REPOS</div>
@@ -257,7 +256,7 @@ textarea#prompt{flex:1;background:transparent;border:none;color:var(--text);font
     <div id="v-chat" style="flex:1; display:flex; flex-direction:column; overflow:hidden">
       <div class="greeting" id="greet">
         <div class="greet-logo-box">
-          <img src="/D&T logo%D9%81%D8%A7%DB%8C%D9%86%D8%A7%D9%84%20cdr.png" class="main-logo-fix" alt="D&T Ai-TECH">
+          <img src="/D&T%20logo%20cdr.png" class="main-logo-fix" alt="D&T Ai-TECH">
         </div>
         <h1>Where should we start?</h1>
         <p>پنل محاسباتی هوش مصنوعی و دستیار فنی توسعه کدهای Grasshopper Python و مهندسی الکترونیک.</p>
@@ -429,7 +428,7 @@ async function send(){
 function b64(f){return new Promise(r=>{const rd=new FileReader();rd.onload=()=>r(rd.result.split(',')[1]);rd.readAsDataURL(f);});}
 
 function miniLogo(){
-  return`<img src="/D&T logo%D9%81%D8%A7%DB%8C%D9%86%D8%A7%D9%84%20cdr.png" style="width:16px;height:16px;object-fit:contain;">`;
+  return `<img src="/D&T%20logo%20cdr.png" style="width:16px;height:16px;object-fit:contain;">`;
 }
 
 async function doSrch(){
