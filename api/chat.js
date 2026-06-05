@@ -16,7 +16,6 @@ export default async function handler(req, res) {
     }
 
     try {
-        // اتصال مستقیم به سورس فوق‌العاده قوی و پرچم‌دار Gemini 1.5 Pro
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`;
         const parts = [];
 
@@ -44,7 +43,7 @@ export default async function handler(req, res) {
                 }]
             },
             generationConfig: {
-                temperature: 0.3,
+                temperature: 0.2,
                 maxOutputTokens: 3000,
                 topP: 0.95
             }
