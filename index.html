@@ -6,6 +6,7 @@
     <title>D&T Ai-TECH | Workspace Core</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             --bg: #07070a;
@@ -31,7 +32,8 @@
             --aura: radial-gradient(circle at 50% 50%, rgba(26, 143, 255, 0.12) 0%, rgba(0, 229, 255, 0.05) 50%, transparent 70%);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-user-select: none; user-select: none; }
+        /* 🔓 آزادسازی کامل قابلیت کپی کردن مطالب پلتفرم */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 'Vazirmatn', sans-serif; transition: background 0.3s; }
         body { display: flex; width: 100vw; height: 100vh; }
 
@@ -107,12 +109,16 @@
         .mrow { display: flex; width: 100%; }
         .mrow.u { justify-content: flex-end; }
         .mrow.a { justify-content: flex-start; gap: 12px; }
-        .bub { max-width: 82%; padding: 14px 20px; border-radius: 20px; font-size: 14.5px; line-height: 1.7; word-break: break-word; }
+        .bub { max-width: 82%; padding: 14px 20px; border-radius: 20px; font-size: 14.5px; line-height: 1.7; word-break: break-word; position: relative; }
         .bub.u { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px 20px 4px 20px; }
         .bub.a { background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 4px 20px 20px 20px; backdrop-filter: blur(12px); }
         .bub.ld { color: var(--cyan); font-style: italic; animation: pulseG 1.5s infinite; }
         .bub b { font-weight: 600; font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 6px; }
-        @keyframes pulseG { 0%,100% { opacity:0.5; } 50% { opacity:1; } }
+        
+        /* 🛠️ جعبه ابزار کپی و PDF زیر پیام‌ها */
+        .b-actions { display: flex; gap: 8px; margin-top: 10px; justify-content: flex-start; }
+        .b-btn { padding: 4px 10px; font-size: 11px; font-family: inherit; font-weight: 500; border-radius: 6px; border: 1px solid var(--border); background: rgba(255,255,255,0.02); color: var(--text-muted); cursor: pointer; transition: all 0.2s; }
+        .b-btn:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,229,255,0.04); }
 
         /* ====== VIEWS ====== */
         .view { display: none; flex-direction: column; width: 100%; max-width: 900px; margin: 0 auto; gap: 20px; }
@@ -121,7 +127,6 @@
         .vh h2 { font-size: 24px; font-weight: 600; background: linear-gradient(135deg,var(--purple),var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; }
         .vh p { font-size: 13px; color: var(--text-muted); }
 
-        /* Deep Search Box */
         .search-center-container { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; max-width: 600px; margin: auto; gap: 20px; }
         .swrap { position: relative; width: 100%; }
         .swrap input { width: 100%; padding: 16px 20px 16px 54px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; color: var(--text); font-size: 15px; outline: none; transition: border-color 0.2s; }
@@ -135,7 +140,6 @@
         .pcard:hover { border-color: rgba(0, 229, 255, 0.2); transform: translateY(-2px); }
         .ptag { display: inline-block; padding: 3px 10px; font-size: 10px; font-weight: 700; border-radius: 8px; margin-top: 12px; background: rgba(124, 58, 237, 0.12); color: var(--purple); border: 1px solid rgba(124, 58, 237, 0.18); }
 
-        /* Extended Library */
         .lib-tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px; }
         .lib-tab { padding: 8px 18px; font-size: 12.5px; font-weight: 500; border-radius: 30px; border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; transition: all 0.2s; background: transparent; }
         .lib-tab.on, .lib-tab:hover { border-color: rgba(0, 229, 255, 0.3); color: var(--cyan); background: rgba(0, 229, 255, 0.03); }
@@ -144,7 +148,6 @@
         .clang { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 6px; background: rgba(0, 229, 255, 0.06); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.12); }
         .ccard pre { padding: 18px; font-size: 12px; color: var(--text); font-family: 'Courier New', monospace; overflow-x: auto; background: rgba(0, 0, 0, 0.2); line-height: 1.75; }
 
-        /* Settings configuration row layout */
         .settings-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 600px; margin: 20px auto; }
         .sett-row { display: flex; align-items: center; justify-content: space-between; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.04); }
         .sett-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
@@ -155,19 +158,16 @@
         .dropz { width: 100%; max-width: 520px; height: 180px; border: 2px dashed rgba(0, 229, 255, 0.16); border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; background: rgba(0, 229, 255, 0.01); margin: 20px auto; }
         .dropz:hover { border-color: var(--cyan); background: rgba(0, 229, 255, 0.03); }
 
-        /* Command Box Control */
+        /* Input area bottom bar */
         .inp-wrap { padding: 12px 24px 24px; position: relative; z-index: 10; flex-shrink: 0; width: 100%; background: transparent; }
         .findc { font-size: 12px; color: var(--cyan); padding: 4px 0 8px 4px; display: none; align-items: center; gap: 6px; max-width: 760px; margin: 0 auto; }
         .findc.on { display: flex; }
-        .findc svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
         
         .ibox { max-width: 760px; margin: 0 auto; background: rgba(18, 18, 26, 0.8); backdrop-filter: blur(35px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 32px; padding: 8px 8px 8px 18px; display: flex; align-items: flex-end; gap: 10px; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6); }
         .lacts { display: flex; gap: 4px; align-items: center; padding-bottom: 4px; }
         .ab { width: 38px; height: 38px; border-radius: 50%; background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
         .ab:hover { background: rgba(255, 255, 255, 0.05); color: var(--text); }
         .ab svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
-        
-        textarea transform #prompt { flex: 1; background: transparent; border: none; color: var(--text); font-size: 15px; font-family: inherit; resize: none; outline: none; line-height: 1.65; padding: 8px 0; max-height: 140px; }
         textarea#prompt { flex: 1; background: transparent; border: none; color: var(--text); font-size: 15px; font-family: inherit; resize: none; outline: none; line-height: 1.65; padding: 8px 0; max-height: 140px; }
         .racts { display: flex; align-items: center; gap: 6px; padding-bottom: 3px; }
         .sbtn { height: 40px; padding: 0 24px; border-radius: 20px; border: none; font-family: inherit; background: linear-gradient(270deg, var(--blue), var(--purple), var(--pink), var(--cyan)); background-size: 300% 300%; animation: gradientS 4s ease infinite; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: transform 0.15s; }
@@ -199,7 +199,7 @@
 
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-top">
-        <button class="toggle-btn" onclick="toggleSB()" aria-label="Toggle sidebar">
+        <button class="toggle-btn" onclick="toggleSB()">
             <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
         <div class="brand">
@@ -218,7 +218,7 @@
     </nav>
     <div class="sidebar-bottom">
         <div class="ni" data-v="settings" onclick="sw('settings',this)">
-            <div class="ni-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+            <div class="ni-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
             <span class="ni-txt" id="m-settings">System Settings</span>
         </div>
     </div>
@@ -477,7 +477,7 @@ async function send(){
     if(selFile){fp=[{inlineData:{data:await b64(selFile),mimeType:selFile.type}}];}
     selFile=null;document.getElementById('findc').classList.remove('on');
     
-    try{
+    try {
         const r=await fetch('/api/chat',{
             method:'POST',
             headers:{'Content-Type':'application/json'},
@@ -486,9 +486,20 @@ async function send(){
         const d=await r.json();const el=document.getElementById(id);el.classList.remove('ld');
         if(r.ok && d.response){
             const resFa = /[\u0600-\u06FF]/.test(d.response);
+            const msgId = 'msg_' + Date.now();
+            
             el.style.direction = resFa ? 'rtl' : 'ltr';
             el.style.textAlign = resFa ? 'right' : 'left';
-            el.innerHTML=`<b>D&T Ai-TECH</b><br>${d.response}`;
+            
+            // تزریق باکس پاسخ به همراه دکمه کپی و پی‌دی‌اف زنده و کاربردی
+            el.innerHTML=`
+                <b>D&T Ai-TECH</b>
+                <div id="${msgId}" class="pdf-export-content" style="margin-top:5px; padding:2px;">${d.response}</div>
+                <div class="b-actions">
+                    <button class="b-btn" onclick="copyTextToClipboard('${msgId}')">${currentLang==='fa'?'کپی متن':'Copy'}</button>
+                    <button class="b-btn" onclick="exportBubbleToPDF('${msgId}')">${currentLang==='fa'?'دانلود PDF':'Download PDF'}</button>
+                </div>
+            `;
         } else {
             el.innerHTML=`<b>System Error:</b> Connection failed. Check Vercel function log metrics.`;
         }
@@ -498,6 +509,27 @@ async function send(){
 
 function b64(f){return new Promise(r=>{const rd=new FileReader();rd.onload=()=>r(rd.result.split(',')[1]);rd.readAsDataURL(f);});}
 function miniLogo(){ return `<img src="/D&T%20logo%20cdr.png" style="width:16px;height:16px;object-fit:contain;">`; }
+
+// 🛠️ تابع کپی متن اختصاصی
+function copyTextToClipboard(id) {
+    const txt = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(txt).then(() => {
+        alert(currentLang==='fa'?'متن با موفقیت کپی شد.':'Text copied successfully!');
+    });
+}
+
+// 🛠️ تابع مبدل زنده خروجی به PDF مهندسی
+function exportBubbleToPDF(id) {
+    const element = document.getElementById(id);
+    const opt = {
+        margin:       10,
+        filename:     'DT-AiTech-Export-' + id + '.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#141420' },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
+}
 
 async function doSrch(){
     const q=document.getElementById('dsi').value.trim();if(!q)return;
@@ -519,13 +551,6 @@ async function analyzeImg(){
 }
 
 function libF(l,el){document.querySelectorAll('.lib-tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.querySelectorAll('.ccard').forEach(c=>{c.style.display=(l==='all'||c.dataset.l===l)?'block':'none';});}
-
-document.addEventListener('keydown', function(e) {
-    if (e.keyCode == 123) { e.preventDefault(); return false; } 
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 73) { e.preventDefault(); return false; } 
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 67) { e.preventDefault(); return false; } 
-    if (e.ctrlKey && e.keyCode == 85) { e.preventDefault(); return false; } 
-});
 </script>
 </body>
 </html>
