@@ -19,7 +19,7 @@ export default async function handler(req, res) {
 
     try {
         // 🔒 پورت مادری و بدون خطای کاتالوگ برای نسل جدید Gemini 2.0 Flash بر پایه لایه v1beta
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
         const parts = [];
 
         if (fileParts && Array.isArray(fileParts) && fileParts.length > 0) {
