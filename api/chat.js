@@ -7,71 +7,96 @@ export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
     const { prompt, fileParts, lang } = req.body;
-    
-    // 🔍 خواندن مستقیم و بدون واسطه متغیر اصلی از دشبورد ورسل
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.OPENROUTER_API_KEY;
 
     if (!apiKey) {
         return res.status(200).json({
-            response: "سرور مرکزی: متغیر GEMINI_API_KEY در تنظیمات ورسل یافت نشد یا مقدار آن خالی است. لطفاً توکن جدید را به این فیلد اضافه کنید."
+            response: "⚠️ متغیر OPENROUTER_API_KEY در Vercel یافت نشد.\n\n1. به openrouter.ai بروید و ثبت‌نام کنید\n2. یک API key رایگان بگیرید\n3. در Vercel → Settings → Environment Variables اضافه کنید\n4. Redeploy کنید"
         });
     }
 
-    try {
-        // 🔒 پورت مادری و بدون خطای کاتالوگ برای نسل جدید Gemini 2.0 Flash بر پایه لایه v1beta
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-        const parts = [];
+    let systemInstructionText = "You are the D&T Ai-TECH Intelligent Core, engineered and maintained by HMO-Tech. You are a professional, premium architecture and computer engineering co-pilot. Help users generate advanced Grasshopper parametric Python scripts, analyze electronics circuit models, and build UI frameworks. Keep responses technical, flawlessly clean, and exceptionally professional.";
 
-        if (fileParts && Array.isArray(fileParts) && fileParts.length > 0) {
-            fileParts.forEach(part => {
-                if (part.inlineData && part.inlineData.data && part.inlineData.mimeType) {
-                    parts.push({
-                        inlineData: {
-                            data: part.inlineData.data,
-                            mimeType: part.inlineData.mimeType
-                        }
-                    });
-                }
+    if (lang === 'fa') {
+        systemInstructionText = "شما هسته پردازش مرکزی هوشمند D&T Ai-TECH هستید که توسط مجموعه‌ی HMO-Tech توسعه یافته و نگهداری می‌شود. شما یک دستیار هوش مصنوعی پیشرفته و مهندسی هستید که به سوالات پاسخ داده و اسکریپت‌های کاربردی پایتون در گراس‌هاپر و بردهای الکترونیکی تولید می‌کنید. لحن شما باید بسیار تخصصی، دقیق، محترمانه و حرفه‌ای باشد. همواره پاسخ‌های متنی را به زبان فارسی روان بدهید اما کدهای کامپیوتری و توابع پایتون را کاملاً انگلیسی بنویسید.";
+    }
+
+    const userText = prompt?.trim() || "Execute workspace analysis.";
+
+    // ساخت محتوای پیام — پشتیبانی از تصویر
+    let messageContent;
+    if (fileParts && Array.isArray(fileParts) && fileParts.length > 0) {
+        messageContent = [
+            { type: "text", text: userText },
+            ...fileParts
+                .filter(p => p.inlineData?.data && p.inlineData?.mimeType)
+                .map(p => ({
+                    type: "image_url",
+                    image_url: {
+                        url: `data:${p.inlineData.mimeType};base64,${p.inlineData.data}`
+                    }
+                }))
+        ];
+    } else {
+        messageContent = userText;
+    }
+
+    // مدل‌های fallback — همه رایگان
+    const MODELS = [
+        "google/gemini-2.0-flash-exp:free",
+        "google/gemini-flash-1.5-8b-exp",
+        "meta-llama/llama-3.1-8b-instruct:free",
+    ];
+
+    for (const model of MODELS) {
+        try {
+            const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`,
+                    "HTTP-Referer": "https://dt-aitech.vercel.app",
+                    "X-Title": "D&T Ai-TECH"
+                },
+                body: JSON.stringify({
+                    model: model,
+                    messages: [
+                        { role: "system", content: systemInstructionText },
+                        { role: "user", content: messageContent }
+                    ],
+                    max_tokens: 3500,
+                    temperature: 0.2,
+                    top_p: 0.95
+                })
             });
-        }
 
-        const userText = prompt && prompt.trim() !== "" ? prompt.trim() : "Execute workspace analysis.";
-        parts.push({ text: userText });
+            const data = await response.json();
 
-        let systemInstructionText = "You are the D&T Ai-TECH Intelligent Core, engineered and maintained by HMO-Tech. You are a professional, premium architecture and computer engineering co-pilot. Help users generate advanced Grasshopper parametric Python scripts, analyze electronics circuit models, and build UI frameworks. Keep responses technical, flawlessly clean, and exceptionally professional.";
-
-        if (lang === 'fa') {
-            systemInstructionText = "شما هسته پردازش مرکزی هوشمند D&T Ai-TECH هستید که توسط مجموعه‌ی HMO-Tech توسعه یافته و نگهداری می‌شود. شما یک دستیار هوش مصنوعی پیشرفته و مهندسی هستید که به سوالات پاسخ داده و اسکریپت‌های کاربردی پایتون در گراس‌هاپر و بردهای الکترونیکی تولید می‌کنید. لحن شما باید بسیار تخصصی، دقیق، محترمانه و حرفه‌ای باشد. همواره پاسخ‌های متنی را به زبان فارسی روان بدهید اما کدهای کامپیوتری و توابع پایتون را کاملاً انگلیسی بنویسید.";
-        }
-
-        const requestBody = {
-            contents: [{ parts: parts }],
-            systemInstruction: {
-                parts: [{ text: systemInstructionText }]
-            },
-            generationConfig: {
-                temperature: 0.2,
-                maxOutputTokens: 3500,
-                topP: 0.95
+            // اگر خطای rate limit یا مدل در دسترس نبود، بعدی را امتحان کن
+            if (data.error) {
+                const code = data.error.code || data.error.status;
+                if (code === 429 || code === 503 || code === 'rate_limit_exceeded') {
+                    continue;
+                }
+                // خطای دیگر — برگردان
+                return res.status(200).json({
+                    response: `خطای API (${model}): ${data.error.message || JSON.stringify(data.error)}`
+                });
             }
-        };
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestBody)
-        });
+            const aiText = data.choices?.[0]?.message?.content;
+            if (aiText) {
+                return res.status(200).json({ response: aiText, model_used: model });
+            }
 
-        const data = await response.json();
-
-        if (!response.ok || data.error) {
-            return res.status(200).json({ response: `خطای مستقیم سرور گوگل کلاود: ${data.error?.message || response.statusText}` });
+        } catch (err) {
+            continue;
         }
-
-        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "پاسخی از هسته مرکزی دریافت نشد.";
-        return res.status(200).json({ response: aiText });
-
-    } catch (error) {
-        return res.status(200).json({ response: `خطای بحرانی لایه شبکه بک‌آند: ${error.message}` });
     }
+
+    return res.status(200).json({
+        response: lang === 'fa'
+            ? "⚠️ همه مدل‌ها در حال حاضر در دسترس نیستند. لطفاً چند دقیقه دیگر دوباره امتحان کنید."
+            : "⚠️ All models are currently unavailable. Please try again in a few minutes."
+    });
 }
