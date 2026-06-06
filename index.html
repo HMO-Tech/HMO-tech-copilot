@@ -29,9 +29,10 @@
             display: flex;
             height: 100vh;
             overflow: hidden;
+            direction: rtl;
         }
 
-        /* --- اسکرول بار مخفی و زیبا شبیه جمنای --- */
+        /* --- اسکرول بار مخفی و مینی‌مال --- */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -47,14 +48,14 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
-        /* --- منوی سمت چپ (Sidebar) --- */
+        /* --- منوی سمت راست (Sidebar) --- */
         .sidebar {
             width: 280px;
             background-color: var(--bg-sidebar);
             display: flex;
             flex-direction: column;
             border-left: 1px solid var(--border-color);
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease;
             z-index: 100;
         }
 
@@ -66,12 +67,12 @@
         }
 
         .brand {
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 22px;
+            font-weight: 700;
             background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-align: center;
+            text-align: right;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--border-color);
         }
@@ -80,15 +81,16 @@
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 12px;
+            padding: 12px 20px;
             border-radius: 24px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
+            justify-content: flex-start;
+            gap: 12px;
             font-weight: 500;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            width: 100%;
         }
 
         .new-project-btn:hover {
@@ -96,46 +98,49 @@
             border-color: var(--accent);
         }
 
-        /* سرچ بار چت‌ها */
+        /* سرچ بار */
         .search-container {
-            padding: 0 20px 10px 20px;
+            padding: 0 20px 15px 20px;
         }
 
         .search-box {
             width: 100%;
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border-color);
-            padding: 8px 12px;
+            padding: 10px 14px;
             border-radius: 8px;
             color: var(--text-main);
             font-size: 13px;
             outline: none;
+            text-align: right;
         }
 
         .search-box:focus {
             border-color: rgba(0, 240, 255, 0.5);
         }
 
-        /* منوهای ناوبری */
+        /* بخش آیتم‌های منو */
         .nav-section {
             flex: 1;
             overflow-y: auto;
-            padding: 10px;
+            padding: 0 10px;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
         }
 
         .section-title {
             font-size: 12px;
             color: var(--text-sub);
-            padding: 10px 15px 5px 15px;
+            padding: 15px 15px 6px 0;
             font-weight: 600;
+            text-align: right;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
+            justify-content: flex-start;
             padding: 10px 15px;
             border-radius: 8px;
             cursor: pointer;
@@ -143,17 +148,21 @@
             font-size: 14px;
             gap: 12px;
             transition: background 0.2s;
+            text-align: right;
         }
 
         .nav-item:hover, .nav-item.active {
             background-color: rgba(255, 255, 255, 0.06);
         }
 
-        .nav-item span.icon {
+        .nav-item .icon {
             font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* --- بخش اصلی چت و محتوا --- */
+        /* --- بخش اصلی چت --- */
         .main-content {
             flex: 1;
             display: flex;
@@ -183,6 +192,7 @@
         .current-project-title {
             font-weight: 500;
             color: var(--text-main);
+            font-size: 16px;
         }
 
         .chat-container {
@@ -191,9 +201,8 @@
             padding: 40px 20px;
             display: flex;
             flex-direction: column;
-            gap: 30px;
-            max-width: 840px;
             width: 100%;
+            max-width: 840px;
             margin: 0 auto;
         }
 
@@ -204,39 +213,39 @@
             align-items: center;
             height: 100%;
             text-align: center;
-            gap: 20px;
+            margin-top: auto;
+            margin-bottom: auto;
         }
 
         .welcome-screen h2 {
             font-size: 32px;
+            font-weight: 600;
             background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* باکس ورودی چت شبیه جمنای */
+        /* باکس ورودی چت */
         .input-container {
             padding: 20px;
             max-width: 840px;
             width: 100%;
             margin: 0 auto;
-            position: relative;
         }
 
         .input-wrapper {
             background-color: var(--bg-chat-box);
             border: 1px solid var(--border-color);
             border-radius: 32px;
-            padding: 12px 24px;
+            padding: 14px 24px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 15px;
-            transition: border-color 0.2s;
         }
 
         .input-wrapper:focus-within {
             border-color: rgba(0, 240, 255, 0.4);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.05);
         }
 
         .chat-input {
@@ -245,9 +254,11 @@
             border: none;
             outline: none;
             color: var(--text-main);
-            font-size: 16px;
+            font-size: 15px;
             resize: none;
             height: 24px;
+            text-align: right;
+            direction: rtl;
         }
 
         .send-btn {
@@ -255,10 +266,15 @@
             border: none;
             color: var(--accent);
             cursor: pointer;
-            font-size: 18px;
+            font-size: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
         }
 
         .footer-note {
@@ -268,26 +284,27 @@
             margin-top: 8px;
         }
 
-        /* --- استایل‌های اختصاصی موبایل (ریسپانسیو بی‌نقص بدون حالت ویندوزی) --- */
+        /* --- ریسپانسیو کامل موبایل بدون حالت دسکتاپ ریز --- */
         @media (max-width: 768px) {
             .menu-toggle {
-                display: block; /* نمایش دکمه همبرگری روی موبایل */
+                display: block;
             }
 
             .sidebar {
                 position: absolute;
-                right: -280px; /* مخفی شدن منو در لبه راست */
+                right: 0;
                 top: 0;
                 bottom: 0;
+                transform: translateX(100%);
                 box-shadow: -10px 0 30px rgba(0,0,0,0.5);
             }
 
             .sidebar.active {
-                right: 0; /* باز شدن منو به صورت کشویی روی موبایل */
+                transform: translateX(0);
             }
 
             .welcome-screen h2 {
-                font-size: 24px;
+                font-size: 22px;
             }
 
             .chat-container {
@@ -299,34 +316,28 @@
             }
 
             .input-wrapper {
-                padding: 10px 16px;
+                padding: 12px 20px;
                 border-radius: 24px;
-            }
-
-            .chat-input {
-                font-size: 14px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- منوی سمت چپ (Sidebar) کاملاً منطبق بر ساختار چت جمنای -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="brand">D&T Ai-TECH</div>
             <button class="new-project-btn" id="new-project">
-                <span>+</span> پروژه جدید
+                <span style="font-size: 18px;">+</span>
+                <span>پروژه جدید</span>
             </button>
         </div>
 
-        <!-- سرچ بار هوشمند چت‌ها و پروژه‌ها -->
         <div class="search-container">
             <input type="text" class="search-box" id="search-chat" placeholder="جستجو در چت‌ها...">
         </div>
 
         <div class="nav-section">
-            <!-- بخش پروژه‌های فعال کابر -->
             <div class="section-title">پروژه‌ها</div>
             <div id="projects-list">
                 <div class="nav-item active" data-proj="default">
@@ -335,7 +346,6 @@
                 </div>
             </div>
 
-            <!-- بخش لایبرری جامع (مختص کد، پرامپت‌ها و چت‌های پین شده) -->
             <div class="section-title">لایبرری پلتفرم</div>
             <div class="nav-item">
                 <span class="icon">📜</span>
@@ -352,12 +362,11 @@
         </div>
     </aside>
 
-    <!-- بخش اصلی نمایش و چت -->
     <main class="main-content">
         <div class="top-bar">
             <button class="menu-toggle" id="menu-toggle">☰</button>
             <div class="current-project-title" id="current-project-title">پروژه پیش‌فرض</div>
-            <div style="width: 24px;"></div> <!-- تعادل هدر -->
+            <div style="width: 24px;"></div>
         </div>
 
         <div class="chat-container" id="chat-container">
@@ -376,7 +385,7 @@
     </main>
 
     <script>
-        // مدیریت منوی کشویی در موبایل
+        // مدیریت سایدبار روی موبایل
         const sidebar = document.getElementById('sidebar');
         const menuToggle = document.getElementById('menu-toggle');
         
@@ -391,27 +400,23 @@
             }
         });
 
-        // سیستم مدیریت پروژه فعال و داینامیک
+        // سیستم مدیریت پروژه فعال
         const newProjectBtn = document.getElementById('new-project');
         const projectsList = document.getElementById('projects-list');
         const currentProjectTitle = document.getElementById('current-project-title');
-        const welcomeScreen = document.getElementById('welcome-screen');
         const chatContainer = document.getElementById('chat-container');
 
         newProjectBtn.addEventListener('click', () => {
             const projName = prompt('نام پروژه جدید را وارد کنید:');
             if (projName && projName.trim() !== "") {
-                // غیرفعال کردن اکتیو قبلی‌ها
                 document.querySelectorAll('#projects-list .nav-item').forEach(item => {
                     item.classList.remove('active');
                 });
 
-                // ساخت دکمه پروژه جدید
                 const newProjItem = document.createElement('div');
                 newProjItem.className = 'nav-item active';
                 newProjItem.innerHTML = `<span class="icon">📁</span><span class="proj-name">${projName}</span>`;
                 
-                // کلیک روی پروژه جدید
                 newProjItem.addEventListener('click', () => {
                     document.querySelectorAll('#projects-list .nav-item').forEach(i => i.classList.remove('active'));
                     newProjItem.classList.add('active');
@@ -426,7 +431,7 @@
             }
         });
 
-        // سیستم سرچ چت و پروژه ساده
+        // سرچ چت و پروژه
         const searchBox = document.getElementById('search-chat');
         searchBox.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
