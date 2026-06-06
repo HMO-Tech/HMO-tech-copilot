@@ -16,8 +16,8 @@ export default async function handler(req, res) {
     }
 
     try {
-        // 🔒 استفاده از شناسه رسمی و جهانی بدون ریسک ریجکت شدن کاتالوگ ابری گوگل
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${apiKey}`;
+        // 🔒 استفاده از اندپوینت رسمی، پایدار و بدون ریسک ریجکت کاتالوگ مدل پرو گوگل
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`;
         const parts = [];
 
         if (fileParts && Array.isArray(fileParts) && fileParts.length > 0) {
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
         const userText = prompt && prompt.trim() !== "" ? prompt.trim() : "Execute workspace analysis.";
         parts.push({ text: userText });
 
-        // 🧠 دستورالعمل سیستمی عمومی و هوشمند پلتفرم بر اساس سوییچ زبان فرانت‌آند
+        // 🧠 پرامپت سیستمی کاملاً عمومی و تجاری متناسب با سوییچ زبان دشبورد کاربر
         let systemInstructionText = "You are the D&T Ai-TECH Intelligent Core, engineered and maintained by HMO-Tech. You are a professional, premium architecture and computer engineering co-pilot. Help users generate advanced Grasshopper parametric Python scripts, analyze electronics circuit models, and build UI frameworks. Keep responses technical, flawlessly clean, and exceptionally professional.";
         
         if (lang === 'fa') {
