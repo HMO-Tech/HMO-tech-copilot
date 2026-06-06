@@ -11,7 +11,9 @@ export default async function handler(req, res) {
 
     if (!apiKey) {
         return res.status(200).json({
-            response: "⚠️ متغیر OPENROUTER_API_KEY در Vercel یافت نشد.\n\n1. به openrouter.ai بروید و ثبت‌نام کنید\n2. یک API key رایگان بگیرید\n3. در Vercel → Settings → Environment Variables اضافه کنید\n4. Redeploy کنید"
+            response: lang === 'fa'
+                ? "⚠️ متغیر OPENROUTER_API_KEY در Vercel یافت نشد.\n\n۱. به openrouter.ai بروید و ثبت‌نام کنید\n۲. یک API key رایگان بگیرید\n۳. در Vercel → Settings → Environment Variables با نام OPENROUTER_API_KEY اضافه کنید\n۴. Redeploy کنید"
+                : "⚠️ OPENROUTER_API_KEY not found in Vercel environment variables."
         });
     }
 
@@ -26,26 +28,30 @@ export default async function handler(req, res) {
     // ساخت محتوای پیام — پشتیبانی از تصویر
     let messageContent;
     if (fileParts && Array.isArray(fileParts) && fileParts.length > 0) {
-        messageContent = [
-            { type: "text", text: userText },
-            ...fileParts
-                .filter(p => p.inlineData?.data && p.inlineData?.mimeType)
-                .map(p => ({
+        const imageParts = fileParts.filter(p => p.inlineData?.data && p.inlineData?.mimeType);
+        if (imageParts.length > 0) {
+            messageContent = [
+                { type: "text", text: userText },
+                ...imageParts.map(p => ({
                     type: "image_url",
-                    image_url: {
-                        url: `data:${p.inlineData.mimeType};base64,${p.inlineData.data}`
-                    }
+                    image_url: { url: `data:${p.inlineData.mimeType};base64,${p.inlineData.data}` }
                 }))
-        ];
+            ];
+        } else {
+            messageContent = userText;
+        }
     } else {
         messageContent = userText;
     }
 
-    // مدل‌های fallback — همه رایگان
+    // ✅ مدل‌های رایگان فعال در OpenRouter — جون ۲۰۲۶
+    // اگر یکی کار نکرد بعدی امتحان می‌شود
     const MODELS = [
-        "google/gemini-2.0-flash-exp:free",
-        "google/gemini-flash-1.5-8b-exp",
-        "meta-llama/llama-3.1-8b-instruct:free",
+        "openrouter/auto",                          // هوشمند — بهترین مدل رایگان موجود را انتخاب می‌کند
+        "openai/gpt-oss-120b:free",                 // OpenAI 120B رایگان
+        "nvidia/nemotron-3-super-120b-a12b:free",   // NVIDIA 120B رایگان
+        "meta-llama/llama-3.3-70b-instruct:free",   // Llama 3.3 رایگان
+        "openrouter/owl-alpha",                     // OpenRouter Owl رایگان
     ];
 
     for (const model of MODELS) {
@@ -72,15 +78,17 @@ export default async function handler(req, res) {
 
             const data = await response.json();
 
-            // اگر خطای rate limit یا مدل در دسترس نبود، بعدی را امتحان کن
             if (data.error) {
-                const code = data.error.code || data.error.status;
-                if (code === 429 || code === 503 || code === 'rate_limit_exceeded') {
+                const msg = data.error.message || '';
+                const code = data.error.code || data.error.status || response.status;
+                // اگر مدل پیدا نشد یا rate limit خورد، بعدی را امتحان کن
+                if (code === 429 || code === 503 || code === 404 ||
+                    msg.includes('No endpoints') || msg.includes('rate limit') ||
+                    msg.includes('not found') || msg.includes('unavailable')) {
                     continue;
                 }
-                // خطای دیگر — برگردان
                 return res.status(200).json({
-                    response: `خطای API (${model}): ${data.error.message || JSON.stringify(data.error)}`
+                    response: `خطای API: ${msg}`
                 });
             }
 
@@ -97,6 +105,6 @@ export default async function handler(req, res) {
     return res.status(200).json({
         response: lang === 'fa'
             ? "⚠️ همه مدل‌ها در حال حاضر در دسترس نیستند. لطفاً چند دقیقه دیگر دوباره امتحان کنید."
-            : "⚠️ All models are currently unavailable. Please try again in a few minutes."
+            : "⚠️ All models currently unavailable. Please try again in a few minutes."
     });
 }
