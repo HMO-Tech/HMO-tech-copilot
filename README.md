@@ -1,49 +1,74 @@
 # 🌐 D&T Ai-TECH | Intelligent Workspace & Conversational Co-Pilot
 
-<p align="center">
-  <img src="D&T logo cdr.png" width="140" height="140" alt="D&T Ai-TECH Logo">
-</p>
+### Advanced AI Engineering Workspace for Computational Design & Intelligent Systems
 
-<p align="center">
-  <strong>hmo-tech-copilot</strong> is an advanced, enterprise-grade AI control panel and conversational co-pilot meticulously engineered for architects, computational designers, and hardware developers. It seamlessly bridges the gap between natural language prompts and production-ready parameterizations.
-</p>
+D&T Ai-TECH is an enterprise-grade conversational co-pilot and intelligent engineering workspace designed for computational designers, software engineers, architects, and hardware developers.
+
+The platform converts natural language prompts into production-ready engineering outputs, including Python scripts for Rhino/Grasshopper environments, computational geometry workflows, and intelligent system automation.
 
 ---
 
-## 🌐 Overview | معرفی پروژه
+## 🎓 Academic Context
 
-**D&T Ai-TECH** acts as a multi-dimensional intelligent workspace that translates intuitive textual descriptions into high-performance Python scripts tailored for **Rhinoceros 3D (RhinoCommon API)** and **Grasshopper** components, alongside complex electronics circuit optimization and computer science logic.
+This project is actively developed as part of ongoing graduate-level research and practical engineering work in Computer Engineering.
 
-این پلتفرم یک پنل تحت وب و دستیار مهندسی محاسباتی مبتنی بر هوش مصنوعی است که دستورات متنی ساده را به اسکریپت‌های کاربردی پایتون در محیط Rhino و Grasshopper و همچنین بهینه‌سازی برد‌های الکترونیکی تبدیل می‌کند. این ابزار از یک دشبورد شیشه‌ای مدرن دو زبانه و یک بک‌آند امن بر روی بستر ورسل بهره می‌برد.
+The repository reflects continuous exploration in:
 
----
-
-## ✨ Core Features | قابلیت‌های کلیدی
-
-*   **🤖 Flagship Gemini Pro Integration:** Powered natively by the `gemini-1.5-pro` enterprise engine via a highly optimized cloud network layer.
-*   **🗣️ Advanced Bilingual Architecture:** Features an instant live language toggle (EN/FA) that recalibrates alignments, placeholders, and directional view ports (RTL/LTR).
-*   **🛠️ Interactive System Settings:** Includes fully operational preference panels to alter UI theme layers (Gemini Dark / Ultra Blue Engine) and manage sandbox token tiers.
-*   **📦 Extended Library & Prompt Hub:** A curated repository housing foundational algorithmic geometry scripts, parametric hardware skeletons, and advanced system prompt workflows.
-*   **🎨 Premium Glassmorphic UI:** A pixel-perfect frontend designed after the new official Gemini layout, optimizing rendering boxes across all desktop and mobile displays.
-*   **🔍 Centered Deep Search Node:** Cross-examines deep parametric databases and technical engineering manifests from a clean, centered interface.
-*   **🔒 Serverless Cloud Security:** Node.js backend infrastructure running on Vercel serverless functions, protecting Google Cloud API gateway signatures from client-side exposure.
+- AI-assisted computational workflows  
+- Human–AI interaction systems  
+- Parametric design automation  
+- Cloud-based engineering environments  
+- Conversational software architectures  
 
 ---
 
-## 🚀 Architecture & Tech Stack | ساختار فنی
+## 🚀 Core Features
 
-*   **Frontend:** Pure Vanilla HTML5, CSS3 (Custom Variables, Advanced Fluid Layouts), JavaScript (ES6+).
-*   **Backend Runtime:** Serverless Node.js Environment deployment.
-*   **AI Gateway Routing:** Google Generative Language Platform Enterprise Hub API.
-*   **Hosting Infrastructure:** Vercel Global Edge Network Framework.
+- Gemini-powered conversational engineering assistant  
+- Bilingual interface (English / Persian ready architecture)  
+- Dynamic RTL / LTR rendering system  
+- Rhino & Grasshopper scripting integration  
+- Serverless Node.js backend architecture  
+- Secure API gateway routing layer  
+- Modern glassmorphism-based UI system  
+- Deep-search workflow engine  
+- Modular prompt engineering structure  
 
 ---
 
-## 🛠️ Sandbox Deployment Guide | راه‌اندازی سریع
+## 🛠️ Technology Stack
 
-To deploy and extend your own instances of this computational copilot on Vercel:
+**Frontend:**
+- HTML5
+- CSS3
+- JavaScript (ES6+)
 
-### 1. Repository Setup
-```bash
-# Fork this official repository or clone the source locally
-git clone [https://github.com/HMO-Tech/hmo-tech-copilot.git](https://github.com/HMO-Tech/hmo-tech-copilot.git)
+**Backend:**
+- Node.js (Serverless Runtime)
+- Vercel Deployment Platform
+
+**AI Infrastructure:**
+- Google Generative Language API
+- Gemini API Integration Layer
+
+---
+
+## 📦 Current Development Status
+
+The system is currently under active development and architectural refinement.
+
+Recent updates include:
+- optimization of AI routing pipelines  
+- enhancement of parametric generation engine  
+- UI/UX improvements for bilingual rendering  
+- deployment and cloud infrastructure stabilization  
+
+---
+
+## 👨‍💻 Developer
+
+**H. Mohseni**  
+M.Sc. Student in Computer Engineering  
+University of Tehran  
+
+GitHub: https://github.com/HMO-Tech
