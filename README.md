@@ -1,44 +1,52 @@
-<div align="center">
+# D&T Ai-TECH Ecosystem
 
-<img src="https://img.shields.io/badge/D%26T_Ai--TECH-AI_Engineering-6d28d9?style=for-the-badge&logo=openai&logoColor=white"/>
-<img src="https://img.shields.io/badge/Node.js-Powered-339933?style=for-the-badge&logo=node.js&logoColor=white"/>
-<img src="https://img.shields.io/badge/License-MIT-a78bfa?style=for-the-badge"/>
-<img src="https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel&logoColor=white"/>
-<img src="https://img.shields.io/badge/Build-Passing-22c55e?style=for-the-badge"/>
-<img src="https://img.shields.io/badge/Coverage-100%25-22c55e?style=for-the-badge"/>
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://vercel.com/)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![Vercel](https://img.shields.io/badge/deployed-on-Vercel-00C7B7)](https://vercel.com/)
 
-# 🤖 D-T-Ai-Outputs
-
-**AI Engineering Ecosystem for workflow automation, agent orchestration, and structured output generation across modular repositories.**
-
-[Overview](#overview) • [Artifacts](#artifacts) • [Structure](#structure) • [Tech Stack](#tech-stack) • [Deployment](#deployment) • [Roadmap](#roadmap) • [Contributing](#contributing) • [License](#license)
-
-</div>
+D&T Ai-TECH is a professional AI engineering ecosystem designed to showcase real-world AI workflows, automation pipelines, and engineering outputs. This ecosystem demonstrates a connected, scalable, and believable AI engineering portfolio.
 
 ---
 
-## 📌 Overview | نمای کلی
+## Table of Contents
 
-**D-T-Ai-Outputs** is the central repository for all generated AI outputs, engineering artifacts, and workflow exports from the **D&T Ai-TECH** ecosystem.
-
-This repository organizes, documents, and tracks every artifact produced by AI engineering workflows — serving as a **single source of truth** for developers, engineers, and AI agents operating within the ecosystem.
-
-> **فارسی** | این ریپازیتوری مرکزی‌ترین منبع برای تمام خروجی‌های هوش مصنوعی، آرتیفکت‌های مهندسی و صادرات workflow در اکوسیستم D&T Ai-TECH است. هر خروجی تولیدشده توسط عوامل AI و اتوماسیون‌ها در اینجا ردیابی، نسخه‌بندی و مستندسازی می‌شود.
-
----
-
-## 📦 Artifacts | آرتیفکت‌ها
-
-| Artifact Type | Description | فارسی |
-|---|---|---|
-| `JSON Workflows` | Structured AI task outputs for automation pipelines | خروجی‌های ساختاریافته برای pipeline های اتوماسیون |
-| `Markdown Reports` | Documentation of generated processes and results | مستندات فرآیندها و نتایج تولیدشده |
-| `Screenshots & Thumbnails` | Visual artifacts for dashboards and previews | آرتیفکت‌های بصری برای داشبوردها |
-| `Deployment Logs` | Status and history of Vercel or CI/CD deployments | لاگ‌های استقرار و تاریخچه deploy |
-| `Prompt Packs` | Reusable, versioned prompts used in AI workflows | پرامپت‌های قابل استفاده مجدد در workflow های AI |
-| `Agent Outputs` | Structured responses from orchestrated AI agents | پاسخ‌های ساختاریافته از عوامل AI |
-| `Config Exports` | Exported configurations for modular repo setup | تنظیمات صادرشده برای راه‌اندازی ریپازیتوری‌های ماژولار |
+- [Overview](#overview)
+- [Repositories](#repositories)
+- [Architecture](#architecture)
+- [Features](#features)
+- [Workflow](#workflow)
+- [Tech Stack](#tech-stack)
+- [Deployment](#deployment)
+- [Roadmap](#roadmap)
+- [License](#license)
 
 ---
 
-## 🗂️ Structure | ساختار پروژه
+## Overview
+
+D&T Ai-TECH combines multiple AI tools, automation scripts, and output management systems into one coherent ecosystem. The goal is to simulate a professional AI engineering environment with:
+
+- AI-assisted workflow orchestration
+- Output artifact management
+- Deployment pipelines
+- Documentation and templates for engineering teams
+
+This ecosystem is designed for developers, AI engineers, and automation enthusiasts who want to explore real-world AI workflows and system integration.
+
+---
+
+## Repositories
+
+Current core repositories in the ecosystem:
+
+| Repository               | Purpose |
+|---------------------------|---------|
+| D&T Ai-TECH              | Core ecosystem and landing hub |
+| HMO-tech-copilot         | AI engineering assistant and code prompts |
+| Smarts-Downloader        | Automation downloader system |
+| D-T-Ai-Outputs           | Generated AI outputs and engineering artifacts |
+| D&T Workflow Forge       | AI workflow orchestration platform |
+
+---
+
+## Architecture
