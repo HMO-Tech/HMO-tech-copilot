@@ -1,7 +1,13 @@
 {
-  "name": "D&T Ai-TECH",
+  "name": "dt-ai-tech",
   "version": "1.0.0",
   "type": "module",
+  "description": "DT AI Tech Workspace",
+  "main": "api/chat.js",
+  "scripts": {
+    "start": "node api/chat.js"
+  },
   "dependencies": {
     "@google/generative-ai": "^0.21.0"
   }
+}
