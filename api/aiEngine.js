@@ -2,8 +2,12 @@ export async function runAI(prompt, { systemText = "" } = {}) {
     try {
         const apiKey = process.env.OPENROUTER_API_KEY;
 
+        if (!apiKey) {
+            return "ERROR: Missing OPENROUTER_API_KEY in environment variables";
+        }
+
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 8000); // 8 ثانیه limit
+        const timeout = setTimeout(() => controller.abort(), 15000);
 
         const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
             method: "POST",
@@ -23,10 +27,16 @@ export async function runAI(prompt, { systemText = "" } = {}) {
 
         clearTimeout(timeout);
 
+        if (!response.ok) {
+            const errText = await response.text();
+            throw new Error(errText);
+        }
+
         const data = await response.json();
+
         return data?.choices?.[0]?.message?.content || "No response from model";
 
     } catch (err) {
-        return "AI Engine timeout or error: " + err.message;
+        return "AI Engine error: " + err.message;
     }
 }
