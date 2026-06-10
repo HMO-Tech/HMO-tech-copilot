@@ -1,38 +1,29 @@
-import { pushArtifact } from "../../lib/github.js";
-import fs from "fs";
-import path from "path";
+import { pushArtifact } from "../lib/github.js";
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+    try {
+        if (req.method !== "POST") {
+            return res.status(405).json({ error: "Method not allowed" });
+        }
 
-  const artifact = req.body;
+        const artifact = req.body;
 
-  if (!artifact || !artifact.id) {
-    return res.status(400).json({ error: "Artifact data required" });
-  }
+        if (!artifact || !artifact.id) {
+            return res.status(400).json({ error: "Invalid artifact" });
+        }
 
-  try {
-    // ۱. ذخیره محلی (optional)
-    const dir = path.join(process.cwd(), "workflows");
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+        const result = await pushArtifact(artifact);
 
-    const filePath = path.join(dir, `artifact-${artifact.id}.json`);
-    fs.writeFileSync(filePath, JSON.stringify(artifact, null, 2));
+        return res.status(200).json({
+            success: true,
+            message: "Artifact saved to GitHub",
+            github_url: result?.content?.html_url || null
+        });
 
-    // ۲. push به GitHub
-    const githubRes = await pushArtifact(artifact);
-
-    res.status(200).json({
-      success: true,
-      artifact,
-      github: githubRes.html_url
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      error: err.message
-    });
-  }
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: err.message
+        });
+    }
 }
