@@ -1,65 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>D&T Ai-TECH | AI Studio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        :root { 
-            --sidebar-grad: linear-gradient(180deg, #6d28d9 0%, #00e5ff 100%);
-            --bg-main: #f8f9fb;
-            --card-bg: #ffffff;
-        }
-        body { margin: 0; display: flex; height: 100vh; font-family: 'Inter', sans-serif; background: var(--bg-main); }
-
-        /* سایدبار گرادینت دار */
-        .sidebar { width: 260px; background: var(--sidebar-grad); color: white; padding: 24px; display: flex; flex-direction: column; gap: 40px; }
-        .logo-area { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.2rem; }
-        .logo-area img { width: 40px; height: 40px; border-radius: 8px; }
-        .nav-items { display: flex; flex-direction: column; gap: 15px; }
-        .nav-item { padding: 10px; cursor: pointer; opacity: 0.8; }
-        .nav-item.active { background: rgba(255,255,255,0.2); border-radius: 8px; opacity: 1; }
-
-        /* محیط اصلی */
-        .main { flex: 1; display: flex; flex-direction: column; padding: 20px; }
-        .top-bar { display: flex; justify-content: flex-end; padding-bottom: 20px; }
-        .chat-box { flex: 1; background: var(--card-bg); border-radius: 24px; border: 1px solid #e0e0e0; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        :root { --grad-start: #6d28d9; --grad-end: #00e5ff; --bg-main: #f8f9fb; }
+        body { margin: 0; display: flex; height: 100vh; font-family: 'Space Grotesk', sans-serif; background: #fff; }
         
-        .hero { text-align: center; }
-        .hero img { width: 100px; margin-bottom: 20px; }
+        /* سایدبار با تم لوگوی تو */
+        .sidebar { width: 260px; background: linear-gradient(180deg, var(--grad-start), var(--grad-end)); color: white; padding: 24px; display: flex; flex-direction: column; gap: 40px; }
+        .logo-box { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.2rem; }
+        .logo-box img { width: 45px; height: 45px; object-fit: contain; }
         
-        /* اینپوت مدرن */
-        .input-area { width: 80%; max-width: 700px; margin-top: 30px; padding: 15px 25px; border-radius: 50px; border: 1px solid #ddd; background: #f0f4f9; display: flex; align-items: center; }
-        .input-area input { flex: 1; border: none; background: transparent; outline: none; font-size: 16px; }
+        /* محیط اصلی جمنای استایل */
+        .main { flex: 1; display: flex; flex-direction: column; background: var(--bg-main); padding: 20px; }
+        .studio-card { background: white; border-radius: 24px; flex: 1; border: 1px solid #e0e0e0; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        
+        /* بخش چت و دکمه‌ها */
+        .chat-container { width: 100%; max-width: 800px; padding: 20px; }
+        .input-area { width: 100%; max-width: 700px; margin: 20px auto; padding: 15px 25px; border-radius: 50px; border: 1px solid #ddd; background: #f0f4f9; display: flex; align-items: center; }
+        .sbtn { background: var(--grad-start); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; }
+        
+        /* دکمه‌های کپی و PDF */
+        .b-actions { display: flex; gap: 10px; margin-top: 10px; }
+        .b-btn { padding: 5px 12px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; background: white; }
     </style>
 </head>
 <body>
 
 <aside class="sidebar">
-    <div class="logo-area">
-        <img src="/logo.png" alt="D&T Logo"> <span>D&T Ai-TECH</span>
+    <div class="logo-box">
+        <img src="/logo.png" alt="D&T Logo"> 
+        <span>D&T Ai-TECH</span>
     </div>
-    <div class="nav-items">
-        <div class="nav-item active">Chat</div>
-        <div class="nav-item">Projects</div>
-        <div class="nav-item">Design Workspace</div>
-        <div class="nav-item">Analysis</div>
+    <div class="nav">
+        <div onclick="sw('chat')">Chat</div>
+        <div onclick="sw('projects')">Projects</div>
     </div>
 </aside>
 
 <main class="main">
-    <div class="top-bar"><span>AI Studio</span></div>
-    <div class="chat-box">
-        <div class="hero">
-            <img src="/logo.png" alt="Logo">
-            <h1>Welcome to your D&T Design Hub</h1>
-        </div>
+    <div class="studio-card">
+        <img src="/logo.png" style="width:100px;" alt="Logo">
+        <h1>Welcome to your D&T Design Hub</h1>
+        
+        <div id="chatbox" class="chat-container"></div>
+        
         <div class="input-area">
-            <input type="text" placeholder="Ask D&T Ai-TECH to create, optimize, or analyze...">
+            <textarea id="prompt" style="flex:1; border:none; background:transparent; outline:none;"></textarea>
+            <button class="sbtn" onclick="send()">SEND</button>
         </div>
     </div>
 </main>
 
+<script>
+    // [تمام توابعِ کاملت مثل send, exportPDF, copy, و... را اینجا Paste کن]
+    // من اینجا فقط اسکلت را گذاشتم تا مطمئن شوی ظاهر درست شده
+</script>
 </body>
 </html>
