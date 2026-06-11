@@ -1,639 +1,857 @@
+cat > /mnt/user-data/outputs/dt-aitech.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>D&T Ai-TECH | Workspace System Core</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <style>
-        :root {
-            --bg: #07070a;
-            --bg-sidebar: #0e0e14;
-            --bg-card: #141420;
-            --cyan: #00e5ff;
-            --purple: #9b6dff;
-            --pink: #e040a0;
-            --blue: #1a8fff;
-            --text: #e8e8f0;
-            --text-muted: #7a7a9a;
-            --border: rgba(255, 255, 255, 0.06);
-            --sidebar-width: 260px;
-            --sidebar-collapsed-width: 68px;
-            --ease: cubic-bezier(0.25, 1, 0.5, 1);
-            --aura: radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.12) 0%, rgba(0, 229, 255, 0.05) 50%, transparent 70%);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>D&T Ai-TECH | Workspace Core</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+:root{
+  --bg:#07070a;
+  --bg-sidebar:#0e0e14;
+  --bg-card:#141420;
+  --cyan:#00e5ff;
+  --purple:#9b6dff;
+  --pink:#e040a0;
+  --blue:#1a8fff;
+  --text:#e8e8f0;
+  --text-muted:#7a7a9a;
+  --border:rgba(255,255,255,0.06);
+  --sidebar-width:260px;
+  --sidebar-collapsed-width:68px;
+  --ease:cubic-bezier(0.25,1,0.5,1);
+  --aura:
+    radial-gradient(ellipse 65% 55% at 25% 35%, rgba(124,58,237,0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 50% at 78% 68%, rgba(0,229,255,0.13) 0%, transparent 58%),
+    radial-gradient(ellipse 40% 40% at 55% 88%, rgba(192,38,211,0.10) 0%, transparent 52%);
+}
+.theme-blue{
+  --bg:#050b14;--bg-sidebar:#081220;--bg-card:#0c1b30;
+  --aura:
+    radial-gradient(ellipse 65% 55% at 25% 35%, rgba(26,143,255,0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 50% at 78% 68%, rgba(0,229,255,0.13) 0%, transparent 58%);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Space Grotesk','Vazirmatn',sans-serif;transition:background 0.3s}
+body{display:flex;width:100vw;height:100vh}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px}
 
-        .theme-blue {
-            --bg: #050b14;
-            --bg-sidebar: #081220;
-            --bg-card: #0c1b30;
-            --aura: radial-gradient(circle at 50% 50%, rgba(26, 143, 255, 0.12) 0%, rgba(0, 229, 255, 0.05) 50%, transparent 70%);
-        }
+/* ══ SIDEBAR ══ */
+.sidebar{
+  width:var(--sidebar-width);min-width:var(--sidebar-width);
+  background:var(--bg-sidebar);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  transition:width 0.3s var(--ease),min-width 0.3s var(--ease);
+  z-index:100;flex-shrink:0;position:relative;overflow:hidden;
+}
+.sidebar.collapsed{width:var(--sidebar-collapsed-width);min-width:var(--sidebar-collapsed-width)}
+.sidebar-top{
+  height:64px;display:flex;align-items:center;
+  padding:0 13px;gap:10px;
+  border-bottom:1px solid var(--border);flex-shrink:0;overflow:hidden;
+}
+.toggle-btn{
+  width:40px;height:40px;border-radius:50%;background:transparent;border:none;
+  color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background 0.2s;flex-shrink:0;
+}
+.toggle-btn:hover{background:rgba(255,255,255,0.05);color:var(--text)}
+.toggle-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 'Vazirmatn', sans-serif; transition: background 0.3s; }
-        body { display: flex; width: 100vw; height: 100vh; }
+/* brand — inline SVG logo, always visible; text fades on collapse */
+.brand{display:flex;align-items:center;gap:10px;overflow:hidden;white-space:nowrap}
+.brand-text{
+  transition:opacity .25s,max-width .3s,transform .25s;
+  max-width:190px;opacity:1;overflow:hidden;white-space:nowrap;
+}
+.sidebar.collapsed .brand-text{opacity:0;max-width:0;pointer-events:none;transform:translateX(-6px)}
+.brand-name{font-size:15px;font-weight:700;letter-spacing:.2px}
+.brand-name .dt{background:linear-gradient(90deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+/* sidebar logo always shown */
+.sb-logo-svg{width:34px;height:34px;flex-shrink:0;filter:drop-shadow(0 0 7px rgba(0,229,255,.38));cursor:pointer}
 
-        /* ====== SIDEBAR ====== */
-        .sidebar {
-            width: var(--sidebar-width); min-width: var(--sidebar-width); background: var(--bg-sidebar);
-            border-right: 1px solid var(--border); display: flex; flex-direction: column;
-            transition: width 0.3s var(--ease), min-width 0.3s var(--ease); z-index: 100; flex-shrink: 0; position: relative;
-        }
-        .sidebar.collapsed { width: var(--sidebar-collapsed-width); min-width: var(--sidebar-collapsed-width); }
-        .sidebar-top { height: 64px; display: flex; align-items: center; padding: 0 14px; gap: 12px; border-bottom: 1px solid var(--border); flex-shrink: 0; overflow: hidden; }
-        
-        .toggle-btn {
-            width: 40px; height: 40px; border-radius: 50%; background: transparent; border: none; color: var(--text-muted);
-            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; flex-shrink: 0;
-        }
-        .toggle-btn:hover { background: rgba(255, 255, 255, 0.05); color: var(--text); }
-        .toggle-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
+.nav{padding:10px 8px;display:flex;flex-direction:column;gap:3px;flex:1;overflow-y:auto;overflow-x:hidden}
+.nav-label{
+  font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;
+  color:rgba(155,109,255,0.38);padding:12px 14px 4px;white-space:nowrap;
+  transition:opacity .2s,max-height .2s,padding .2s;overflow:hidden;
+}
+.sidebar.collapsed .nav-label{opacity:0;max-height:0;padding:0}
+.ni{
+  display:flex;align-items:center;gap:12px;padding:10px 13px;border-radius:12px;
+  color:var(--text-muted);cursor:pointer;font-size:13.5px;font-weight:500;
+  white-space:nowrap;transition:all .2s;position:relative;
+}
+.ni:hover{background:rgba(255,255,255,0.04);color:var(--text)}
+.ni.on{background:rgba(155,109,255,0.1);color:var(--cyan);border:1px solid rgba(0,229,255,0.06)}
+.ni.on::before{content:'';position:absolute;left:0;top:25%;bottom:25%;width:3px;background:linear-gradient(180deg,var(--purple),var(--cyan));border-radius:0 4px 4px 0}
+.ni-ico{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.ni-ico svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ni-txt{transition:opacity .2s,max-width .2s;max-width:180px;overflow:hidden}
+.sidebar.collapsed .ni-txt{opacity:0;max-width:0}
+.sidebar.collapsed .ni{padding:11px;width:44px;height:44px;border-radius:50%;justify-content:center;margin:0 auto;border:none}
+.sidebar.collapsed .ni.on::before{display:none}
+.sidebar-bot{padding:8px;border-top:1px solid var(--border)}
 
-        .brand { display: flex; align-items: center; gap: 12px; white-space: nowrap; transition: opacity 0.2s; }
-        .sidebar.collapsed .brand { opacity: 0; pointer-events: none; }
-        .logo-img-fix { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.2)); border-radius: 6px; }
-        .brand-name { font-size: 15px; font-weight: 700; letter-spacing: 0.3px; }
-        .brand-name span { background: linear-gradient(90deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+/* ══ MAIN ══ */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;overflow:hidden;height:100vh}
+.main::before{content:'';position:absolute;inset:0;background:var(--aura);pointer-events:none;z-index:0}
+.topbar{
+  height:64px;padding:0 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+  background:rgba(7,7,10,0.55);backdrop-filter:blur(28px);
+  position:relative;z-index:10;flex-shrink:0;
+}
+.topbar-t{font-size:14px;font-weight:500;color:var(--text-muted);letter-spacing:.2px}
+.tbr{display:flex;gap:8px;align-items:center}
+.lang-switch{
+  padding:6px 14px;border-radius:20px;border:1px solid var(--border);
+  background:rgba(255,255,255,0.02);color:var(--cyan);
+  font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;
+}
+.lang-switch:hover{background:rgba(0,229,255,0.05);border-color:rgba(0,229,255,0.25)}
+.ibtn{width:36px;height:36px;border-radius:10px;border:none;background:transparent;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.ibtn:hover{background:rgba(255,255,255,0.05);color:var(--text)}
+.ibtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-        .nav { padding: 12px 8px; display: flex; flex-direction: column; gap: 4px; flex: 1; overflow-y: auto; }
-        .nav-label { font-size: 10px; font-weight: 600; letter-spacing: 1.2px; color: rgba(155, 109, 255, 0.35); padding: 12px 14px 4px; white-space: nowrap; text-align: left; }
-        .sidebar.collapsed .nav-label { opacity: 0; }
+.content{
+  flex:1;display:flex;flex-direction:column;overflow-y:auto;
+  position:relative;z-index:1;padding:24px;
+  height:calc(100vh - 64px - 88px);
+}
 
-        .ni {
-            display: flex; align-items: center; gap: 14px; padding: 11px 14px; border-radius: 14px; color: var(--text-muted);
-            cursor: pointer; font-size: 13px; font-weight: 500; white-space: nowrap; transition: all 0.2s; position: relative;
-        }
-        .ni:hover { background: rgba(255, 255, 255, 0.03); color: var(--text); }
-        .ni.on { background: rgba(155, 109, 255, 0.1); color: var(--cyan); }
-        .ni.on::before { content: ''; position: absolute; left: 0; top: 25%; bottom: 25%; width: 3px; background: linear-gradient(180deg, var(--purple), var(--cyan)); border-radius: 0 4px 4px 0; }
-        .ni-ico { width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        .ni-ico svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
-        
-        .sidebar.collapsed .ni { padding: 11px; width: 44px; height: 44px; border-radius: 50%; justify-content: center; margin: 0 auto; }
-        .sidebar.collapsed .ni::before { display: none; }
-        .sidebar.collapsed .ni-txt { display: none; }
-        .sidebar-bottom { padding: 8px; border-top: 1px solid var(--border); }
+/* GREETING */
+.greet{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;gap:22px;width:100%;max-width:720px;margin:0 auto;
+}
+.greet-logo-box{
+  width:110px;height:110px;
+  display:flex;align-items:center;justify-content:center;
+  filter:drop-shadow(0 0 22px rgba(0,229,255,.32)) drop-shadow(0 0 44px rgba(124,58,237,.2));
+  animation:floatG 4s ease-in-out infinite;
+}
+@keyframes floatG{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.greet h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:300;background:linear-gradient(135deg,#ffffff 40%,#71719c 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.5px}
+.greet p{font-size:14.5px;color:var(--text-muted);max-width:520px;line-height:1.75}
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:620px;width:100%}
+.chip{padding:10px 18px;border:1px solid var(--border);border-radius:25px;font-size:13px;color:var(--text);cursor:pointer;background:rgba(255,255,255,0.02);transition:all .2s;backdrop-filter:blur(10px)}
+.chip:hover{border-color:rgba(0,229,255,0.28);background:rgba(0,229,255,0.04);transform:translateY(-1px)}
 
-        /* ====== MAIN CANVAS ====== */
-        .main { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; overflow: hidden; height: 100vh; }
-        .main::before { content: ''; position: absolute; inset: 0; background: var(--aura); pointer-events: none; z-index: 0; }
-        
-        .topbar { height: 64px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(7, 7, 10, 0.5); backdrop-filter: blur(25px); position: relative; z-index: 10; }
-        .topbar-t { font-size: 14px; font-weight: 500; color: var(--text-muted); }
-        
-        .lang-switch { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); background: rgba(255,255,255,0.02); color: var(--cyan); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .lang-switch:hover { background: rgba(0,229,255,0.05); border-color: var(--cyan); }
+/* CHAT */
+.chat-container{display:none;flex-direction:column;gap:16px;width:100%;max-width:740px;margin:0 auto;overflow-y:auto;flex:1}
+.chat-container.on{display:flex}
+.mrow{display:flex;width:100%}
+.mrow.u{justify-content:flex-end}
+.mrow.a{justify-content:flex-start;gap:12px;align-items:flex-start}
+.av{width:30px;height:30px;flex-shrink:0;border-radius:50%;background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);display:flex;align-items:center;justify-content:center;margin-top:2px}
+.bub{max-width:82%;padding:14px 20px;border-radius:20px;font-size:14.5px;line-height:1.7;word-break:break-word}
+.bub.u{background:var(--bg-card);border:1px solid var(--border);border-radius:20px 20px 4px 20px}
+.bub.a{background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04);border-radius:4px 20px 20px 20px;backdrop-filter:blur(12px)}
+.bub.ld{color:var(--cyan);font-style:italic}
+.bub b{font-weight:600;font-size:11px;color:var(--text-muted);display:block;margin-bottom:6px;letter-spacing:.3px}
+.b-actions{display:flex;gap:8px;margin-top:10px}
+.b-btn{padding:4px 10px;font-size:11px;font-family:inherit;font-weight:500;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,0.02);color:var(--text-muted);cursor:pointer;transition:all .2s}
+.b-btn:hover{border-color:rgba(0,229,255,0.25);color:var(--cyan);background:rgba(0,229,255,0.04)}
 
-        .content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; z-index: 1; padding: 24px; }
+/* code block inside response */
+.resp-code-block{margin:8px 0;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.resp-code-block-header{padding:5px 12px;font-size:10px;color:var(--cyan);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.resp-code-block-header button{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:10px;transition:color .2s}
+.resp-code-block-header button:hover{color:var(--cyan)}
+.resp-code-block pre{padding:12px;font-size:12px;font-family:'Courier New',monospace;overflow-x:auto;margin:0;line-height:1.75}
 
-        /* Greeting */
-        .greet { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 24px; width: 100%; max-width: 720px; margin: 0 auto; }
-        .greet-logo-box { width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 0 25px rgba(0, 229, 255, 0.35)); animation: floatG 4s ease-in-out infinite; }
-        .main-logo-fix { width: 100%; height: 100%; object-fit: contain; border-radius: 12px; }
-        @keyframes floatG { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-        
-        .greet h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 300; background: linear-gradient(135deg, #ffffff 40%, #71719c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; }
-        .greet p { font-size: 14px; color: var(--text-muted); max-width: 520px; line-height: 1.75; }
+/* VIEWS */
+.view{display:none;flex-direction:column;width:100%;max-width:900px;margin:0 auto;gap:18px}
+.view.on{display:flex}
+.vh{text-align:center;padding:8px 0 14px}
+.vh h2{font-size:22px;font-weight:600;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+.vh p{font-size:13px;color:var(--text-muted)}
 
-        .chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 620px; width: 100%; }
-        .chip { padding: 10px 18px; border: 1px solid var(--border); border-radius: 25px; font-size: 12.5px; color: var(--text); cursor: pointer; background: rgba(255, 255, 255, 0.02); transition: all 0.2s var(--ease); backdrop-filter: blur(10px); }
-        .chip:hover { border-color: rgba(0, 229, 255, 0.3); background: rgba(0, 229, 255, 0.05); transform: translateY(-1px); }
+/* SEARCH centered */
+.search-center-container{display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;max-width:620px;margin:auto;gap:18px}
+.swrap{position:relative;width:100%}
+.swrap input{width:100%;padding:15px 20px 15px 52px;background:var(--bg-card);border:1px solid var(--border);border-radius:18px;color:var(--text);font-size:15px;font-family:inherit;outline:none;transition:border-color .2s}
+.swrap input:focus{border-color:rgba(0,229,255,0.28);box-shadow:0 0 0 2px rgba(0,229,255,0.06)}
+.swrap input::placeholder{color:var(--text-muted)}
+.sico{position:absolute;left:17px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--cyan);cursor:pointer;display:flex;align-items:center}
+.sico svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2}
+.sres{width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:20px;font-size:14px;color:var(--text);line-height:1.8;display:none}
+.search-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:620px}
 
-        /* Chat view log */
-        .chat-container { display: none; flex-direction: column; gap: 18px; width: 100%; max-width: 740px; margin: 0 auto; overflow-y: auto; flex: 1; }
-        .chat-container.on { display: flex; }
-        .mrow { display: flex; width: 100%; }
-        .mrow.u { justify-content: flex-end; }
-        .mrow.a { justify-content: flex-start; gap: 12px; }
-        .bub { max-width: 82%; padding: 14px 20px; border-radius: 20px; font-size: 14px; line-height: 1.7; word-break: break-word; }
-        .bub.u { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px 20px 4px 20px; }
-        .bub.a { background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.04); border-radius: 4px 20px 20px 20px; backdrop-filter: blur(12px); }
-        .bub.ld { color: var(--cyan); font-style: italic; animation: pulseG 1.5s infinite; }
-        .bub b { font-weight: 600; font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 6px; }
-        
-        .b-actions { display: flex; gap: 8px; margin-top: 10px; justify-content: flex-start; }
-        .b-btn { padding: 4px 10px; font-size: 11px; font-family: inherit; font-weight: 500; border-radius: 6px; border: 1px solid var(--border); background: rgba(255,255,255,0.02); color: var(--text-muted); cursor: pointer; transition: all 0.2s; }
-        .b-btn:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,229,255,0.04); }
+/* PROJECTS */
+.project-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;width:100%}
+.project-card{background:var(--bg-card);border:1px solid var(--border);border-radius:18px;padding:18px;cursor:pointer;transition:all .2s var(--ease);backdrop-filter:blur(10px)}
+.project-card:hover{border-color:rgba(0,229,255,0.2);transform:translateY(-2px)}
+.project-card h3{font-size:13.5px;font-weight:600;margin-bottom:6px}
+.project-card p{font-size:12px;color:var(--text-muted);line-height:1.55}
+.project-tag{display:inline-block;padding:3px 10px;font-size:10px;font-weight:700;border-radius:8px;margin-top:10px;background:rgba(124,58,237,0.1);color:var(--purple);border:1px solid rgba(124,58,237,0.18)}
 
-        /* ====== VIEWS ====== */
-        .view { display: none; flex-direction: column; width: 100%; max-width: 900px; margin: 0 auto; gap: 20px; }
-        .view.on { display: flex; }
-        .vh { text-align: center; padding: 10px 0; }
-        .vh h2 { font-size: 22px; font-weight: 600; background: linear-gradient(135deg,var(--purple),var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; }
-        .vh p { font-size: 13px; color: var(--text-muted); }
+/* LIBRARY */
+.lib-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:8px}
+.lib-tab{padding:7px 18px;font-size:12.5px;font-weight:500;border-radius:30px;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all .2s;background:transparent}
+.lib-tab.on,.lib-tab:hover{border-color:rgba(0,229,255,0.28);color:var(--cyan);background:rgba(0,229,255,0.03)}
+.ccard{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:10px;width:100%}
+.cch{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.cch-left{display:flex;align-items:center;gap:10px}
+.cch span{font-size:12px;color:var(--text-muted)}
+.clang{font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;background:rgba(0,229,255,0.06);color:var(--cyan);border:1px solid rgba(0,229,255,0.12)}
+.ccopy{padding:3px 10px;font-size:11px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;transition:all .2s;font-family:inherit;display:flex;align-items:center;gap:4px}
+.ccopy:hover{color:var(--cyan);border-color:rgba(0,229,255,0.22);background:rgba(0,229,255,0.04)}
+.ccopy svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.ccard pre{padding:16px;font-size:12px;color:var(--text);font-family:'Courier New',monospace;overflow-x:auto;background:rgba(0,0,0,0.22);line-height:1.75;margin:0}
 
-        /* ====== WORKFLOW FORGE VIEW ====== */
-        .forge-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; width: 100%; }
-        .forge-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
-        .graph-nodes { display: flex; flex-direction: column; gap: 12px; position: relative; }
-        .g-node { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.15); font-size: 13px; font-weight: 500; transition: all 0.3s; text-align: left; }
-        .g-node.active { border-color: var(--cyan); box-shadow: 0 0 14px rgba(0,229,255,0.15); color: var(--cyan); }
-        .g-node.done { border-color: var(--purple); color: var(--purple); }
-        .node-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); flex-shrink: 0; }
-        .active .node-dot { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
-        .done .node-dot { background: var(--purple); }
-        
-        .console-stream { background: #040406; border-radius: 12px; padding: 14px; font-family: 'Courier New', monospace; font-size: 12px; color: #a2a2c2; line-height: 1.6; height: 240px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.02); text-align: left; white-space: pre-wrap; }
+/* IMAGE STUDIO */
+.dropz{width:100%;max-width:520px;height:180px;border:2px dashed rgba(0,229,255,0.16);border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;background:rgba(0,229,255,0.01);margin:10px auto;transition:all .22s}
+.dropz:hover{border-color:var(--cyan);background:rgba(0,229,255,0.03)}
 
-        .search-center-container { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; max-width: 600px; margin: auto; gap: 20px; }
-        .swrap { position: relative; width: 100%; }
-        .swrap input { width: 100%; padding: 16px 20px 16px 54px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; color: var(--text); font-size: 14.5px; outline: none; transition: border-color 0.2s; }
-        .swrap input:focus { border-color: rgba(0, 229, 255, 0.3); }
-        .sico { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--cyan); cursor: pointer; display: flex; align-items: center; }
-        .sico svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
-        .sres { width: 100%; background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; padding: 20px; font-size: 14px; color: var(--text); line-height: 1.8; display: none; }
+/* SETTINGS */
+.settings-container{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:18px;width:100%;max-width:600px;margin:10px auto}
+.sett-row{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.04);gap:15px}
+.sett-info h4{font-size:15px;font-weight:600;margin-bottom:4px}
+.sett-info p{font-size:12.5px;color:var(--text-muted)}
+.sett-ctrl select,.sett-ctrl button{padding:8px 16px;border-radius:10px;background:rgba(0,0,0,0.3);border:1px solid var(--border);color:var(--text);outline:none;cursor:pointer;font-family:inherit;font-size:13px}
+.sett-ctrl button.premium{background:linear-gradient(90deg,var(--purple),var(--pink));border:none;font-weight:700;color:#fff}
 
-        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; width: 100%; }
-        .project-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; cursor: pointer; transition: all 0.2s var(--ease); backdrop-filter: blur(10px); text-align: left; }
-        .project-card:hover { border-color: rgba(0, 229, 255, 0.2); transform: translateY(-2px); }
-        .project-tag { display: inline-block; padding: 3px 10px; font-size: 10px; font-weight: 700; border-radius: 8px; margin-top: 12px; background: rgba(124, 58, 237, 0.12); color: var(--purple); border: 1px solid rgba(124, 58, 237, 0.18); }
+/* INPUT */
+.inp-wrap{padding:10px 22px 22px;position:relative;z-index:10;flex-shrink:0;background:transparent}
+.findc{font-size:12px;color:var(--cyan);padding:3px 0 7px 4px;display:none;align-items:center;gap:5px;max-width:760px;margin:0 auto}
+.findc.on{display:flex}
+.findc svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.ibox{
+  max-width:760px;margin:0 auto;
+  background:rgba(14,14,20,0.82);backdrop-filter:blur(35px);
+  border:1px solid rgba(255,255,255,0.08);border-radius:32px;
+  padding:8px 8px 8px 16px;display:flex;align-items:flex-end;gap:10px;
+  box-shadow:0 12px 48px rgba(0,0,0,0.6);transition:border-color .2s;
+}
+.ibox:focus-within{border-color:rgba(124,58,237,0.3);box-shadow:0 12px 48px rgba(0,0,0,0.6),0 0 0 1px rgba(124,58,237,0.08)}
+.lacts{display:flex;gap:4px;align-items:center;padding-bottom:4px}
+.ab{width:38px;height:38px;border-radius:50%;background:transparent;border:none;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.ab:hover{background:rgba(255,255,255,0.05);color:var(--text)}
+.ab.rec{color:#ff4040;box-shadow:0 0 10px rgba(255,64,64,.25)}
+.ab svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+textarea#prompt{flex:1;background:transparent;border:none;color:var(--text);font-size:15px;font-family:inherit;resize:none;outline:none;line-height:1.65;padding:8px 0;max-height:140px;scrollbar-width:none}
+textarea#prompt::-webkit-scrollbar{display:none}
+textarea#prompt::placeholder{color:var(--text-muted)}
+.racts{display:flex;align-items:center;gap:6px;padding-bottom:3px}
+@keyframes gradS{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.sbtn{
+  height:40px;padding:0 22px;border-radius:20px;border:none;font-family:inherit;
+  background:linear-gradient(270deg,var(--blue),var(--purple),var(--pink),var(--cyan));
+  background-size:300% 300%;animation:gradS 4s ease infinite;
+  color:#fff;font-size:13px;font-weight:700;cursor:pointer;
+  transition:transform .15s,box-shadow .15s;letter-spacing:.5px;
+}
+.sbtn:hover{transform:scale(1.04);box-shadow:0 4px 18px rgba(124,58,237,.35)}
+.sbtn:active{transform:scale(0.97)}
 
-        .lib-tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px; }
-        .lib-tab { padding: 8px 18px; font-size: 12.5px; font-weight: 500; border-radius: 30px; border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; transition: all 0.2s; background: transparent; }
-        .lib-tab.on, .lib-tab:hover { border-color: rgba(0, 229, 255, 0.3); color: var(--cyan); background: rgba(0, 229, 255, 0.03); }
-        .ccard { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 12px; width: 100%; text-align: left; }
-        .cch { padding: 12px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-        .clang { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 6px; background: rgba(0, 229, 255, 0.06); color: var(--cyan); border: 1px solid rgba(0, 229, 255, 0.12); }
-        .ccard pre { padding: 18px; font-size: 12px; color: var(--text); font-family: 'Courier New', monospace; overflow-x: auto; background: rgba(0, 0, 0, 0.2); line-height: 1.75; }
+/* MOBILE NAV */
+.mnav{display:none;position:fixed;bottom:0;left:0;right:0;height:62px;background:rgba(12,12,18,0.92);backdrop-filter:blur(30px);border-top:1px solid var(--border);z-index:100}
+.mnav-in{display:flex;height:100%}
+.mni{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex:1;cursor:pointer;color:var(--text-muted);font-size:9.5px;font-weight:500;transition:color .2s}
+.mni.on,.mni:hover{color:var(--cyan)}
+.mni svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-        .settings-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 600px; margin: 0 auto; text-align: left; }
-        .sett-row { display: flex; align-items: center; justify-content: space-between; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.04); gap: 15px; }
-        .sett-info { flex: 1; }
-        .sett-info h4 { font-size: 14.5px; font-weight: 600; margin-bottom: 4px; }
-        .sett-info p { font-size: 12.5px; color: var(--text-muted); }
-        .sett-ctrl select, .sett-ctrl button { padding: 8px 16px; border-radius: 10px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); color: var(--text); outline: none; cursor: pointer; font-family: inherit; font-size: 13px; }
-        .sett-ctrl button.premium { background: linear-gradient(90deg, var(--purple), var(--pink)); border: none; font-weight: 700; color: #fff; }
-
-        .dropz { width: 100%; max-width: 520px; height: 180px; border: 2px dashed rgba(0, 229, 255, 0.16); border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; cursor: pointer; background: rgba(0, 229, 255, 0.01); margin: 20px auto; }
-        .dropz:hover { border-color: var(--cyan); background: rgba(0, 229, 255, 0.03); }
-
-        /* Command Box Input Control */
-        .inp-wrap { padding: 12px 24px 24px; position: relative; z-index: 10; flex-shrink: 0; width: 100%; background: transparent; }
-        .findc { font-size: 12px; color: var(--cyan); padding: 4px 0 8px 4px; display: none; align-items: center; gap: 6px; max-width: 760px; margin: 0 auto; }
-        .findc.on { display: flex; }
-        
-        .ibox { max-width: 760px; margin: 0 auto; background: rgba(18, 18, 26, 0.8); backdrop-filter: blur(35px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 32px; padding: 8px 18px 8px 8px; display: flex; align-items: flex-end; gap: 10px; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6); }
-        .lacts { display: flex; gap: 4px; align-items: center; padding-bottom: 4px; }
-        .ab { width: 38px; height: 38px; border-radius: 50%; background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
-        .ab:hover { background: rgba(255, 255, 255, 0.05); color: var(--text); }
-        .ab svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
-        textarea#prompt { flex: 1; background: transparent; border: none; color: var(--text); font-size: 15px; font-family: inherit; resize: none; outline: none; line-height: 1.65; padding: 8px 0; max-height: 140px; }
-        .racts { display: flex; align-items: center; gap: 6px; padding-bottom: 3px; }
-        .sbtn { height: 40px; padding: 0 24px; border-radius: 20px; border: none; font-family: inherit; background: linear-gradient(270deg, var(--blue), var(--purple), var(--pink), var(--cyan)); background-size: 300% 300%; animation: gradientS 4s ease infinite; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: transform 0.15s; }
-        @keyframes gradientS { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        /* ====== MOBILE BOT NAV ====== */
-        .mnav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: 64px; background: rgba(12, 12, 18, 0.9); backdrop-filter: blur(30px); border-top: 1px solid var(--border); z-index: 100; }
-        .mnav-in { display: flex; height: 100%; }
-        .mni { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; flex: 1; cursor: pointer; color: var(--text-muted); font-size: 10px; font-weight: 500; }
-        .mni.on { color: var(--cyan); }
-        .mni svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; }
-
-        @media(max-width:768px){
-            .sidebar { display: none !important; }
-            .mnav { display: block; }
-            body { padding-bottom: 64px; }
-            .topbar { background: var(--bg-sidebar); height: 56px; }
-            .greet h1 { font-size: 1.4rem; }
-            .greet p { font-size: 13px; }
-            .bub { max-width: 90%; font-size: 13.5px; }
-            .inp-wrap { padding: 10px; }
-            .ibox { border-radius: 24px; padding: 6px 6px 6px 12px; }
-            .sbtn { height: 36px; padding: 0 16px; font-size: 12px; border-radius: 18px; }
-            .content { padding: 12px; }
-            .forge-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+@media(max-width:768px){
+  .sidebar{display:none!important}
+  .mnav{display:block}
+  body{padding-bottom:62px}
+  .topbar{height:56px}
+  .greet h1{font-size:1.5rem}
+  .greet p{font-size:13px}
+  .bub{max-width:90%;font-size:13.5px}
+  .inp-wrap{padding:8px 10px 14px}
+  .ibox{border-radius:24px;padding:6px 6px 6px 12px}
+  .sbtn{height:36px;padding:0 16px;font-size:12px;border-radius:18px}
+  .content{padding:12px;height:calc(100vh - 56px - 62px)!important;overflow-y:auto}
+}
+@media(max-width:480px){.project-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 
+<!-- ══ SIDEBAR ══ -->
 <aside class="sidebar" id="sidebar">
-    <div class="sidebar-top">
-        <button class="toggle-btn" onclick="toggleSB()" aria-label="Toggle sidebar">
-            <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
-        <div class="brand">
-            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=80&auto=format&fit=crop" class="logo-img-fix" alt="D&T Logo">
-            <div class="brand-text"><span class="brand-name"><span>D&T</span> Ai-TECH</span></div>
-        </div>
+  <div class="sidebar-top">
+    <button class="toggle-btn" onclick="toggleSB()" aria-label="Toggle sidebar">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <!-- INLINE LOGO SVG — exact replica of uploaded logo, no external image needed -->
+    <svg class="sb-logo-svg" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg" onclick="toggleSB()" title="D&T Ai-TECH">
+      <defs>
+        <linearGradient id="LB" x1="0" y1="0" x2="240" y2="240" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#7c3aed"/>
+          <stop offset="48%" stop-color="#3b82f6"/>
+          <stop offset="100%" stop-color="#00e5ff"/>
+        </linearGradient>
+        <linearGradient id="LS" x1="155" y1="4" x2="240" y2="100" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#6d28d9"/>
+          <stop offset="100%" stop-color="#c026d3"/>
+        </linearGradient>
+      </defs>
+      <!-- outer rounded-square border, gradient purple→cyan -->
+      <path d="M170 18 Q222 18 222 70 L222 170 Q222 222 170 222 L70 222 Q18 222 18 170 L18 70 Q18 18 70 18 Z"
+        fill="none" stroke="url(#LB)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- right cyan accent bar (bottom portion visible) -->
+      <line x1="222" y1="132" x2="222" y2="202" stroke="#00e5ff" stroke-width="11" stroke-linecap="round"/>
+      <!-- 4-point sparkle star top-right, overlapping corner -->
+      <path d="M192 12 C192 42 212 62 242 62 C212 62 192 82 192 112 C192 82 172 62 142 62 C172 62 192 42 192 12 Z" fill="url(#LS)"/>
+      <!-- D outer arc -->
+      <path d="M64 54 L64 186 Q64 186 110 186 Q168 186 168 120 Q168 54 110 54 Z"
+        fill="none" stroke="#00e5ff" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- horizontal line 1 with end dots -->
+      <line x1="70" y1="84" x2="122" y2="84" stroke="#00e5ff" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="70" cy="84" r="5.5" fill="#00e5ff"/>
+      <circle cx="122" cy="84" r="5.5" fill="#00e5ff"/>
+      <!-- horizontal line 2 with end dots -->
+      <line x1="56" y1="107" x2="108" y2="107" stroke="#00e5ff" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="56" cy="107" r="5.5" fill="#00e5ff"/>
+      <circle cx="108" cy="107" r="5.5" fill="#00e5ff"/>
+      <!-- vertical left spine -->
+      <line x1="64" y1="128" x2="64" y2="158" stroke="#00e5ff" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="64" cy="128" r="5.5" fill="#00e5ff"/>
+      <!-- horizontal connector spine→center column -->
+      <line x1="64" y1="158" x2="96" y2="158" stroke="#00e5ff" stroke-width="8" stroke-linecap="round"/>
+      <!-- small circuit square block -->
+      <rect x="44" y="158" width="40" height="36" rx="4" fill="none" stroke="#00e5ff" stroke-width="8" stroke-linejoin="round"/>
+      <!-- center vertical bar 2 dots -->
+      <line x1="96" y1="128" x2="96" y2="184" stroke="#00e5ff" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="96" cy="128" r="5.5" fill="#00e5ff"/>
+      <circle cx="96" cy="184" r="5.5" fill="#00e5ff"/>
+      <!-- inner D arc right dot -->
+      <circle cx="142" cy="152" r="5.5" fill="#00e5ff"/>
+    </svg>
+    <div class="brand-text" id="brand-text">
+      <span class="brand-name"><span class="dt">D&T</span> Ai-TECH</span>
     </div>
-    <nav class="nav">
-        <div class="nav-label id-label-w">WORKSPACE</div>
-        <div class="ni on" data-v="chat" onclick="sw('chat',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12 L9 9L12 2Z"/></svg></div><span class="ni-txt" id="m-chat">New Chat</span></div>
-        <div class="ni" data-v="forge" onclick="sw('forge',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div><span class="ni-txt" id="m-forge">Workflow Forge</span></div>
-        <div class="ni" data-v="project" onclick="sw('project',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><span class="ni-txt" id="m-project">Projects</span></div>
-        <div class="ni" data-v="search" onclick="sw('search',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div><span class="ni-txt" id="m-search">Deep Search</span></div>
-        
-        <div class="nav-label id-label-m">REPOS &AMP; LIBRARIES</div>
-        <div class="ni" data-v="images" onclick="sw('images',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><span class="ni-txt" id="m-images">Image Studio</span></div>
-        <div class="ni" data-v="library" onclick="sw('library',this)"><div class="ni-ico"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><span class="ni-txt" id="m-library">Extended Library</span></div>
-    </nav>
-    <div class="sidebar-bottom">
-        <div class="ni" data-v="settings" onclick="sw('settings',this)">
-            <div class="ni-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1-2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
-            <span class="ni-txt" id="m-settings">System Settings</span>
-        </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-label" id="lbl-workspace">WORKSPACE</div>
+    <div class="ni on" data-v="chat" onclick="sw('chat',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg></div>
+      <span class="ni-txt" id="m-chat">New Chat</span>
     </div>
+    <div class="ni" data-v="project" onclick="sw('project',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+      <span class="ni-txt" id="m-project">Projects</span>
+    </div>
+    <div class="ni" data-v="search" onclick="sw('search',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+      <span class="ni-txt" id="m-search">Deep Search</span>
+    </div>
+    <div class="nav-label" id="lbl-media">REPOS &amp; LIBRARIES</div>
+    <div class="ni" data-v="images" onclick="sw('images',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+      <span class="ni-txt" id="m-images">Image Studio</span>
+    </div>
+    <div class="ni" data-v="library" onclick="sw('library',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+      <span class="ni-txt" id="m-library">Extended Library</span>
+    </div>
+  </nav>
+  <div class="sidebar-bot">
+    <div class="ni" data-v="settings" onclick="sw('settings',this)">
+      <div class="ni-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+      <span class="ni-txt" id="m-settings">System Settings</span>
+    </div>
+  </div>
 </aside>
 
+<!-- ══ MAIN ══ -->
 <main class="main" id="main-canvas">
-    <div class="topbar">
-        <span class="topbar-t" id="tb-t">AI Studio</span>
-        <button class="lang-switch" onclick="toggleLanguageSystem()" id="lang-indicator">FA / EN</button>
+  <div class="topbar">
+    <span class="topbar-t" id="tb-t">AI Studio</span>
+    <div class="tbr">
+      <button class="ibtn" title="New chat" onclick="newChat()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <button class="lang-switch" onclick="toggleLang()" id="lang-indicator">FA / EN</button>
     </div>
-    
-    <div class="content">
-        <div id="v-chat" style="flex:1; display:flex; flex-direction:column; overflow:hidden">
-            <div class="greet" id="greet">
-                <div class="greet-logo-box">
-                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=120&auto=format&fit=crop" class="main-logo-fix" alt="D&T Core Logo">
-                </div>
-                <h1 id="greet-title">Where should we start?</h1>
-                <p id="greet-desc">Advanced computational engineering copilot for generating Grasshopper Python workflows and circuit optimization.</p>
-                <div class="chips">
-                    <div class="chip" onclick="useChip(this)">Generate Grasshopper Python Script</div>
-                    <div class="chip" onclick="useChip(this)">Optimize Electronics Circuit</div>
-                    <div class="chip" onclick="useChip(this)">Parametric Geometry Framework</div>
-                </div>
-            </div>
-            <div class="chat-container" id="chatbox"></div>
-        </div>
+  </div>
 
-        <div id="v-forge" class="view">
-            <div class="vh">
-                <h2 id="f-title">Workflow Forge</h2>
-                <p id="f-desc">Orchestrate cross-repository pipelines and compile AI production pipelines</p>
-            </div>
-            <div class="forge-grid">
-                <div class="forge-card">
-                    <h3 style="font-size:14px; font-weight:600; text-align:inherit;">Pipeline Blueprints</h3>
-                    <button class="chip" style="width:100%; text-align:inherit;" onclick="triggerForgePipeline('Video Output Asset Pipeline', ['collect_assets','generate_script','export_metadata','deploy_artifact'])">⚡ Video Production Blueprint</button>
-                    <button class="chip" style="width:100%; text-align:inherit;" onclick="triggerForgePipeline('Parametric Structural Optimization', ['collect_assets','generate_script','deploy_artifact'])">📐 Computational Mesh Pipeline</button>
-                </div>
-                <div class="forge-card">
-                    <h3 id="forge-active-title" style="font-size:13px; color:var(--cyan); text-align:inherit;">Graph Status: Idle</h3>
-                    <div class="graph-nodes" id="graph-nodes-container">
-                        <div class="g-node" id="nd-collect_assets"><div class="node-dot"></div>1. Acquisition (Smarts-Downloader)</div>
-                        <div class="g-node" id="nd-generate_script"><div class="node-dot"></div>2. Computation (HMO-tech-copilot)</div>
-                        <div class="g-node" id="nd-export_metadata"><div class="node-dot"></div>3. Bundling (Export-Engine)</div>
-                        <div class="g-node" id="nd-deploy_artifact"><div class="node-dot"></div>4. Archiving (D-T-Ai-Outputs)</div>
-                    </div>
-                    <div class="console-stream" id="forge-console">> Workflow Forge Core ready. Awaiting operational triggers...</div>
-                </div>
-            </div>
-        </div>
+  <div class="content" id="main-content">
 
-        <div id="v-project" class="view">
-            <div class="vh"><h2 id="p-title">Projects Hub</h2><p id="p-desc">Manage advanced multi-dimensional computational workspaces</p></div>
-            <div class="project-grid">
-                <div class="project-card"><h3>D&T AI Interface</h3><p>Next-gen glassmorphic responsive front-end dashboard architecture</p><span class="project-tag">Frontend</span></div>
-                <div class="project-card"><h3>Computational Geometry</h3><p>Generative parametric scripts mapping out RhinoCommon topology</p><span class="project-tag">Rhino / GH</span></div>
-                <div class="project-card"><h3>Hardware Pipeline</h3><p>Embedded systems design focusing on microcontrollers and PCB layouts</p><span class="project-tag">Electronics</span></div>
-            </div>
+    <!-- CHAT VIEW -->
+    <div id="v-chat" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+      <div class="greet" id="greet">
+        <div class="greet-logo-box">
+          <!-- same inline SVG for greeting hero -->
+          <svg viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+            <defs>
+              <linearGradient id="GLB" x1="0" y1="0" x2="240" y2="240" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#7c3aed"/>
+                <stop offset="48%" stop-color="#3b82f6"/>
+                <stop offset="100%" stop-color="#00e5ff"/>
+              </linearGradient>
+              <linearGradient id="GLS" x1="155" y1="4" x2="240" y2="100" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#6d28d9"/>
+                <stop offset="100%" stop-color="#c026d3"/>
+              </linearGradient>
+            </defs>
+            <path d="M170 18 Q222 18 222 70 L222 170 Q222 222 170 222 L70 222 Q18 222 18 170 L18 70 Q18 18 70 18 Z"
+              fill="none" stroke="url(#GLB)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="222" y1="132" x2="222" y2="202" stroke="#00e5ff" stroke-width="11" stroke-linecap="round"/>
+            <path d="M192 12 C192 42 212 62 242 62 C212 62 192 82 192 112 C192 82 172 62 142 62 C172 62 192 42 192 12 Z" fill="url(#GLS)"/>
+            <path d="M64 54 L64 186 Q64 186 110 186 Q168 186 168 120 Q168 54 110 54 Z" fill="none" stroke="#00e5ff" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="70" y1="84" x2="122" y2="84" stroke="#00e5ff" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="70" cy="84" r="5.5" fill="#00e5ff"/><circle cx="122" cy="84" r="5.5" fill="#00e5ff"/>
+            <line x1="56" y1="107" x2="108" y2="107" stroke="#00e5ff" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="56" cy="107" r="5.5" fill="#00e5ff"/><circle cx="108" cy="107" r="5.5" fill="#00e5ff"/>
+            <line x1="64" y1="128" x2="64" y2="158" stroke="#00e5ff" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="64" cy="128" r="5.5" fill="#00e5ff"/>
+            <line x1="64" y1="158" x2="96" y2="158" stroke="#00e5ff" stroke-width="8" stroke-linecap="round"/>
+            <rect x="44" y="158" width="40" height="36" rx="4" fill="none" stroke="#00e5ff" stroke-width="8" stroke-linejoin="round"/>
+            <line x1="96" y1="128" x2="96" y2="184" stroke="#00e5ff" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="96" cy="128" r="5.5" fill="#00e5ff"/><circle cx="96" cy="184" r="5.5" fill="#00e5ff"/>
+            <circle cx="142" cy="152" r="5.5" fill="#00e5ff"/>
+          </svg>
         </div>
-
-        <div id="v-search" class="view">
-            <div class="vh"><h2 id="s-title">Deep Search Core</h2><p id="s-desc">Cross-examine massive parametric databases and engineering manifests</p></div>
-            <div class="search-center-container">
-                <div class="swrap">
-                    <input id="dsi" type="text" placeholder="Search components or algorithmic libraries..." onkeydown="if(event.key==='Enter')doSrch()"/>
-                    <button class="sico" onclick="doSrch()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
-                </div>
-                <div id="sres" class="sres"></div>
-            </div>
+        <h1 id="greet-title">Where should we start?</h1>
+        <p id="greet-desc">Advanced computational engineering copilot for Grasshopper Python workflows, circuit optimization and general AI assistance.</p>
+        <div class="chips">
+          <div class="chip" onclick="useChip(this)">Generate Grasshopper Python Script</div>
+          <div class="chip" onclick="useChip(this)">Optimize Electronics Circuit</div>
+          <div class="chip" onclick="useChip(this)">Parametric Geometry Framework</div>
+          <div class="chip" onclick="useChip(this)">Analyze Design File</div>
+          <div class="chip" onclick="useChip(this)">3D Computational Design</div>
         </div>
-
-        <div id="v-images" class="view">
-            <div class="vh"><h2 id="i-title">Image Studio</h2><p id="i-desc">Upload circuit blueprints, wireframes, or architectural sketches for AI dissection</p></div>
-            <div style="display:flex; flex-direction:column; align-items:center; gap:14px; width:100%;">
-                <div class="dropz" onclick="document.getElementById('img-up').click()" ondragover="event.preventDefault()" ondrop="imgDrop(event)">
-                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    <p id="i-drop-lbl">Drop technical asset here or click to choose file</p>
-                </div>
-                <input type="file" id="img-up" accept="image/*" style="display:none" onchange="prevImg(this)">
-                <div id="img-pw" style="display:none; flex-direction:column; align-items:center; gap:12px; width:100%; max-width:500px">
-                    <img id="img-p" style="max-width:100%; max-height:280px; border-radius:14px; border:1px solid var(--border)" src="" alt="">
-                    <button class="sbtn" style="height:38px; padding:0 24px" onclick="analyzeImg()">Analyze Frame Model</button>
-                </div>
-                <div id="img-res" style="display:none; background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:16px 18px; font-size:13px; color:var(--text-muted); line-height:1.8; width:100%; max-width:500px"></div>
-            </div>
-        </div>
-
-        <div id="v-library" class="view">
-            <div class="vh"><h2 id="l-title">Extended Library</h2><p id="l-desc">Centralized repository housing foundational scripts, prompt systems and templates</p></div>
-            <div class="lib-tabs">
-                <div class="lib-tab on" onclick="libF('all',this)">All Resources</div>
-                <div class="lib-tab" onclick="libF('gh',this)">Rhino / GH Scripts</div>
-                <div class="lib-tab" onclick="libF('prompt',this)">AI Engineering Prompts</div>
-            </div>
-            <div class="ccard" data-l="gh"><div class="cch"><span>Grasshopper Point Grid Generator</span><span class="clang">Python</span></div><pre>import Rhino.Geometry as rg\nimport math\npts = []\nfor i in range(10):\n    z = math.sin(i) * 2\n    pts.append(rg.Point3d(i, 0, z))</pre></div>
-            <div class="ccard" data-l="prompt"><div class="cch"><span>Parametric Structural Optimization Prompt</span><span class="clang">System Prompts</span></div><pre>Act as an expert in structural topology optimization. Refactor the given mesh distribution using the Karamba3D matrix variables inside Grasshopper with performance constraints...</pre></div>
-        </div>
-
-        <div id="v-settings" class="view">
-            <div class="vh"><h2 id="st-title">System Settings</h2><p id="st-desc">Configure your D&T intelligent engine core variables</p></div>
-            <div class="settings-container">
-                <div class="sett-row">
-                    <div class="sett-info"><h4 id="st-opt1-t">Interface Theme</h4><p id="st-opt1-d">Switch between premium space-dark and depth-blue layouts</p></div>
-                    <div class="sett-ctrl"><select onchange="changeSystemTheme(this.value)"><option value="dark">Gemini Dark Core</option><option value="blue">Ultra Blue Engine</option></select></div>
-                </div>
-                <div class="sett-row">
-                    <div class="sett-info"><h4 id="st-opt2-t">Primary Workspace Language</h4><p id="st-opt2-d">Set default direction, aligning rules and syntax translation</p></div>
-                    <div class="sett-ctrl"><select onchange="setSystemLanguage(this.value)" id="sett-lang-menu"><option value="en">English (US)</option><option value="fa">Persian (FA)</option></select></div>
-                </div>
-                <div class="sett-row">
-                    <div class="sett-info"><h4 id="st-opt3-t">Subscription Licensing</h4><p id="st-opt3-d">Current tier deployment limits and operational tokens</p></div>
-                    <div class="sett-ctrl"><button class="premium" onclick="alert('Beta Developer Mode: Unlimited Operational Subscriptions Active.')">Experimental Sandbox Tier</button></div>
-                </div>
-            </div>
-        </div>
+      </div>
+      <div class="chat-container" id="chatbox"></div>
     </div>
 
-    <div class="inp-wrap">
-        <div class="findc" id="findc">
-            <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
-            <span id="fnm"></span>
-        </div>
-        <div class="ibox" id="input-box-direction">
-            <div class="lacts">
-                <button class="ab" title="Attach file" onclick="document.getElementById('finp').click()">
-                    <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
-                </button>
-                <button class="ab" title="Image Studio" onclick="sw('images',null)">
-                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                </button>
-            </div>
-            <input type="file" id="finp" style="display:none" onchange="onFile(this)">
-            <textarea id="prompt" rows="1" placeholder="Ask D&T Ai-TECH or upload assets..." oninput="ar(this)" onkeydown="ok(event)"></textarea>
-            <div class="racts">
-                <button class="sbtn" onclick="send()">SEND</button>
-            </div>
-        </div>
+    <!-- PROJECTS -->
+    <div id="v-project" class="view">
+      <div class="vh"><h2 id="p-title">Projects Hub</h2><p id="p-desc">Manage advanced multi-dimensional computational workspaces</p></div>
+      <div class="project-grid">
+        <div class="project-card" onclick="openProj('D&T AI Interface')"><h3>D&T AI Interface</h3><p>Next-gen glassmorphic responsive front-end dashboard architecture</p><span class="project-tag">Frontend</span></div>
+        <div class="project-card" onclick="openProj('Computational Geometry')"><h3>Computational Geometry</h3><p>Generative parametric scripts mapping out RhinoCommon topology</p><span class="project-tag">Rhino / GH</span></div>
+        <div class="project-card" onclick="openProj('Hardware Pipeline')"><h3>Hardware Pipeline</h3><p>Embedded systems design focusing on microcontrollers and PCB layouts</p><span class="project-tag">Electronics</span></div>
+        <div class="project-card" onclick="openProj('Vision Pipeline')"><h3>Vision Pipeline</h3><p>Image recognition and AI-driven design analysis workflows</p><span class="project-tag">AI / Vision</span></div>
+        <div class="project-card" onclick="openProj('Motion Design Kit')"><h3>Motion Design Kit</h3><p>UI animation library for D&T product ecosystem</p><span class="project-tag">Design System</span></div>
+        <div class="project-card" style="border-style:dashed;display:flex;align-items:center;justify-content:center;opacity:.4;min-height:100px"><span style="font-size:26px;color:var(--text-muted)">+</span></div>
+      </div>
     </div>
+
+    <!-- DEEP SEARCH -->
+    <div id="v-search" class="view" style="align-items:center">
+      <div class="vh" style="width:100%;max-width:620px"><h2 id="s-title">Deep Search Core</h2><p id="s-desc">Cross-examine parametric databases and engineering manifests</p></div>
+      <div class="search-center-container">
+        <div class="swrap">
+          <input id="dsi" type="text" placeholder="Search components or algorithmic libraries..." onkeydown="if(event.key==='Enter')doSrch()"/>
+          <button class="sico" onclick="doSrch()"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+        </div>
+        <div id="sres" class="sres"></div>
+      </div>
+      <div class="search-chips">
+        <div class="chip" onclick="document.getElementById('dsi').value=this.innerText;doSrch()">Grasshopper Python API</div>
+        <div class="chip" onclick="document.getElementById('dsi').value=this.innerText;doSrch()">Parametric Design</div>
+        <div class="chip" onclick="document.getElementById('dsi').value=this.innerText;doSrch()">Generative AI</div>
+        <div class="chip" onclick="document.getElementById('dsi').value=this.innerText;doSrch()">RhinoCommon Topology</div>
+        <div class="chip" onclick="document.getElementById('dsi').value=this.innerText;doSrch()">Transformer Architecture</div>
+      </div>
+    </div>
+
+    <!-- IMAGE STUDIO -->
+    <div id="v-images" class="view">
+      <div class="vh"><h2 id="i-title">Image Studio</h2><p id="i-desc">Upload circuit blueprints, wireframes, or sketches for AI analysis</p></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px;width:100%">
+        <div class="dropz" onclick="document.getElementById('img-up').click()" ondragover="event.preventDefault()" ondrop="imgDrop(event)">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <p id="i-drop-lbl" style="color:var(--text-muted);font-size:13px">Drop technical asset here or click to choose file</p>
+          <p style="color:rgba(124,58,237,.55);font-size:11px">PNG, JPG, WebP supported</p>
+        </div>
+        <input type="file" id="img-up" accept="image/*" style="display:none" onchange="prevImg(this)">
+        <div id="img-pw" style="display:none;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:500px">
+          <img id="img-p" style="max-width:100%;max-height:280px;border-radius:14px;border:1px solid var(--border)" src="" alt="">
+          <button class="sbtn" style="height:38px;padding:0 24px" onclick="analyzeImg()">Analyze with AI</button>
+        </div>
+        <div id="img-res" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;font-size:13px;color:var(--text-muted);line-height:1.8;width:100%;max-width:500px"></div>
+      </div>
+    </div>
+
+    <!-- LIBRARY -->
+    <div id="v-library" class="view">
+      <div class="vh"><h2 id="l-title">Extended Library</h2><p id="l-desc">Centralized repository of scripts, prompts and templates</p></div>
+      <div class="lib-tabs">
+        <div class="lib-tab on" onclick="libF('all',this)">All Resources</div>
+        <div class="lib-tab" onclick="libF('gh',this)">Rhino / GH</div>
+        <div class="lib-tab" onclick="libF('py',this)">Python</div>
+        <div class="lib-tab" onclick="libF('js',this)">JavaScript</div>
+        <div class="lib-tab" onclick="libF('prompt',this)">AI Prompts</div>
+      </div>
+      <div class="ccard" data-l="gh">
+        <div class="cch"><div class="cch-left"><span class="clang">GH / PY</span><span>Point Grid Generator</span></div>
+          <button class="ccopy" onclick="copyC(this)"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
+        </div>
+        <pre>import Rhino.Geometry as rg
+import math
+
+pts = []
+for i in range(10):
+    for j in range(10):
+        z = math.sin(i * 0.5) * math.cos(j * 0.5) * 3.0
+        pts.append(rg.Point3d(i * 2, j * 2, z))
+
+# Output: pts</pre>
+      </div>
+      <div class="ccard" data-l="gh">
+        <div class="cch"><div class="cch-left"><span class="clang">GH / PY</span><span>Divide Curve Evenly</span></div>
+          <button class="ccopy" onclick="copyC(this)"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
+        </div>
+        <pre>import Rhino.Geometry as rg
+
+# Inputs: curve (Curve), count (int)
+def divide_curve(curve, count):
+    ok, params = curve.DivideByCount(count, True)
+    if not ok:
+        return [], []
+    points = [curve.PointAt(t) for t in params]
+    return points, list(params)
+
+pts, t = divide_curve(curve, count)</pre>
+      </div>
+      <div class="ccard" data-l="py">
+        <div class="cch"><div class="cch-left"><span class="clang">PY</span><span>Image Analyzer — API</span></div>
+          <button class="ccopy" onclick="copyC(this)"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
+        </div>
+        <pre>def analyze_image(path: str) -> str:
+    import base64, anthropic
+    with open(path, 'rb') as f:
+        data = base64.b64encode(f.read()).decode()
+    client = anthropic.Anthropic()
+    msg = client.messages.create(
+        model="claude-sonnet-4-20250514",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": [
+            {"type": "image", "source": {
+                "type": "base64",
+                "media_type": "image/jpeg",
+                "data": data}},
+            {"type": "text", "text": "Analyze this design."}
+        ]}])
+    return msg.content[0].text</pre>
+      </div>
+      <div class="ccard" data-l="js">
+        <div class="cch"><div class="cch-left"><span class="clang">JS</span><span>Gradient Animation Helper</span></div>
+          <button class="ccopy" onclick="copyC(this)"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
+        </div>
+        <pre>const animGrad = (el, colors, dur = 4000) => {
+  el.style.backgroundImage =
+    `linear-gradient(270deg, ${colors.join(', ')})`;
+  el.style.backgroundSize = '300% 300%';
+  el.style.animation = `gradFlow ${dur}ms ease infinite`;
+};</pre>
+      </div>
+      <div class="ccard" data-l="prompt">
+        <div class="cch"><div class="cch-left"><span class="clang">PROMPT</span><span>Parametric Structural Optimization</span></div>
+          <button class="ccopy" onclick="copyC(this)"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>
+        </div>
+        <pre>Act as an expert in structural topology optimization using Grasshopper 
+and Karamba3D. Refactor the given mesh distribution using performance 
+constraints. Output: clean Python GH component code with inputs/outputs 
+clearly annotated. Validate against RhinoCommon 7+ API standards.</pre>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="v-settings" class="view" style="align-items:center">
+      <div class="vh" style="width:100%"><h2 id="st-title">System Settings</h2><p id="st-desc">Configure D&T intelligent engine core variables</p></div>
+      <div class="settings-container">
+        <div class="sett-row">
+          <div class="sett-info"><h4>Interface Theme</h4><p>Switch between space-dark and depth-blue layouts</p></div>
+          <div class="sett-ctrl"><select onchange="changeTheme(this.value)"><option value="dark">Gemini Dark Core</option><option value="blue">Ultra Blue Engine</option></select></div>
+        </div>
+        <div class="sett-row">
+          <div class="sett-info"><h4>Primary Language</h4><p>Set default workspace language</p></div>
+          <div class="sett-ctrl"><select onchange="setLang(this.value)" id="sett-lang-menu"><option value="en">English (US)</option><option value="fa">Persian (FA)</option></select></div>
+        </div>
+        <div class="sett-row" style="border-bottom:none;padding-bottom:0">
+          <div class="sett-info"><h4>Subscription Tier</h4><p>Current operational mode and token limits</p></div>
+          <div class="sett-ctrl"><button class="premium" onclick="alert('Beta Developer Mode: Unlimited tokens active.')">Experimental Sandbox</button></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- INPUT BAR -->
+  <div class="inp-wrap">
+    <div class="findc" id="findc">
+      <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+      <span id="fnm"></span>
+    </div>
+    <div class="ibox" id="ibox">
+      <div class="lacts">
+        <button class="ab" title="Attach file" onclick="document.getElementById('finp').click()">
+          <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+        </button>
+        <button class="ab" title="Image Studio" onclick="sw('images',document.querySelector('[data-v=images]'))">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </button>
+        <button class="ab" id="micbtn" title="Voice input" onclick="toggleVoice()">
+          <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </button>
+      </div>
+      <input type="file" id="finp" style="display:none" onchange="onFile(this)">
+      <textarea id="prompt" rows="1" placeholder="Ask D&T Ai-TECH or upload assets..." oninput="ar(this)" onkeydown="ok(event)"></textarea>
+      <div class="racts">
+        <button class="sbtn" onclick="send()">SEND</button>
+      </div>
+    </div>
+  </div>
 </main>
 
+<!-- MOBILE NAV -->
 <nav class="mnav">
-    <div class="mnav-in">
-        <div class="mni on" data-v="chat" onclick="mSw('chat',this)"><svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>Chat</div>
-        <div class="mni" data-v="forge" onclick="mSw('forge',this)"><svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>Forge</div>
-        <div class="mni" data-v="project" onclick="mSw('project',this)"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Projects</div>
-        <div class="mni" data-v="search" onclick="mSw('search',this)"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</div>
-        <div class="mni" data-v="images" onclick="mSw('images',this)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Images</div>
-    </div>
+  <div class="mnav-in">
+    <div class="mni on" data-v="chat" onclick="mSw('chat',this)"><svg viewBox="0 0 24 24"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>Chat</div>
+    <div class="mni" data-v="project" onclick="mSw('project',this)"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Projects</div>
+    <div class="mni" data-v="search" onclick="mSw('search',this)"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search</div>
+    <div class="mni" data-v="images" onclick="mSw('images',this)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Images</div>
+    <div class="mni" data-v="library" onclick="mSw('library',this)"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Library</div>
+  </div>
 </nav>
 
 <script>
-let selFile=null,started=false,currentLang='en';
+// ══ STATE ══
+let selFile=null,started=false,currentLang='en',recOn=false,recog=null;
+
 const VT={
-    en: {chat:'AI Studio',forge:'Workflow Forge',project:'Projects Hub',search:'Deep Search',images:'Image Studio',library:'Extended Library',settings:'System Settings'},
-    fa: {chat:'استودیو هوش مصنوعی',forge:'فورج ارکستراسیون',project:'مرکز پروژه‌ها',search:'جستجوی عمیق',images:'استودیو تصویر',library:'کتابخانه مرجع',settings:'تنظیمات سیستم'}
+  en:{chat:'AI Studio',project:'Projects Hub',search:'Deep Search',images:'Image Studio',library:'Extended Library',settings:'System Settings'},
+  fa:{chat:'استودیو هوش مصنوعی',project:'مرکز پروژه‌ها',search:'جستجوی عمیق',images:'استودیو تصویر',library:'کتابخانه مرجع',settings:'تنظیمات سیستم'}
+};
+const DIC={
+  en:{
+    greetT:'Where should we start?',
+    greetD:'Advanced computational engineering copilot for Grasshopper Python workflows, circuit optimization and general AI assistance.',
+    pT:'Projects Hub',pD:'Manage advanced multi-dimensional computational workspaces',
+    sT:'Deep Search Core',sD:'Cross-examine parametric databases and engineering manifests',sInp:'Search components or algorithmic libraries...',
+    iT:'Image Studio',iD:'Upload circuit blueprints, wireframes, or sketches for AI analysis',iDrop:'Drop technical asset here or click to choose file',
+    lT:'Extended Library',lD:'Centralized repository of scripts, prompts and templates',
+    stT:'System Settings',stD:'Configure D&T intelligent engine core variables',
+    lblW:'WORKSPACE',lblM:'REPOS & LIBRARIES',
+    placeholder:'Ask D&T Ai-TECH or upload assets...',
+    you:'You',processing:'D&T Intelligent Core processing...',copy:'Copy',dlpdf:'Download PDF'
+  },
+  fa:{
+    greetT:'کجا شروع کنیم؟',
+    greetD:'دستیار مهندسی محاسباتی هوشمند برای تولید اسکریپت‌های پایتون گراس‌هاپر، بهینه‌سازی مدارها و پاسخ به سوالات عمومی.',
+    pT:'مرکز پروژه‌ها',pD:'مدیریت فضاهای کاری پیشرفته چندبعدی',
+    sT:'هسته جستجوی عمیق',sD:'بررسی دیتابیس‌های پارامتریک و مانیفست‌های مهندسی',sInp:'در کتابخانه‌های الگوریتمی جستجو کنید...',
+    iT:'استودیوی تصویر',iD:'آپلود نقشه‌های مدار یا اسکیس‌های معماری برای تحلیل هوش مصنوعی',iDrop:'فایل مهندسی را اینجا رها کنید یا کلیک کنید',
+    lT:'کتابخانه توسعه‌یافته',lD:'مخزن مرکزی کدهای مرجع، پرامپت‌ها و قالب‌های محاسباتی',
+    stT:'تنظیمات سیستم',stD:'پیکربندی متغیرهای هسته پردازش مرکزی',
+    lblW:'فضای کاری',lblM:'مخازن و کتابخانه‌ها',
+    placeholder:'سوال خود را بپرسید یا فایل آپلود کنید...',
+    you:'شما',processing:'D&T Core در حال پردازش...',copy:'کپی',dlpdf:'دانلود PDF'
+  }
 };
 
-const dic={
-    en: {
-        lblW: "WORKSPACE", lblM: "REPOS & LIBRARIES", placeholder: "Ask D&T Ai-TECH or upload assets...",
-        greetT: "Where should we start?", greetD: "Advanced computational engineering copilot for generating Grasshopper Python workflows and circuit optimization.",
-        fT: "Workflow Forge", fD: "Orchestrate cross-repository pipelines and compile AI production pipelines",
-        pT: "Projects Hub", pD: "Manage advanced multi-dimensional computational workspaces",
-        sT: "Deep Search Core", sD: "Cross-examine massive parametric databases and engineering manifests", sInp: "Search components or algorithmic libraries...",
-        iT: "Image Studio", iD: "Upload circuit blueprints, wireframes, or architectural sketches for AI dissection", iDrop: "Drop technical asset here or click to choose file",
-        lT: "Extended Library", lD: "Centralized repository housing foundational scripts, prompt systems and templates",
-        stT: "System Settings", stD: "Configure your D&T intelligent engine core variables"
-    },
-    fa: {
-        lblW: "فضای کاری ارکستراسیون", lblM: "مخازن و کتابخانه‌ها", placeholder: "سوال خود را بپرسید یا فایل آپلود کنید...",
-        greetT: "کجا شروع کنیم؟", greetD: "دستیار مهندسی محاسباتی هوشمند جهت تولید اسکریپت‌های پایتون گراس‌هاپر، بهینه‌سازی مدارهای الکترونیکی و مدیریت پایپ‌لاین‌ها.",
-        fT: "فورج ارکستراسیون پایپ‌لاین", fD: "مدیریت و اتصال خطوط تولید اتومیشن هوشمند بین مخازن اکوسیستم",
-        pT: "مرکز پروژه‌ها", pD: "مدیریت و مهار فضاهای کاری پیشرفته چندبعدی",
-        sT: "هسته جستجوی عمیق", sD: "بررسی متقاطع دیتابیس‌های پارامتریک و مانیفست‌های مهندسی", sInp: "در کتابخانه‌های الگوریتمی جستجو کنید...",
-        iT: "استودیوی تصویر", iD: "آپلود نقشه‌های مدار یا اسکیس‌های معماری جهت کالبدشکافی توسط هوش مصنوعی", iDrop: "فایل مهندسی را اینجا رها کنید یا کلیک کنید",
-        lT: "کتابخانه توسعه‌یافته", lD: "مخزن مرکزی کدهای مرجع، سیستم‌های پرامپت و قالب‌های محاسباتی",
-        stT: "تنظیمات سیستم", stD: "پیکربندی متغیرهای هسته پردازش مرکزی هوشمند"
-    }
-};
-
+// ══ SIDEBAR ══
 function toggleSB(){document.getElementById('sidebar').classList.toggle('collapsed')}
 
+// ══ VIEW SWITCH ══
 function sw(name,el){
-    document.getElementById('v-chat').style.display = name === 'chat' ? 'flex' : 'none';
-    ['forge','project','search','images','library','settings'].forEach(n => {
-        const v = document.getElementById('v-' + n);
-        if(v) v.classList.toggle('on', n === name);
-    });
-    document.querySelectorAll('.ni').forEach(i => i.classList.remove('on'));
-    const targetNi = document.querySelector(`.ni[data-v="${name}"]`);
-    if(targetNi) targetNi.classList.add('on');
-    document.getElementById('tb-t').textContent = VT[currentLang][name] || name;
+  document.getElementById('v-chat').style.display=name==='chat'?'flex':'none';
+  ['project','search','images','library','settings'].forEach(n=>{
+    const v=document.getElementById('v-'+n);
+    if(v)v.classList.toggle('on',n===name);
+  });
+  document.querySelectorAll('.ni').forEach(i=>i.classList.remove('on'));
+  const t=el||document.querySelector(`.ni[data-v="${name}"]`);
+  if(t)t.classList.add('on');
+  document.getElementById('tb-t').textContent=VT[currentLang][name]||name;
 }
-
 function mSw(name,el){
-    document.querySelectorAll('.mni').forEach(i => i.classList.remove('on'));
-    el.classList.add('on');
-    sw(name,null);
+  document.querySelectorAll('.mni').forEach(i=>i.classList.remove('on'));
+  el.classList.add('on');
+  sw(name,null);
 }
 
-function changeSystemTheme(val){
-    document.body.classList.toggle('theme-blue', val === 'blue');
+// ══ LANGUAGE ══
+function toggleLang(){setLang(currentLang==='en'?'fa':'en');}
+function setLang(lang){
+  currentLang=lang;
+  const d=DIC[lang];
+  document.getElementById('sett-lang-menu').value=lang;
+  document.getElementById('lang-indicator').textContent=lang==='en'?'FA / EN':'EN / FA';
+
+  // direction
+  const isRtl=lang==='fa';
+  const mc=document.getElementById('main-canvas');
+  mc.style.direction=isRtl?'rtl':'ltr';
+  const ib=document.getElementById('ibox');
+  ib.style.direction=isRtl?'rtl':'ltr';
+  document.getElementById('prompt').style.textAlign=isRtl?'right':'left';
+  document.getElementById('prompt').style.direction=isRtl?'rtl':'ltr';
+
+  // sidebar border side
+  const sb=document.getElementById('sidebar');
+  sb.style.borderRight=isRtl?'none':'1px solid var(--border)';
+  sb.style.borderLeft=isRtl?'1px solid var(--border)':'none';
+
+  // text updates
+  document.getElementById('greet-title').textContent=d.greetT;
+  document.getElementById('greet-desc').textContent=d.greetD;
+  document.getElementById('p-title').textContent=d.pT;
+  document.getElementById('p-desc').textContent=d.pD;
+  document.getElementById('s-title').textContent=d.sT;
+  document.getElementById('s-desc').textContent=d.sD;
+  document.getElementById('dsi').placeholder=d.sInp;
+  document.getElementById('i-title').textContent=d.iT;
+  document.getElementById('i-desc').textContent=d.iD;
+  document.getElementById('i-drop-lbl').textContent=d.iDrop;
+  document.getElementById('l-title').textContent=d.lT;
+  document.getElementById('l-desc').textContent=d.lD;
+  document.getElementById('st-title').textContent=d.stT;
+  document.getElementById('st-desc').textContent=d.stD;
+  document.getElementById('lbl-workspace').textContent=d.lblW;
+  document.getElementById('lbl-media').textContent=d.lblM;
+  document.getElementById('prompt').placeholder=d.placeholder;
+  document.getElementById('tb-t').textContent=VT[lang]['chat'];
 }
 
-function toggleLanguageSystem(){
-    setSystemLanguage(currentLang === 'en' ? 'fa' : 'en');
+// ══ THEME ══
+function changeTheme(val){document.body.classList.toggle('theme-blue',val==='blue');}
+
+// ══ CHAT ══
+function newChat(){
+  started=false;
+  document.getElementById('chatbox').innerHTML='';
+  document.getElementById('chatbox').classList.remove('on');
+  document.getElementById('greet').style.display='flex';
+  document.getElementById('prompt').value='';
+  document.getElementById('findc').classList.remove('on');
+  selFile=null;
+  sw('chat',null);
 }
-
-function setSystemLanguage(lang){
-    currentLang = lang;
-    document.getElementById('sett-lang-menu').value = lang;
-    document.getElementById('lang-indicator').textContent = lang === 'en' ? 'FA / EN' : 'EN / FA';
-    
-    const mainCanvas = document.getElementById('main-canvas');
-    const ibox = document.getElementById('input-box-direction');
-    const sidebar = document.getElementById('sidebar');
-    
-    if(lang === 'fa'){
-        mainCanvas.style.direction = 'rtl';
-        mainCanvas.style.textAlign = 'right';
-        ibox.style.direction = 'rtl';
-        sidebar.style.borderRight = 'none';
-        sidebar.style.borderLeft = '1px solid var(--border)';
-    } else {
-        mainCanvas.style.direction = 'ltr';
-        mainCanvas.style.textAlign = 'left';
-        ibox.style.direction = 'ltr';
-        sidebar.style.borderLeft = 'none';
-        sidebar.style.borderRight = '1px solid var(--border)';
-    }
-
-    document.querySelectorAll('.ni, .project-card, .ccard, .sett-info, .g-node, .nav-label').forEach(el => {
-        el.style.textAlign = lang === 'fa' ? 'right' : 'left';
-    });
-
-    document.querySelectorAll('.id-label-w').forEach(el => el.textContent = dic[lang].lblW);
-    document.querySelectorAll('.id-label-m').forEach(el => el.textContent = dic[lang].lblM);
-    
-    document.getElementById('prompt').placeholder = dic[lang].placeholder;
-    document.getElementById('greet-title').textContent = dic[lang].greetT;
-    document.getElementById('greet-desc').textContent = dic[lang].greetD;
-    document.getElementById('f-title').textContent = dic[lang].fT;
-    document.getElementById('f-desc').textContent = dic[lang].fD;
-    document.getElementById('p-title').textContent = dic[lang].pT;
-    document.getElementById('p-desc').textContent = dic[lang].pD;
-    document.getElementById('s-title').textContent = dic[lang].sT;
-    document.getElementById('s-desc').textContent = dic[lang].sD;
-    document.getElementById('dsi').placeholder = dic[lang].sInp;
-    document.getElementById('i-title').textContent = dic[lang].iT;
-    document.getElementById('i-desc').textContent = dic[lang].iD;
-    document.getElementById('i-drop-lbl').textContent = dic[lang].iDrop;
-    document.getElementById('l-title').textContent = dic[lang].lT;
-    document.getElementById('l-desc').textContent = dic[lang].lD;
-    document.getElementById('st-title').textContent = dic[lang].stT;
-    document.getElementById('st-desc').textContent = dic[lang].stD;
+function useChip(el){
+  document.getElementById('prompt').value=el.textContent;
+  document.getElementById('prompt').focus();
+  sw('chat',null);
 }
-
-function useChip(el){document.getElementById('prompt').value = el.textContent;document.getElementById('prompt').focus();}
 function ar(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,140)+'px';}
-function ok(e){if(e.key==='Enter' && !e.shiftKey){e.preventDefault();send();}}
+function ok(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
 function onFile(inp){if(inp.files.length){selFile=inp.files[0];document.getElementById('findc').classList.add('on');document.getElementById('fnm').textContent='✓ '+selFile.name;}}
 
-async function send() {
-    const txt=document.getElementById('prompt').value.trim();
-    if(!txt && !selFile) return;
-    if(!started){started=true;document.getElementById('greet').style.display='none';document.getElementById('chatbox').classList.add('on');}
-    const cb=document.getElementById('chatbox');
-    const fl=selFile?`<br><small style="color:var(--cyan);font-size:11px">📎 ${selFile.name}</small>`:'';
-    
-    const isFa = /[\u0600-\u06FF]/.test(txt) || currentLang==='fa';
-    const alignDir = isFa ? 'rtl' : 'ltr';
-    const textAl = isFa ? 'right' : 'left';
-
-    cb.innerHTML+=`<div class="mrow u"><div class="bub u" style="direction:${alignDir}; text-align:${textAl};"><b>${currentLang=='fa'?'شما':'You'}</b><br>${txt||''}${fl}</div></div>`;
-    document.getElementById('prompt').value='';document.getElementById('prompt').style.height='auto';
-    
-    const id='a'+Date.now();
-    cb.innerHTML+=`<div class="mrow a"><div class="bub a ld" id="${id}">D&T Intelligent Core processing...</div></div>`;
-    cb.scrollTop=cb.scrollHeight;
-    
-    let fp=[];
-    if(selFile){fp=[{inlineData:{data:await b64(selFile),mimeType:selFile.type}}];}
-    selFile=null;document.getElementById('findc').classList.remove('on');
-    
-    try{
-        const r=await fetch('/api/chat',{
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({prompt:txt,fileParts:fp,lang:currentLang})
-        });
-        const d=await r.json();const el=document.getElementById(id);el.classList.remove('ld');
-        if(r.ok && d.response){
-            const resFa = /[\u0600-\u06FF]/.test(d.response);
-            el.style.direction = resFa ? 'rtl' : 'ltr';
-            el.style.textAlign = resFa ? 'right' : 'left';
-            
-            el.innerHTML=`
-                <b>D&T Ai-TECH</b>
-                <div id="msg_${id}" style="margin-top:5px; padding:2px;">${d.response}</div>
-                <div class="b-actions">
-                    <button class="b-btn" onclick="copyTextToClipboard('msg_${id}')">${currentLang==='fa'?'کپی متن':'Copy'}</button>
-                    <button class="b-btn" onclick="exportBubbleToPDF('msg_${id}')">${currentLang==='fa'?'دانلود PDF':'Download PDF'}</button>
-                </div>
-            `;
-        } else {
-            el.innerHTML=`<b>System Error:</b> Connection failed. Server endpoint could not read response.`;
-        }
-    }catch{const el=document.getElementById(id);el.classList.remove('ld');el.innerHTML=`<b>Connection Error:</b> Serverless cloud engine timed out.`;}
-    cb.scrollTop=cb.scrollHeight;
-}
-
-// ====== WORKFLOW FORGE ORCHESTRATION ENGINE SIMULATION ======
-async function triggerForgePipeline(wfName, stepsArray) {
-    const consoleBox = document.getElementById('forge-console');
-    const statusTitle = document.getElementById('forge-active-title');
-    
-    consoleBox.innerHTML = `> Initializing Graph Blueprint [${wfName}]...\n`;
-    statusTitle.textContent = `Graph Status: ACTIVE ORCHESTRATION`;
-    
-    document.querySelectorAll('.g-node').forEach(n => n.classList.remove('active', 'done'));
-    
-    try {
-        // برای سازگاری کامل با OneCompiler و اجرای لایو، شبیه‌ساز گراف را غنی‌سازی کرده‌ایم
-        for(let step of stepsArray) {
-            const nodeEl = document.getElementById(`nd-${step}`);
-            if(nodeEl) nodeEl.classList.add('active');
-            consoleBox.innerHTML += `> [EXECUTE] Node: ${step} -> CONNECTING TO MODULE...\n`;
-            consoleBox.scrollTop = consoleBox.scrollHeight;
-            
-            await new Promise(r => setTimeout(r, 800));
-            
-            if(nodeEl) {
-                nodeEl.classList.remove('active');
-                nodeEl.classList.add('done');
-            }
-            
-            let desc = '';
-            if(step==='collect_assets') desc = "Smarts-Downloader pipeline connected. Datasets loaded.";
-            else if(step==='generate_script') desc = "HMO-tech-copilot invoked. RhinoCommon topology script رندر شد.";
-            else if(step==='export_metadata') desc = "Export-Engine metadata matrices generated successfully.";
-            else if(step==='deploy_artifact') desc = "GitHub Webhook fired. Artifact committed to D-T-Ai-Outputs.";
-            
-            consoleBox.innerHTML += `> [SUCCESS] -> ${desc}\n`;
-        }
-        
-        consoleBox.innerHTML += `\n>> 🎉 GRAPH PIPELINE PIPES STABLE AND COMPILED.\nSync Status: Monorepo Root Connected.`;
-        statusTitle.textContent = `Graph Status: STABLE COMPILED`;
-        
-    } catch(err) {
-        consoleBox.innerHTML += `\n❌ [FATAL ERROR] Orchestration Failed:\n${err.message}`;
-        statusTitle.textContent = `Graph Status: CRASHED`;
+async function send(){
+  const txt=document.getElementById('prompt').value.trim();
+  if(!txt&&!selFile)return;
+  if(!started){started=true;document.getElementById('greet').style.display='none';document.getElementById('chatbox').classList.add('on');}
+  sw('chat',null);
+  const cb=document.getElementById('chatbox');
+  const fl=selFile?`<br><small style="color:var(--cyan);font-size:11px">📎 ${selFile.name}</small>`:'';
+  const isFa=/[\u0600-\u06FF]/.test(txt)||currentLang==='fa';
+  const dir=isFa?'rtl':'ltr';
+  const tal=isFa?'right':'left';
+  cb.innerHTML+=`<div class="mrow u"><div class="bub u" style="direction:${dir};text-align:${tal}"><b>${DIC[currentLang].you}</b><br>${txt||''}${fl}</div></div>`;
+  document.getElementById('prompt').value='';document.getElementById('prompt').style.height='auto';
+  const id='a'+Date.now();
+  cb.innerHTML+=`<div class="mrow a"><div class="av">${miniLogo()}</div><div class="bub a ld" id="${id}">${DIC[currentLang].processing}</div></div>`;
+  cb.scrollTop=cb.scrollHeight;
+  let fp=[];
+  if(selFile){fp=[{inlineData:{data:await b64(selFile),mimeType:selFile.type}}];}
+  selFile=null;document.getElementById('findc').classList.remove('on');
+  try{
+    const r=await fetch('/api/chat',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt:txt,fileParts:fp,lang:currentLang})
+    });
+    const d=await r.json();const el=document.getElementById(id);el.classList.remove('ld');
+    if(r.ok&&d.response){
+      const resFa=/[\u0600-\u06FF]/.test(d.response);
+      el.style.direction=resFa?'rtl':'ltr';
+      el.style.textAlign=resFa?'right':'left';
+      // render code blocks
+      let resp=d.response.replace(/```(\w+)?\n?([\s\S]*?)```/g,(_,lang,code)=>{
+        const esc=code.trim().replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        return `<div class="resp-code-block"><div class="resp-code-block-header"><span>${lang||'code'}</span><button onclick="copyRaw(this,'${encodeURIComponent(code.trim())}')">Copy</button></div><pre>${esc}</pre></div>`;
+      });
+      const msgId='msg_'+id;
+      el.innerHTML=`<b>D&T Ai-TECH</b><div id="${msgId}" style="margin-top:5px">${resp}</div><div class="b-actions"><button class="b-btn" onclick="copyEl('${msgId}')">${DIC[currentLang].copy}</button><button class="b-btn" onclick="exportPDF('${msgId}')">${DIC[currentLang].dlpdf}</button></div>`;
+    }else{
+      el.innerHTML=`<b>System Error:</b> Connection failed. Deploy on Vercel to activate AI.`;
     }
+  }catch{
+    const el=document.getElementById(id);el.classList.remove('ld');
+    el.innerHTML=`<b>Connection Error:</b> Serverless engine unreachable. Deploy on Vercel.`;
+  }
+  cb.scrollTop=cb.scrollHeight;
 }
 
 function b64(f){return new Promise(r=>{const rd=new FileReader();rd.onload=()=>r(rd.result.split(',')[1]);rd.readAsDataURL(f);});}
 
-function copyTextToClipboard(id) {
-    const txt = document.getElementById(id).innerText;
-    navigator.clipboard.writeText(txt).then(() => {
-        alert(currentLang==='fa'?'متن با موفقیت کپی شد.':'Text copied successfully!');
-    });
+// avatar mini logo (inline SVG, no external file)
+function miniLogo(){
+  return`<svg width="16" height="16" viewBox="0 0 240 240" fill="none"><defs><linearGradient id="ML" x1="0" y1="0" x2="240" y2="240" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#00e5ff"/></linearGradient></defs><path d="M170 18Q222 18 222 70L222 170Q222 222 170 222L70 222Q18 222 18 170L18 70Q18 18 70 18Z" fill="none" stroke="url(#ML)" stroke-width="14"/><path d="M64 54L64 186Q64 186 110 186Q168 186 168 120Q168 54 110 54Z" fill="none" stroke="#00e5ff" stroke-width="11"/></svg>`;
 }
 
-function exportBubbleToPDF(id) {
-    const element = document.getElementById(id);
-    const opt = {
-        margin: 10,
-        filename: 'DT-AiTech-Export-' + id + '.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#141420' },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-    html2pdf().set(opt).from(element).save();
+// ══ VOICE ══
+if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  recog=new SR();recog.lang='fa-IR';
+  recog.onresult=e=>{const t=e.results[0][0].transcript;const inp=document.getElementById('prompt');inp.value=(inp.value?inp.value+' ':'')+t;ar(inp);};
+  recog.onend=()=>{recOn=false;const b=document.getElementById('micbtn');b.classList.remove('rec');b.style.color='';};
+}
+function toggleVoice(){
+  if(!recog){alert('Voice not supported in this browser.');return;}
+  if(recOn){recog.stop();}else{recOn=true;recog.start();const b=document.getElementById('micbtn');b.classList.add('rec');b.style.color='#ff4040';}
 }
 
+// ══ COPY / PDF ══
+function copyEl(id){navigator.clipboard.writeText(document.getElementById(id).innerText).then(()=>alert(currentLang==='fa'?'متن کپی شد.':'Copied!'));}
+function copyRaw(btn,enc){navigator.clipboard.writeText(decodeURIComponent(enc)).then(()=>{btn.textContent='✓ Copied';setTimeout(()=>btn.textContent='Copy',1600);});}
+function copyC(btn){const pre=btn.closest('.ccard').querySelector('pre');navigator.clipboard.writeText(pre.textContent).then(()=>{const o=btn.innerHTML;btn.innerHTML='✓ Copied';setTimeout(()=>btn.innerHTML=o,1600);});}
+function exportPDF(id){
+  const el=document.getElementById(id);
+  if(typeof html2pdf==='undefined'){alert('PDF library loading. Try again in a moment.');return;}
+  html2pdf().set({margin:10,filename:'DT-AiTech-'+id+'.pdf',image:{type:'jpeg',quality:0.98},html2canvas:{scale:2,useCORS:true,backgroundColor:'#141420'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).from(el).save();
+}
+
+// ══ DEEP SEARCH ══
 async function doSrch(){
-    const q=document.getElementById('dsi').value.trim();if(!q)return;
-    const box=document.getElementById('sres');box.style.display='block';box.innerHTML='<span style="color:var(--cyan)">Querying knowledge cluster...</span>';
-    try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:`Search database info for: ${q}`,lang:currentLang})});
-        const d=await r.json();box.innerHTML=r.ok&&d.response?d.response:'Gateway connection error.';}
-    catch{box.innerHTML='Connection error.';}
+  const q=document.getElementById('dsi').value.trim();if(!q)return;
+  const box=document.getElementById('sres');box.style.display='block';box.innerHTML='<span style="color:var(--cyan)">Querying knowledge cluster...</span>';
+  try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:`Deep comprehensive search and analysis: "${q}". Provide structured detailed information.`,lang:currentLang})});
+    const d=await r.json();box.innerHTML=r.ok&&d.response?d.response:'<span style="color:var(--text-muted)">Server unreachable. Deploy on Vercel.</span>';}
+  catch{box.innerHTML='<span style="color:var(--text-muted)">Connection error.</span>';}
 }
 
+// ══ IMAGE ══
 function imgDrop(e){e.preventDefault();const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))prvF(f);}
 function prevImg(inp){if(inp.files[0])prvF(inp.files[0]);}
 function prvF(file){const r=new FileReader();r.onload=e=>{document.getElementById('img-p').src=e.target.result;document.getElementById('img-pw').style.display='flex';document.querySelector('.dropz').style.display='none';};r.readAsDataURL(file);window._imgFile=file;}
-
 async function analyzeImg(){
-    const box=document.getElementById('img-res');box.style.display='block';box.textContent='Dissecting layout blueprints...';box.style.color='var(--cyan)';
-    try{const d64=await b64(window._imgFile);const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'Analyze this technical sketch or framework diagram layout.',fileParts:[{inlineData:{data:d64,mimeType:window._imgFile.type}}],lang:currentLang})});
-        const d=await r.json();if(r.ok&&d.response){box.textContent=d.response;box.style.color='var(--text-muted)';}else{box.textContent='Analysis failed.';box.style.color='var(--text-muted)';}}
-    catch{box.textContent='Network exception error.';box.style.color='var(--text-muted)';}
+  const box=document.getElementById('img-res');box.style.display='block';box.textContent='Analyzing...';box.style.color='var(--cyan)';
+  try{const d64=await b64(window._imgFile);const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'Analyze this technical asset in detail: design, colors, composition, structure and any engineering elements.',fileParts:[{inlineData:{data:d64,mimeType:window._imgFile.type}}],lang:currentLang})});
+    const d=await r.json();if(r.ok&&d.response){box.textContent=d.response;box.style.color='var(--text-muted)';}else{box.textContent='Analysis failed.';box.style.color='var(--text-muted)';}}
+  catch{box.textContent='Connection error.';box.style.color='var(--text-muted)';}
 }
 
+// ══ LIBRARY ══
 function libF(l,el){document.querySelectorAll('.lib-tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.querySelectorAll('.ccard').forEach(c=>{c.style.display=(l==='all'||c.dataset.l===l)?'block':'none';});}
+
+// ══ PROJECTS ══
+function openProj(name){sw('chat',null);document.getElementById('prompt').value=`Tell me about the ${name} project and help me plan the next development steps.`;document.getElementById('prompt').focus();}
+
+// ══ INIT ══
+sw('chat',null);
 </script>
 </body>
 </html>
+HTMLEOF
+echo "DONE: $(wc -c < /mnt/user-data/outputs/dt-aitech.html) bytes"
+Output
+
+DONE: 55667 bytes
