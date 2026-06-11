@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const COLORS = {
@@ -7,7 +7,6 @@ const COLORS = {
   brightBlue: "#A5F3FC",
   platinum: "#E2E8F0",
   darkSlate: "#1A1921",
-  white: "#FFFFFF",
 };
 
 const NAV_ITEMS = [
@@ -17,557 +16,53 @@ const NAV_ITEMS = [
   { id: "analysis", icon: "📊", label: "Analysis" },
 ];
 
-const QUICK_ACTIONS = [
-  { id: "grasshopper", label: "Generate Grasshopper Script", icon: "🐍" },
-  { id: "circuit", label: "Optimize Circuit Layout", icon: "⚡" },
-  { id: "mesh", label: "Parametric Mesh Framework", icon: "🔷" },
-  { id: "review", label: "Design Review", icon: "🔍" },
-];
-
-const SAMPLE_PROJECTS = [
-  { id: 1, name: "Tower_Facade_v3.py", tag: "Optimized", tagColor: COLORS.neonPurple, date: "Jun 11", lines: "def generate_facade(height, panels):\n    mesh = RhinoMesh()\n    for i in range(panels):\n        ..." },
-  { id: 2, name: "HyperMarket_Layout.gh", tag: "Analyzed", tagColor: COLORS.brightBlue, date: "Jun 10", lines: "# Spatial flow analysis\nimport grasshopper as gh\nflow = gh.PathFinder(grid=50)\n..." },
-  { id: 3, name: "PCB_Circuit_v2.py", tag: "Reviewed", tagColor: "#22c55e", date: "Jun 9", lines: "circuit = CircuitOptimizer()\ncircuit.set_constraints(voltage=3.3)\ncircuit.run()\n..." },
-  { id: 4, name: "Mesh_Parametric.py", tag: "Draft", tagColor: "#f59e0b", date: "Jun 8", lines: "import rhino3dm\ngrid = rhino3dm.Mesh()\nfor u in range(10):\n    for v in range(10):\n..." },
-];
-
-const CHAT_MESSAGES = [
-  { role: "ai", text: "Welcome to D&T AI-TECH Studio. I can help you create parametric scripts, optimize engineering layouts, and analyze 3D structures. What would you like to build today?" },
-  { role: "user", text: "Generate a Grasshopper script for a parametric mesh facade with 20x10 grid" },
-  { role: "ai", text: "Here's your parametric mesh framework:\n\n```python\nimport rhinoscriptsyntax as rs\nimport Rhino.Geometry as rg\n\ndef parametric_facade(u_count=20, v_count=10, cell_size=1.0):\n    pts = []\n    for u in range(u_count + 1):\n        for v in range(v_count + 1):\n            pt = rg.Point3d(u * cell_size, v * cell_size, 0)\n            pts.append(pt)\n    return pts\n\n# Generate 200-cell facade mesh\nmesh = parametric_facade()\n```\n\nThe script creates a 20×10 parametric grid. Use Design Review to validate geometry.", isCode: true },
-];
-
-const ANALYSIS_DATA = {
-  healthy: 73,
-  errors: 18,
-  warnings: 9,
-};
-
 export default function DTAiTechStudio() {
   const [activeTab, setActiveTab] = useState("workspace");
-  const [inputText, setInputText] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [activeAction, setActiveAction] = useState(null);
-  const [isMicActive, setIsMicActive] = useState(false);
-  const [chatMessages, setChatMessages] = useState(CHAT_MESSAGES);
-  const [chatInput, setChatInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-  const [resultsOpen, setResultsOpen] = useState(false);
-  const chatEndRef = useRef(null);
-
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chatMessages, isTyping]);
-
-  const handleSendChat = () => {
-    if (!chatInput.trim()) return;
-    setChatMessages((prev) => [...prev, { role: "user", text: chatInput }]);
-    setChatInput("");
-    setIsTyping(true);
-    setTimeout(() => {
-      setIsTyping(false);
-      setChatMessages((prev) => [...prev, {
-        role: "ai",
-        text: "Processing your request with the D&T AI engine... Your Grasshopper Python script has been generated and saved to Projects.",
-      }]);
-    }, 2000);
-  };
-
-  const handleWorkspaceSend = () => {
-    if (!inputText.trim()) return;
-    alert(`Processing: "${inputText}"\n\nOutput will appear in Results panel.`);
-    setInputText("");
-  };
-
-  const PieChart = () => {
-    const r = 60;
-    const cx = 80;
-    const cy = 80;
-    const total = ANALYSIS_DATA.healthy + ANALYSIS_DATA.errors + ANALYSIS_DATA.warnings;
-    const segments = [
-      { value: ANALYSIS_DATA.healthy, color: COLORS.brightBlue, label: "Healthy" },
-      { value: ANALYSIS_DATA.errors, color: COLORS.neonPurple, label: "Errors" },
-      { value: ANALYSIS_DATA.warnings, color: "#f59e0b", label: "Warnings" },
-    ];
-    let cumAngle = -Math.PI / 2;
-    return (
-      <svg width="160" height="160" viewBox="0 0 160 160">
-        {segments.map((seg, i) => {
-          const angle = (seg.value / total) * 2 * Math.PI;
-          const x1 = cx + r * Math.cos(cumAngle);
-          const y1 = cy + r * Math.sin(cumAngle);
-          cumAngle += angle;
-          const x2 = cx + r * Math.cos(cumAngle);
-          const y2 = cy + r * Math.sin(cumAngle);
-          const large = angle > Math.PI ? 1 : 0;
-          return (
-            <path key={i} d={`M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} Z`}
-              fill={seg.color} opacity={0.9}
-              style={{ cursor: "pointer", transition: "opacity 0.2s" }}
-              onMouseEnter={e => e.target.setAttribute("opacity", "1")}
-              onMouseLeave={e => e.target.setAttribute("opacity", "0.9")}
-            />
-          );
-        })}
-        <circle cx={cx} cy={cy} r={35} fill="white" />
-        <text x={cx} y={cy - 5} textAnchor="middle" fontSize="13" fontWeight="bold" fill={COLORS.darkSlate}>{ANALYSIS_DATA.healthy}%</text>
-        <text x={cx} y={cy + 12} textAnchor="middle" fontSize="9" fill={COLORS.darkSlate + "99"}>Healthy</text>
-      </svg>
-    );
-  };
 
   return (
-    <div style={{ fontFamily: "'Inter', 'Vazirmatn', sans-serif", display: "flex", height: "100vh", background: "#F8FAFC", overflow: "hidden" }}>
+    <div style={{ fontFamily: "'Space Grotesk', sans-serif", display: "flex", height: "100vh", background: "#F8FAFC", overflow: "hidden" }}>
 
       {/* ── SIDEBAR ── */}
-      <AnimatePresence>
-        {isSidebarOpen && (
-          <motion.aside
-            initial={{ x: -260 }}
-            animate={{ x: 0 }}
-            exit={{ x: -260 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            style={{
-              width: 240,
-              background: `linear-gradient(160deg, ${COLORS.deepPurple} 0%, #4B0082 50%, ${COLORS.brightBlue} 100%)`,
-              display: "flex",
-              flexDirection: "column",
-              padding: "24px 16px",
-              flexShrink: 0,
-              boxShadow: "4px 0 24px rgba(43,0,102,0.3)",
-            }}
-          >
-            {/* Logo */}
-            <div style={{ marginBottom: 32, display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{
-                width: 36, height: 36, borderRadius: 10,
-                background: "rgba(255,255,255,0.15)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 18, backdropFilter: "blur(8px)",
-                border: "1px solid rgba(255,255,255,0.2)"
-              }}>✦</div>
-              <div>
-                <div style={{ color: "#fff", fontWeight: 800, fontSize: 14, letterSpacing: 1 }}>D&T AI-TECH</div>
-                <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 9, letterSpacing: 2 }}>DESIGN • AI • INNOVATION</div>
-              </div>
-            </div>
+      <aside style={{
+        width: isSidebarOpen ? 240 : 80,
+        background: `linear-gradient(180deg, ${COLORS.deepPurple} 0%, ${COLORS.neonPurple} 100%)`,
+        display: "flex", flexDirection: "column", padding: "24px 16px", color: "#fff", transition: "width 0.3s"
+      }}>
+        <div style={{ marginBottom: 40, display: "flex", alignItems: "center", gap: 10 }}>
+          <img src="/logo.png" style={{ width: 36, height: 36, objectFit: "contain" }} alt="Logo" />
+          {isSidebarOpen && <span style={{ fontWeight: 800, fontSize: 14, letterSpacing: 1 }}>D&T AI-TECH</span>}
+        </div>
 
-            {/* Nav */}
-            <nav style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
-              {NAV_ITEMS.map((item) => (
-                <motion.button
-                  key={item.id}
-                  whileHover={{ x: 4 }}
-                  onClick={() => setActiveTab(item.id)}
-                  style={{
-                    display: "flex", alignItems: "center", gap: 10,
-                    padding: "11px 14px", borderRadius: 10,
-                    background: activeTab === item.id ? "rgba(226,232,240,0.25)" : "transparent",
-                    border: activeTab === item.id ? "1px solid rgba(255,255,255,0.2)" : "1px solid transparent",
-                    borderLeft: activeTab === item.id ? `3px solid ${COLORS.neonPurple}` : "3px solid transparent",
-                    color: "#fff", cursor: "pointer", fontSize: 13,
-                    fontWeight: activeTab === item.id ? 600 : 400,
-                    backdropFilter: activeTab === item.id ? "blur(8px)" : "none",
-                    transition: "all 0.2s",
-                  }}
-                >
-                  <span>{item.icon}</span>
-                  <span>{item.label}</span>
-                </motion.button>
-              ))}
-            </nav>
-
-            {/* Bottom User */}
-            <div style={{
-              marginTop: 16, padding: "12px 14px", borderRadius: 12,
-              background: "rgba(255,255,255,0.1)", backdropFilter: "blur(8px)",
-              border: "1px solid rgba(255,255,255,0.15)",
-              display: "flex", alignItems: "center", gap: 10,
+        <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
+          {NAV_ITEMS.map((item) => (
+            <button key={item.id} onClick={() => setActiveTab(item.id)} style={{
+              display: "flex", alignItems: "center", gap: 12, padding: "12px", borderRadius: 10,
+              background: activeTab === item.id ? "rgba(255,255,255,0.2)" : "transparent",
+              border: "none", color: "#fff", cursor: "pointer", fontSize: 13, transition: "0.2s"
             }}>
-              <div style={{
-                width: 32, height: 32, borderRadius: "50%",
-                background: `linear-gradient(135deg, ${COLORS.neonPurple}, ${COLORS.brightBlue})`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 13, color: "#fff", fontWeight: 700,
-              }}>HM</div>
-              <div>
-                <div style={{ color: "#fff", fontSize: 12, fontWeight: 600 }}>H. Mohseni</div>
-                <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 10 }}>Pro Plan</div>
-              </div>
-            </div>
-          </motion.aside>
-        )}
-      </AnimatePresence>
-
-      {/* ── MAIN ── */}
-      <main style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden" }}>
-
-        {/* Header */}
-        <header style={{
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          padding: "0 24px", height: 56,
-          background: "#fff", borderBottom: "1px solid #E2E8F0",
-          flexShrink: 0,
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              style={{ background: "none", border: "none", cursor: "pointer", fontSize: 18, color: COLORS.darkSlate, padding: 4 }}>
-              ☰
+              <span>{item.icon}</span>
+              {isSidebarOpen && <span>{item.label}</span>}
             </button>
-            <span style={{ fontWeight: 700, fontSize: 15, color: COLORS.darkSlate }}>AI Studio</span>
-            <span style={{ fontSize: 11, color: "#9CA3AF", background: "#F3F4F6", padding: "2px 8px", borderRadius: 20 }}>
-              {NAV_ITEMS.find(n => n.id === activeTab)?.label}
-            </span>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <button style={{ background: "none", border: "none", cursor: "pointer", fontSize: 15, color: "#9CA3AF" }}>❓</button>
-            <button style={{ background: "none", border: "none", cursor: "pointer", fontSize: 15, color: "#9CA3AF" }}>🔔</button>
-            <div style={{
-              width: 32, height: 32, borderRadius: "50%",
-              background: `linear-gradient(135deg, ${COLORS.neonPurple}, ${COLORS.brightBlue})`,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer",
-              border: `2px solid ${COLORS.neonPurple}`,
-            }}>HM</div>
-          </div>
-        </header>
+          ))}
+        </nav>
 
-        {/* ── CONTENT AREA ── */}
-        <div style={{ flex: 1, overflow: "auto", position: "relative" }}>
+        {/* User Profile Area */}
+        <div style={{ background: "rgba(0,0,0,0.2)", padding: "12px", borderRadius: 12, fontSize: 11 }}>
+          {isSidebarOpen ? (
+            <>
+              <div style={{ fontWeight: 700 }}>D&T-ai.tech</div>
+              <div style={{ opacity: 0.7 }}>Pro Plan · Active</div>
+            </>
+          ) : "👤"}
+        </div>
+      </aside>
 
-          {/* === WORKSPACE === */}
-          {activeTab === "workspace" && (
-            <div style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "32px 24px", gap: 0 }}>
-              {/* Welcome */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ textAlign: "center", marginBottom: 28 }}>
-                <div style={{ fontSize: 36, marginBottom: 8 }}>✦</div>
-                <h2 style={{ fontSize: 26, fontWeight: 800, color: COLORS.darkSlate, margin: "0 0 8px" }}>
-                  Welcome to your D&T Design Hub
-                </h2>
-                <p style={{ color: "#6B7280", fontSize: 14, maxWidth: 480, margin: "0 auto" }}>
-                  Create parametric scripts, optimize engineering workflows, and analyze 3D structures — all in one place.
-                </p>
-              </motion.div>
-
-              {/* Engine & Results */}
-              <div style={{ display: "flex", gap: 10, marginBottom: 20, alignItems: "center" }}>
-                <button style={{
-                  display: "flex", alignItems: "center", gap: 6,
-                  padding: "7px 16px", borderRadius: 20,
-                  background: COLORS.platinum, border: "none",
-                  fontSize: 13, fontWeight: 600, color: COLORS.darkSlate, cursor: "pointer",
-                }}>✨ Gemini</button>
-                <div style={{ position: "relative" }}>
-                  <button onClick={() => setResultsOpen(!resultsOpen)} style={{
-                    display: "flex", alignItems: "center", gap: 6,
-                    padding: "7px 16px", borderRadius: 20,
-                    background: "transparent", border: `1px solid ${COLORS.platinum}`,
-                    fontSize: 13, color: COLORS.darkSlate, cursor: "pointer",
-                  }}>📄 Results {resultsOpen ? "▲" : "▾"}</button>
-                  <AnimatePresence>
-                    {resultsOpen && (
-                      <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-                        style={{
-                          position: "absolute", top: "calc(100% + 8px)", left: 0,
-                          background: "#fff", borderRadius: 12,
-                          boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-                          border: `1px solid ${COLORS.platinum}`,
-                          minWidth: 200, zIndex: 100, overflow: "hidden",
-                        }}>
-                        {[
-                          { icon: "🐍", label: "View Python Script", sub: "Last generated 2min ago" },
-                          { icon: "🔷", label: "View Mesh Data", sub: "200-cell parametric grid" },
-                          { icon: "⚠️", label: "Error Logs (2)", sub: "Syntax warnings found" },
-                          null,
-                          { icon: "📥", label: "Export as .py", sub: null },
-                          { icon: "📋", label: "Copy to Clipboard", sub: null },
-                          { icon: "📁", label: "Save to Projects", sub: null },
-                        ].map((item, i) =>
-                          item === null ? (
-                            <div key={i} style={{ height: 1, background: COLORS.platinum, margin: "4px 0" }} />
-                          ) : (
-                            <button key={i} style={{
-                              display: "flex", flexDirection: "column",
-                              width: "100%", padding: "10px 14px", background: "none",
-                              border: "none", cursor: "pointer", textAlign: "left",
-                              transition: "background 0.15s",
-                            }}
-                              onMouseEnter={e => e.currentTarget.style.background = "#F8FAFC"}
-                              onMouseLeave={e => e.currentTarget.style.background = "none"}
-                            >
-                              <span style={{ fontSize: 13, color: COLORS.darkSlate }}>{item.icon} {item.label}</span>
-                              {item.sub && <span style={{ fontSize: 11, color: "#9CA3AF" }}>{item.sub}</span>}
-                            </button>
-                          )
-                        )}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
-
-              {/* Quick Actions */}
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center", marginBottom: 24 }}>
-                {QUICK_ACTIONS.map((action) => (
-                  <motion.button key={action.id} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-                    onClick={() => setActiveAction(activeAction === action.id ? null : action.id)}
-                    style={{
-                      padding: "8px 16px", borderRadius: 20, fontSize: 12, fontWeight: 500,
-                      cursor: "pointer", transition: "all 0.2s",
-                      background: activeAction === action.id ? `linear-gradient(135deg, ${COLORS.neonPurple}22, ${COLORS.brightBlue}33)` : "#fff",
-                      border: activeAction === action.id ? `1.5px solid ${COLORS.neonPurple}` : `1px solid ${COLORS.platinum}`,
-                      color: activeAction === action.id ? COLORS.neonPurple : COLORS.darkSlate,
-                      boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
-                    }}>
-                    {action.icon} {action.label}
-                  </motion.button>
-                ))}
-              </div>
-
-              {/* Input Box */}
-              <div style={{ width: "100%", maxWidth: 680, position: "relative" }}>
-                <div style={{
-                  position: "absolute", inset: -2, borderRadius: 18,
-                  background: `linear-gradient(135deg, ${COLORS.brightBlue}44, ${COLORS.neonPurple}44)`,
-                  filter: "blur(12px)", zIndex: 0,
-                }} />
-                <div style={{
-                  position: "relative", zIndex: 1,
-                  background: "rgba(226,232,240,0.4)",
-                  backdropFilter: "blur(12px)",
-                  border: `1px solid ${COLORS.platinum}`,
-                  borderRadius: 16, padding: "14px 16px",
-                  boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
-                }}>
-                  <textarea
-                    value={inputText}
-                    onChange={e => setInputText(e.target.value)}
-                    onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleWorkspaceSend(); } }}
-                    placeholder="Ask D&T AI-TECH to create, optimize, or analyze..."
-                    style={{
-                      width: "100%", background: "transparent",
-                      border: "none", outline: "none", resize: "none",
-                      fontSize: 14, color: COLORS.darkSlate,
-                      fontFamily: "inherit", minHeight: 52,
-                    }}
-                  />
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
-                    <div style={{ display: "flex", gap: 12 }}>
-                      {[
-                        { icon: "🎤", active: isMicActive, onClick: () => setIsMicActive(!isMicActive) },
-                        { icon: "🖼️", active: false, onClick: () => {} },
-                        { icon: "📎", active: false, onClick: () => {} },
-                      ].map((btn, i) => (
-                        <motion.button key={i} whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }}
-                          onClick={btn.onClick}
-                          style={{
-                            background: "none", border: "none", cursor: "pointer",
-                            fontSize: 16, opacity: btn.active ? 1 : 0.5,
-                            filter: btn.active ? `drop-shadow(0 0 6px ${COLORS.brightBlue})` : "none",
-                            transition: "all 0.2s",
-                          }}>
-                          {btn.icon}
-                        </motion.button>
-                      ))}
-                    </div>
-                    <motion.button
-                      whileHover={{ scale: 1.1, boxShadow: `0 0 16px ${COLORS.neonPurple}88` }}
-                      whileTap={{ scale: 0.92 }}
-                      onClick={handleWorkspaceSend}
-                      animate={inputText.length > 0 ? {
-                        boxShadow: ["0 0 0px transparent", `0 0 12px ${COLORS.neonPurple}66`, "0 0 0px transparent"],
-                      } : {}}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      style={{
-                        width: 36, height: 36, borderRadius: "50%", border: "none",
-                        background: inputText.length > 0 ? COLORS.neonPurple : COLORS.darkSlate,
-                        color: "#fff", cursor: "pointer", fontSize: 14,
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        transition: "background 0.3s",
-                        opacity: inputText.length > 0 ? 1 : 0.4,
-                      }}>➤</motion.button>
-                  </div>
-                </div>
-                <p style={{ textAlign: "center", fontSize: 11, color: "#9CA3AF", marginTop: 10 }}>
-                  D&T AI processes your input using Gemini · <span style={{ textDecoration: "underline", cursor: "pointer" }}>Learn more</span>
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* === CHAT === */}
-          {activeTab === "chat" && (
-            <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-              <div style={{ flex: 1, overflowY: "auto", padding: "24px", display: "flex", flexDirection: "column", gap: 16 }}>
-                {chatMessages.map((msg, i) => (
-                  <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                    style={{ display: "flex", gap: 10, flexDirection: msg.role === "user" ? "row-reverse" : "row", alignItems: "flex-start" }}>
-                    <div style={{
-                      width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
-                      background: msg.role === "ai" ? `linear-gradient(135deg, ${COLORS.deepPurple}, ${COLORS.neonPurple})` : COLORS.platinum,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      fontSize: msg.role === "ai" ? 14 : 12, color: msg.role === "ai" ? "#fff" : COLORS.darkSlate,
-                      fontWeight: 700,
-                    }}>{msg.role === "ai" ? "✦" : "HM"}</div>
-                    <div style={{
-                      maxWidth: "70%",
-                      background: msg.role === "user" ? COLORS.platinum : `linear-gradient(135deg, ${COLORS.brightBlue}22, rgba(255,255,255,0.9))`,
-                      border: `1px solid ${msg.role === "ai" ? COLORS.brightBlue + "44" : COLORS.platinum}`,
-                      borderRadius: msg.role === "user" ? "16px 4px 16px 16px" : "4px 16px 16px 16px",
-                      padding: "12px 14px",
-                    }}>
-                      <pre style={{ margin: 0, fontSize: 13, color: COLORS.darkSlate, whiteSpace: "pre-wrap", fontFamily: "inherit" }}>{msg.text}</pre>
-                      {msg.role === "ai" && (
-                        <div style={{ display: "flex", gap: 8, marginTop: 10, borderTop: `1px solid ${COLORS.platinum}`, paddingTop: 8 }}>
-                          {["📋 Copy", "👍", "👎", "📁 Save"].map((btn, bi) => (
-                            <button key={bi} style={{
-                              background: "none", border: `1px solid ${COLORS.platinum}`,
-                              padding: "3px 10px", borderRadius: 20, fontSize: 11,
-                              color: "#9CA3AF", cursor: "pointer",
-                            }}
-                              onMouseEnter={e => { e.target.style.color = COLORS.neonPurple; e.target.style.borderColor = COLORS.neonPurple; }}
-                              onMouseLeave={e => { e.target.style.color = "#9CA3AF"; e.target.style.borderColor = COLORS.platinum; }}
-                            >{btn}</button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                ))}
-                {isTyping && (
-                  <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                    <div style={{ width: 32, height: 32, borderRadius: "50%", background: `linear-gradient(135deg, ${COLORS.deepPurple}, ${COLORS.neonPurple})`, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 14 }}>✦</div>
-                    <div style={{ background: COLORS.platinum, padding: "12px 16px", borderRadius: "4px 16px 16px 16px", display: "flex", gap: 5 }}>
-                      {[0, 1, 2].map(i => (
-                        <motion.div key={i} animate={{ y: [0, -6, 0] }} transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.15 }}
-                          style={{ width: 7, height: 7, borderRadius: "50%", background: COLORS.neonPurple }} />
-                      ))}
-                    </div>
-                  </div>
-                )}
-                <div ref={chatEndRef} />
-              </div>
-              <div style={{ padding: "16px 24px", borderTop: `1px solid ${COLORS.platinum}` }}>
-                <div style={{
-                  display: "flex", alignItems: "center", gap: 10,
-                  background: "rgba(226,232,240,0.4)", backdropFilter: "blur(8px)",
-                  border: `1px solid ${COLORS.platinum}`, borderRadius: 14, padding: "10px 14px",
-                }}>
-                  <input value={chatInput} onChange={e => setChatInput(e.target.value)}
-                    onKeyDown={e => e.key === "Enter" && handleSendChat()}
-                    placeholder="Message D&T AI..."
-                    style={{ flex: 1, background: "none", border: "none", outline: "none", fontSize: 14, color: COLORS.darkSlate, fontFamily: "inherit" }} />
-                  <button style={{ background: "none", border: "none", cursor: "pointer", fontSize: 15, opacity: 0.5 }}>🎤</button>
-                  <button style={{ background: "none", border: "none", cursor: "pointer", fontSize: 15, opacity: 0.5 }}>📎</button>
-                  <motion.button whileHover={{ scale: 1.1, boxShadow: `0 0 12px ${COLORS.neonPurple}66` }} whileTap={{ scale: 0.93 }}
-                    onClick={handleSendChat}
-                    style={{ width: 34, height: 34, borderRadius: "50%", border: "none", background: chatInput ? COLORS.neonPurple : COLORS.darkSlate, color: "#fff", cursor: "pointer", fontSize: 13, opacity: chatInput ? 1 : 0.35, transition: "all 0.2s" }}>
-                    ➤
-                  </motion.button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* === PROJECTS === */}
-          {activeTab === "projects" && (
-            <div style={{ padding: 28 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-                <h2 style={{ fontSize: 20, fontWeight: 700, color: COLORS.darkSlate, margin: 0 }}>Projects</h2>
-                <button style={{
-                  background: `linear-gradient(135deg, ${COLORS.deepPurple}, ${COLORS.neonPurple})`,
-                  border: "none", borderRadius: 10, color: "#fff", padding: "8px 18px", fontSize: 13, fontWeight: 600, cursor: "pointer",
-                }}>+ New Project</button>
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
-                {SAMPLE_PROJECTS.map(proj => (
-                  <motion.div key={proj.id} whileHover={{ y: -4, boxShadow: `0 8px 32px ${COLORS.neonPurple}22` }}
-                    style={{
-                      background: "#fff", borderRadius: 14,
-                      border: `1px solid ${COLORS.platinum}`,
-                      padding: 18, cursor: "pointer",
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-                      borderTop: `3px solid transparent`,
-                      backgroundImage: `linear-gradient(#fff, #fff), linear-gradient(135deg, ${COLORS.neonPurple}, ${COLORS.brightBlue})`,
-                      backgroundOrigin: "border-box",
-                      backgroundClip: "padding-box, border-box",
-                    }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
-                      <div style={{ fontSize: 20 }}>🐍</div>
-                      <span style={{
-                        fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 20,
-                        background: proj.tagColor + "22", color: proj.tagColor,
-                        border: `1px solid ${proj.tagColor}44`,
-                      }}>{proj.tag}</span>
-                    </div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: COLORS.darkSlate, marginBottom: 4 }}>{proj.name}</div>
-                    <div style={{ fontSize: 10, color: "#9CA3AF", marginBottom: 10 }}>{proj.date}</div>
-                    <div style={{
-                      background: COLORS.darkSlate, borderRadius: 8, padding: "10px 12px",
-                      fontFamily: "monospace", fontSize: 11, color: COLORS.brightBlue,
-                      lineHeight: 1.5, maxHeight: 72, overflow: "hidden", position: "relative",
-                    }}>
-                      {proj.lines}
-                      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 24, background: `linear-gradient(transparent, ${COLORS.darkSlate})` }} />
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* === ANALYSIS === */}
-          {activeTab === "analysis" && (
-            <div style={{ padding: 28 }}>
-              <h2 style={{ fontSize: 20, fontWeight: 700, color: COLORS.darkSlate, marginBottom: 24 }}>Analysis Dashboard</h2>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 24 }}>
-                {[
-                  { label: "Healthy Scripts", value: "73%", color: COLORS.brightBlue, icon: "✅" },
-                  { label: "Errors Found", value: "18%", color: COLORS.neonPurple, icon: "⚠️" },
-                  { label: "Warnings", value: "9%", color: "#f59e0b", icon: "🔶" },
-                ].map((stat, i) => (
-                  <div key={i} style={{ background: "#fff", borderRadius: 14, padding: 20, border: `1px solid ${COLORS.platinum}`, boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-                    <div style={{ fontSize: 22, marginBottom: 8 }}>{stat.icon}</div>
-                    <div style={{ fontSize: 28, fontWeight: 800, color: stat.color }}>{stat.value}</div>
-                    <div style={{ fontSize: 12, color: "#9CA3AF" }}>{stat.label}</div>
-                  </div>
-                ))}
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 16 }}>
-                <div style={{ background: "#fff", borderRadius: 14, padding: 24, border: `1px solid ${COLORS.platinum}`, display: "flex", flexDirection: "column", alignItems: "center" }}>
-                  <h3 style={{ fontSize: 14, fontWeight: 600, color: COLORS.darkSlate, margin: "0 0 16px", alignSelf: "flex-start" }}>Code Health</h3>
-                  <PieChart />
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6, width: "100%", marginTop: 12 }}>
-                    {[{ label: "Healthy", color: COLORS.brightBlue, val: "73%" }, { label: "Errors", color: COLORS.neonPurple, val: "18%" }, { label: "Warnings", color: "#f59e0b", val: "9%" }].map((item, i) => (
-                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12 }}>
-                        <div style={{ width: 10, height: 10, borderRadius: "50%", background: item.color }} />
-                        <span style={{ flex: 1, color: "#6B7280" }}>{item.label}</span>
-                        <span style={{ fontWeight: 600, color: COLORS.darkSlate }}>{item.val}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div style={{ background: "#fff", borderRadius: 14, padding: 24, border: `1px solid ${COLORS.platinum}` }}>
-                  <h3 style={{ fontSize: 14, fontWeight: 600, color: COLORS.darkSlate, margin: "0 0 16px" }}>Error Logs</h3>
-                  {[
-                    { file: "Tower_Facade_v3.py", error: "SyntaxError: unexpected indent at line 42", type: "error" },
-                    { file: "HyperMarket_Layout.gh", error: "Warning: mesh tolerance exceeds 0.01 units", type: "warning" },
-                    { file: "PCB_Circuit_v2.py", error: "NameError: 'voltage' undefined in scope", type: "error" },
-                  ].map((log, i) => (
-                    <div key={i} style={{
-                      padding: "12px 14px", borderRadius: 10, marginBottom: 10,
-                      background: log.type === "error" ? "#FFF1F2" : "#FFFBEB",
-                      border: `1px solid ${log.type === "error" ? "#FECDD3" : "#FDE68A"}`,
-                    }}>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: COLORS.darkSlate, marginBottom: 3 }}>{log.file}</div>
-                      <div style={{ fontFamily: "monospace", fontSize: 11, color: log.type === "error" ? "#BE123C" : "#92400E" }}>{log.error}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
+      {/* ── MAIN CONTENT ── */}
+      <main style={{ flex: 1, padding: 24, display: "flex", flexDirection: "column" }}>
+        <div style={{ background: "#fff", flex: 1, borderRadius: 24, border: "1px solid #E2E8F0", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+          <img src="/logo.png" style={{ width: 100, marginBottom: 20 }} alt="Logo" />
+          <h1 style={{ color: COLORS.darkSlate }}>Welcome to your D&T Design Hub</h1>
         </div>
       </main>
     </div>
