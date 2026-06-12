@@ -1,15 +1,15 @@
 {
-  "name": "dt-ai-platform-core",
+  "name": "dt-ai-platform",
   "version": "1.0.0",
-  "description": "D&T AI Platform Core - AI Engineering Ecosystem",
-  "main": "index.html",
+  "private": true,
   "scripts": {
-    "start": "vercel dev",
-    "build": "echo 'No build needed for static HTML'",
-    "dev": "vercel dev"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
-  "dependencies": {},
-  "devDependencies": {},
-  "author": "HMO-Tech",
-  "license": "MIT"
+  "dependencies": {
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  }
 }
