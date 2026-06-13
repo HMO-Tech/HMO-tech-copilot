@@ -1,5 +1,5 @@
 {
-  "name": "dt-ai-platform",
+  "name": "hmo-tech-copilot-dt-ai-tech",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -8,15 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "next": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "framer-motion": "latest",
-    "lucide-react": "latest"
-  },
-  "devDependencies": {
-    "autoprefixer": "latest",
-    "postcss": "latest",
-    "tailwindcss": "latest"
+    "next": "14.2.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }
