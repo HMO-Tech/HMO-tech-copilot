@@ -34,11 +34,11 @@ function LogoSVG({ size = 36 }) {
 
 // ── Nav items matching screenshots ───────────────────────────────────────────
 const NAV = [
-  { id: 'chat',     group: 'WORKSPACE',       icon: '✦',  label: 'New Chat' },
-  { id: 'projects', group: 'WORKSPACE',       icon: '🖥', label: 'Projects' },
-  { id: 'search',   group: 'WORKSPACE',       icon: '🔍', label: 'Deep Search' },
-  { id: 'image',    group: 'REPOS & LIBRARIES', icon: '🖼', label: 'Image Studio' },
-  { id: 'library',  group: 'REPOS & LIBRARIES', icon: '📄', label: 'Extended Library' },
+  { id: 'chat',     group: 'WORKSPACE',       icon: '✦',  label: { en: 'New Chat', fa: 'گفتگوی جدید' } },
+  { id: 'projects', group: 'WORKSPACE',       icon: '🖥', label: { en: 'Projects', fa: 'پروژه‌ها' } },
+  { id: 'search',   group: 'WORKSPACE',       icon: '🔍', label: { en: 'Deep Search', fa: 'جستجوی عمیق' } },
+  { id: 'image',    group: 'REPOS & LIBRARIES', icon: '🖼', label: { en: 'Image Studio', fa: 'استودیو تصویر' } },
+  { id: 'library',  group: 'REPOS & LIBRARIES', icon: '📄', label: { en: 'Extended Library', fa: 'کتابخانه مرجع' } },
 ];
 
 const QUICK_PROMPTS = [
@@ -60,17 +60,19 @@ const LIBRARY = [
 
 // ── Inline styles ────────────────────────────────────────────────────────────
 const S = {
-  root: {
+  root: (lang) => ({
     display: 'flex', width: '100vw', height: '100vh',
     background: '#07070a', color: '#e8e8f0',
     fontFamily: "'Inter', 'Segoe UI', sans-serif",
     overflow: 'hidden',
-  },
-  sidebar: (collapsed) => ({
+    direction: lang === 'fa' ? 'rtl' : 'ltr',
+  }),
+  sidebar: (collapsed, lang) => ({
     width: collapsed ? '64px' : '248px',
     background: 'rgba(10,8,22,0.95)',
     backdropFilter: 'blur(20px)',
-    borderRight: '1px solid rgba(138,43,226,0.15)',
+    borderRight: lang === 'en' ? '1px solid rgba(138,43,226,0.15)' : 'none',
+    borderLeft: lang === 'fa' ? '1px solid rgba(138,43,226,0.15)' : 'none',
     display: 'flex', flexDirection: 'column',
     transition: 'width 0.28s cubic-bezier(.4,0,.2,1)',
     overflow: 'hidden', flexShrink: 0, position: 'relative',
@@ -114,7 +116,6 @@ const S = {
     fontWeight: active ? 500 : 400,
     background: active ? 'rgba(138,43,226,0.15)' : 'transparent',
     border: active ? '1px solid rgba(138,43,226,0.3)' : '1px solid transparent',
-    borderLeft: active && !collapsed ? '3px solid #8A2BE2' : (active ? '1px solid rgba(138,43,226,0.3)' : '1px solid transparent'),
     transition: 'all 0.18s', whiteSpace: 'nowrap', overflow: 'hidden',
   }),
   sbFooter: {
@@ -307,6 +308,7 @@ const S = {
 
 // ── Main component ────────────────────────────────────────────────────────────
 export default function Home() {
+  const [mounted, setMounted]           = useState(false);
   const [promptInput, setPromptInput]   = useState('');
   const [chatMessages, setChatMessages] = useState([]);
   const [started, setStarted]           = useState(false);
@@ -315,15 +317,20 @@ export default function Home() {
   const [collapsed, setCollapsed]       = useState(false);
   const [libTab, setLibTab]             = useState('All Resources');
   const [searchVal, setSearchVal]       = useState('');
-  const [hoverNav, setHoverNav]         = useState(null);
   const chatEndRef = useRef(null);
 
-  // Auto-scroll chat
+  // هماهنگی با چرخه سرور Next.js برای شکستن باگ ۴۰۴
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [chatMessages]);
+    setMounted(true);
+  }, []);
 
-  // Group nav items
+  // اسکرول اتوماتیک چت
+  useEffect(() => {
+    if (mounted) {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [chatMessages, mounted]);
+
   const groups = ['WORKSPACE', 'REPOS & LIBRARIES'];
 
   const sendChat = async (text) => {
@@ -339,29 +346,34 @@ export default function Home() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: txt,
-          systemText: lang === 'fa'
-            ? 'You are D&T AI Engineering Assistant. Answer in Persian.'
-            : 'You are D&T AI Engineering Assistant. Help with Grasshopper, parametric design, and engineering.',
+          prompt: txt,
+          fileParts: [],
+          lang: lang
         }),
       });
       const data = await res.json();
       setChatMessages(p => p.map(m => m.id === loadId
-        ? { sender: 'ai', text: res.ok && data.success ? data.reply : 'System Error: Connection failed.' }
+        ? { sender: 'ai', text: res.ok && data.response ? data.response : (lang === 'fa' ? 'خطا در اتصال به سرور مرکزی.' : 'System Error: Connection failed.') }
         : m));
     } catch {
       setChatMessages(p => p.map(m => m.id === loadId
-        ? { sender: 'ai', text: 'Connection Error: Cloud function timeout.' }
+        ? { sender: 'ai', text: lang === 'fa' ? 'خطای شبکه در اتصال به گیت‌وی ابری.' : 'Connection Error: Cloud function timeout.' }
         : m));
     }
   };
 
-  // Page title map
   const pageTitles = {
-    chat: 'AI Studio', projects: 'Projects Hub',
-    search: 'Deep Search', image: 'Image Studio',
-    library: 'Extended Library', settings: 'System Settings',
+    chat: lang === 'fa' ? 'استودیو هوش مصنوعی' : 'AI Studio',
+    projects: lang === 'fa' ? 'مرکز پروژه‌ها' : 'Projects Hub',
+    search: lang === 'fa' ? 'جستجوی عمیق' : 'Deep Search',
+    image: lang === 'fa' ? 'استودیو تصویر' : 'Image Studio',
+    library: lang === 'fa' ? 'کتابخانه مرجع' : 'Extended Library',
+    settings: lang === 'fa' ? 'تنظیمات سیستمی' : 'System Settings',
   };
+
+  if (!mounted) {
+    return <div style={{ background: '#07070a', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7a7a9a' }}>Initializing Workspace Engine...</div>;
+  }
 
   return (
     <>
@@ -386,10 +398,10 @@ export default function Home() {
         `}</style>
       </Head>
 
-      <div style={S.root}>
+      <div style={S.root(lang)}>
 
         {/* ══ SIDEBAR ══ */}
-        <aside style={S.sidebar(collapsed)}>
+        <aside style={S.sidebar(collapsed, lang)}>
           <div style={S.sbGlow} />
 
           {/* Header */}
@@ -416,10 +428,10 @@ export default function Home() {
                       className="nav-item-btn"
                       style={S.navItem(activeNav === item.id, collapsed)}
                       onClick={() => setActiveNav(item.id)}
-                      title={collapsed ? item.label : undefined}
+                      title={collapsed ? item.label[lang] : undefined}
                     >
                       <span style={{ fontSize: 15, flexShrink: 0 }}>{item.icon}</span>
-                      {!collapsed && <span>{item.label}</span>}
+                      {!collapsed && <span>{item.label[lang]}</span>}
                     </button>
                   ))}
                 </div>
@@ -436,7 +448,7 @@ export default function Home() {
               title={collapsed ? 'System Settings' : undefined}
             >
               <span style={{ fontSize: 15 }}>⚙️</span>
-              {!collapsed && <span style={{ fontSize: 13 }}>System Settings</span>}
+              {!collapsed && <span style={{ fontSize: 13 }}>{lang === 'fa' ? 'تنظیمات هسته' : 'System Settings'}</span>}
             </button>
           </div>
         </aside>
@@ -445,7 +457,7 @@ export default function Home() {
         <main style={S.main}>
           {/* Topbar */}
           <div style={S.topbar}>
-            <span style={S.topTitle}>{pageTitles[activeNav] || 'AI Studio'}</span>
+            <span style={S.topTitle}>{pageTitles[activeNav]}</span>
             <button style={S.langBtn} onClick={() => setLang(l => l === 'en' ? 'fa' : 'en')}>
               {lang === 'en' ? 'FA / EN' : 'EN / FA'}
             </button>
@@ -457,7 +469,7 @@ export default function Home() {
             {/* ── CHAT ── */}
             {activeNav === 'chat' && (
               <>
-                <div style={S.chatArea} ref={chatEndRef}>
+                <div style={S.chatArea}>
                   {!started ? (
                     <div style={S.welcome}>
                       <LogoSVG size={80} />
@@ -538,7 +550,7 @@ export default function Home() {
                       style={S.searchInput}
                       value={searchVal}
                       onChange={e => setSearchVal(e.target.value)}
-                      placeholder="Search components or algorithmic libraries..."
+                      placeholder={lang === 'fa' ? 'در مخازن داده جستجو کنید...' : 'Search components or algorithmic libraries...'}
                     />
                   </div>
                 </div>
@@ -558,7 +570,7 @@ export default function Home() {
                 >
                   <div style={{ fontSize: 32, marginBottom: 12, color: '#00e5ff' }}>🖼</div>
                   <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)' }}>
-                    Drop technical asset here or click to choose file
+                    {lang === 'fa' ? 'فایل تصویر فنی را اینجا رها کنید یا کلیک کنید' : 'Drop technical asset here or click to choose file'}
                   </div>
                   <input id="file-input" type="file" style={{ display: 'none' }} />
                 </div>
