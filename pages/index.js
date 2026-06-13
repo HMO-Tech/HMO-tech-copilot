@@ -7,7 +7,84 @@ function LogoSVG({ size = 36 }) {
     <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="gBody" x1="15" y1="85" x2="85" y2="15" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#1A0055" />
+          <stop offset="0%" stopColor="#1A0055" />import { useEffect, useState, useRef } from 'react';
+import Head from 'next/head';
+
+export default function Home() {
+  const [mounted, setMounted] = useState(false);
+  const [lang, setLang] = useState('en');
+  const [promptInput, setPromptInput] = useState('');
+  const [chatMessages, setChatMessages] = useState([]);
+  const [started, setStarted] = useState(false);
+  const chatEndRef = useRef(null);
+
+  // 🎯 حیاتی: جلوگیری از رندر ناقص سرور که عامل ارور 404 است
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [chatMessages, mounted]);
+
+  const sendChat = async () => {
+    const txt = promptInput.trim();
+    if (!txt) return;
+    if (!started) setStarted(true);
+    setChatMessages(p => [...p, { sender: 'user', text: txt }]);
+    setPromptInput('');
+    const loadId = 'ld_' + Date.now();
+    setChatMessages(p => [...p, { sender: 'ai', id: loadId, text: lang === 'fa' ? 'در حال پردازش...' : 'D&T Core processing...' }]);
+    
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: txt, fileParts: [], lang })
+      });
+      const data = await res.json();
+      setChatMessages(p => p.map(m => m.id === loadId
+        ? { sender: 'ai', text: res.ok && data.response ? data.response : 'System Error.' }
+        : m));
+    } catch {
+      setChatMessages(p => p.map(m => m.id === loadId ? { sender: 'ai', text: 'Network Error.' } : m));
+    }
+  };
+
+  if (!mounted) return null;
+
+  return (
+    <>
+      <Head><title>D&T Ai-TECH</title></Head>
+      <div style={{ display: 'flex', width: '100vw', height: '100vh', background: '#07070a', color: '#e8e8f0', direction: lang === 'fa' ? 'rtl' : 'ltr' }}>
+        <main style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '20px' }}>
+          <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+            <h2>D&T Ai-TECH Core Workspace</h2>
+            <button onClick={() => setLang(l => l === 'en' ? 'fa' : 'en')} style={{ background: 'transparent', border: '1px solid #00e5ff', color: '#00e5ff', padding: '6px 12px', borderRadius: '12px', cursor: 'pointer' }}>
+              {lang === 'en' ? 'FA' : 'EN'}
+            </button>
+          </header>
+          <div style={{ flex: 1, overflowY: 'auto', marginBottom: '20px' }}>
+            {chatMessages.map((msg, i) => (
+              <div key={i} style={{ marginBottom: '10px', textAlign: msg.sender === 'user' ? 'right' : 'left' }}>
+                <div style={{ display: 'inline-block', padding: '10px 16px', background: msg.sender === 'user' ? 'rgba(138,43,226,0.2)' : 'rgba(255,255,255,0.05)', borderRadius: '12px' }}>
+                  {msg.text}
+                </div>
+              </div>
+            ))}
+            <div ref={chatEndRef} />
+          </div>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <input type="text" value={promptInput} onChange={e => setPromptInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && sendChat()} placeholder="Ask D&T Ai-TECH..." style={{ flex: 1, padding: '12px', borderRadius: '8px', background: '#12121a', border: '1px solid #222', color: '#fff' }} />
+            <button onClick={sendChat} style={{ padding: '0 24px', background: '#00e5ff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>SEND</button>
+          </div>
+        </main>
+      </div>
+    </>
+  );
+}
           <stop offset="30%" stopColor="#3D1A8A" />
           <stop offset="65%" stopColor="#7B4FC4" />
           <stop offset="100%" stopColor="#9B80C8" />
