@@ -1,11 +1,8 @@
-import React from 'react';
-import { useEffect } from 'react';
-import '../styles/globals.css';
+import React, { useEffect } from 'react';
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
-    // Ensure proper styling
-    document.documentElement.lang = 'en';
+    // روتین‌های پایه فرانت‌اَند
   }, []);
 
   return <Component {...pageProps} />;
