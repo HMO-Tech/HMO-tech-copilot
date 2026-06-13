@@ -14,6 +14,7 @@ export default function Home() {
   const [imgSrc, setImgSrc] = useState('');
   const [imgAnalysis, setImgAnalysis] = useState('');
   const [activeLibTab, setActiveLibTab] = useState('all');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
   const chatboxRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -64,7 +65,7 @@ export default function Home() {
   const convertToBase64 = (file) => {
     return new Promise((resolve) => {
       const reader = new FileReader();
-      rd.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onload = () => resolve(reader.result.split(',')[1]);
       reader.readAsDataURL(file);
     });
   };
@@ -124,19 +125,18 @@ export default function Home() {
         <title>D&T Ai-TECH | Workspace Core</title>
       </Head>
       <div className={systemTheme === 'blue' ? 'theme-blue' : ''} style={{
-        display: 'flex', width: '100vw', height: '100vh', background: 'var(--bg)', color: 'var(--text)',
+        display: 'flex', width: '100vw', height: '100vh', background: 'var(--bg, #07070a)', color: 'var(--text, #e8e8f0)',
         fontFamily: "'Space Grotesk', 'Vazirmatn', sans-serif", overflow: 'hidden'
       }}>
-        {/* اینترفیس سایدبار و المان‌های استایل پلتفرم شما بدون نقص لود می‌شود */}
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
-          <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: 'center', padding: '20px' }}>
             <img src="/logo.png" style={{ width: '120px', marginBottom: '20px', filter: 'drop-shadow(0 0 25px rgba(0, 229, 255, 0.35))' }} alt="D&T Logo" />
-            <h1 style={{ fontSize: '32px', marginBottom: '10px' }}>{currentLang === 'fa' ? dic.fa.greetT : dic.en.greetT}</h1>
-            <p style={{ color: 'var(--text-muted)', maxWidth: '500px', margin: '0 auto 24px', fontSize: '14.5px', lineHeight: '1.75' }}>
+            <h1 style={{ fontSize: '32px', marginBottom: '10px', color: '#fff' }}>{currentLang === 'fa' ? dic.fa.greetT : dic.en.greetT}</h1>
+            <p style={{ color: '#7a7a9a', maxWidth: '500px', margin: '0 auto 24px', fontSize: '14.5px', lineHeight: '1.75' }}>
               {currentLang === 'fa' ? dic.fa.greetD : dic.en.greetD}
             </p>
-            <button className="lang-switch" onClick={toggleLanguageSystem} style={{
-              padding: '8px 20px', borderRadius: '20px', border: '1px solid var(--border)', background: 'rgba(255,255,255,0.02)', color: 'var(--cyan)', cursor: 'pointer'
+            <button onClick={toggleLanguageSystem} style={{
+              padding: '8px 20px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)', color: '#00e5ff', cursor: 'pointer'
             }}>
               {currentLang === 'en' ? 'FA / EN' : 'EN / FA'}
             </button>
