@@ -36,10 +36,11 @@
         html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 'Vazirmatn', sans-serif; transition: background 0.3s; }
         body { display: flex; width: 100vw; height: 100vh; }
 
-        /* ====== مخفی کردن اسکرول‌بارهای زشت سمت چپ و راست ====== */
+        /* ====== اسکرول‌بار مینی‌مال جمنای ====== */
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
 
         /* ====== SIDEBAR ====== */
         .sidebar {
@@ -69,7 +70,7 @@
 
         .ni {
             display: flex; align-items: center; gap: 14px; padding: 11px 14px; border-radius: 14px; color: var(--text-muted);
-            cursor: pointer; font-size: 13.5px; font-weight: 500; white-space: nowrap; transition: all 0.2s; position: relative;
+            cursor: pointer; font-size: 13.5px; font-weight: 500; white-space: nowrap; transition: all 0.2s; position: relative; text-align: left;
         }
         .ni:hover { background: rgba(255, 255, 255, 0.03); color: var(--text); }
         .ni.on { background: rgba(155, 109, 255, 0.1); color: var(--cyan); }
@@ -107,7 +108,7 @@
         .chip { padding: 10px 18px; border: 1px solid var(--border); border-radius: 25px; font-size: 13px; color: var(--text); cursor: pointer; background: rgba(255, 255, 255, 0.02); transition: all 0.2s var(--ease); backdrop-filter: blur(10px); }
         .chip:hover { border-color: rgba(0, 229, 255, 0.3); background: rgba(0, 229, 255, 0.05); transform: translateY(-1px); }
 
-        /* Chat view log */
+        /* Chat log */
         .chat-container { display: none; flex-direction: column; gap: 18px; width: 100%; max-width: 740px; margin: 0 auto; overflow-y: auto; flex: 1; }
         .chat-container.on { display: flex; }
         .mrow { display: flex; width: 100%; }
@@ -119,7 +120,6 @@
         .bub.ld { color: var(--cyan); font-style: italic; animation: pulseG 1.5s infinite; }
         .bub b { font-weight: 600; font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 6px; }
         
-        /* باکس دکمه‌های کپی و دانلود پی‌دی‌اف */
         .b-actions { display: flex; gap: 8px; margin-top: 10px; justify-content: flex-start; }
         .b-btn { padding: 4px 10px; font-size: 11px; font-family: inherit; font-weight: 500; border-radius: 6px; border: 1px solid var(--border); background: rgba(255,255,255,0.02); color: var(--text-muted); cursor: pointer; transition: all 0.2s; }
         .b-btn:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,229,255,0.04); }
@@ -140,7 +140,7 @@
         .sres { width: 100%; background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; padding: 20px; font-size: 14px; color: var(--text); line-height: 1.8; display: none; }
 
         .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; width: 100%; }
-        .project-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; cursor: pointer; transition: all 0.2s var(--ease); backdrop-filter: blur(10px); text-align: inherit; }
+        .project-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; cursor: pointer; transition: all 0.2s var(--ease); backdrop-filter: blur(10px); text-align: left; }
         .project-card:hover { border-color: rgba(0, 229, 255, 0.2); transform: translateY(-2px); }
         .project-tag { display: inline-block; padding: 3px 10px; font-size: 10px; font-weight: 700; border-radius: 8px; margin-top: 12px; background: rgba(124, 58, 237, 0.12); color: var(--purple); border: 1px solid rgba(124, 58, 237, 0.18); }
 
@@ -154,7 +154,7 @@
 
         .settings-container { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 600px; margin: 20px auto; }
         .sett-row { display: flex; align-items: center; justify-content: space-between; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.04); gap: 15px; }
-        .sett-info { text-align: inherit; }
+        .sett-info { text-align: left; }
         .sett-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
         .sett-info p { font-size: 12.5px; color: var(--text-muted); }
         .sett-ctrl select, .sett-ctrl button { padding: 8px 16px; border-radius: 10px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); color: var(--text); outline: none; cursor: pointer; font-family: inherit; font-size: 13px; }
@@ -173,7 +173,7 @@
         .ab { width: 38px; height: 38px; border-radius: 50%; background: transparent; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
         .ab:hover { background: rgba(255, 255, 255, 0.05); color: var(--text); }
         .ab svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
-        textarea#prompt { flex: 1; background: transparent; border: none; color: var(--text); font-size: 15px; font-family: inherit; resize: none; outline: none; line-height: 1.65; padding: 8px 0; max-height: 140px; }
+        textarea#prompt { flex: 1; background: transparent; border: none; color: var(--text); font-size: 15px; font-family: inherit; resize: none; outline: none; line-height: 1.65; padding: 8px 0; max-height: 140px; text-align: left; }
         .racts { display: flex; align-items: center; gap: 6px; padding-bottom: 3px; }
         .sbtn { height: 40px; padding: 0 24px; border-radius: 20px; border: none; font-family: inherit; background: linear-gradient(270deg, var(--blue), var(--purple), var(--pink), var(--cyan)); background-size: 300% 300%; animation: gradientS 4s ease infinite; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: transform 0.15s; }
         @keyframes gradientS { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
@@ -202,12 +202,14 @@
 </head>
 <body>
 
+<!-- سایدبار اصلی با در نظر گرفتن لوگوی اصلی شما دائم در هدر -->
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-top">
         <button class="toggle-btn" onclick="toggleSB()" aria-label="Toggle sidebar">
             <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
         <div class="brand">
+            <!-- لوگوی اصلی شما به درستی در ساختار سایدبار تثبیت شد -->
             <img src="/D&T%20logo%20cdr.png" class="logo-img-fix" alt="D&T Logo">
             <div class="brand-text"><span class="brand-name"><span class="dt">D&T</span> Ai-TECH</span></div>
         </div>
@@ -237,6 +239,7 @@
     
     <div class="content">
         <div id="v-chat" style="flex:1; display:flex; flex-direction:column; overflow:hidden">
+            <!-- لوگوی اصلی در وسط صفحه ولکام اسکرین چت -->
             <div class="greet" id="greet">
                 <div class="greet-logo-box">
                     <img src="/D&T%20logo%20cdr.png" class="main-logo-fix" alt="D&T Core Logo">
@@ -420,20 +423,28 @@ function setSystemLanguage(lang){
         mainCanvas.style.direction = 'rtl';
         mainCanvas.style.textAlign = 'right';
         ibox.style.direction = 'rtl';
+        if(document.getElementById('prompt')) {
+            document.getElementById('prompt').style.direction = 'rtl';
+            document.getElementById('prompt').style.textAlign = 'right';
+        }
         sidebar.style.borderRight = 'none';
         sidebar.style.borderLeft = '1px solid var(--border)';
-        document.getElementById('nav-label-fix-1').style.textAlign = 'right';
-        document.getElementById('nav-label-fix-2').style.textAlign = 'right';
-        document.querySelectorAll('.nav-item, .project-card, .ccard, .sett-info').forEach(el => el.style.textAlign = 'right');
+        document.getElementById('lbl-workspace').style.textAlign = 'right';
+        document.getElementById('lbl-media').style.textAlign = 'right';
+        document.querySelectorAll('.ni, .project-card, .ccard, .sett-info').forEach(el => el.style.textAlign = 'right');
     } else {
         mainCanvas.style.direction = 'ltr';
         mainCanvas.style.textAlign = 'left';
         ibox.style.direction = 'ltr';
+        if(document.getElementById('prompt')) {
+            document.getElementById('prompt').style.direction = 'ltr';
+            document.getElementById('prompt').style.textAlign = 'left';
+        }
         sidebar.style.borderLeft = 'none';
         sidebar.style.borderRight = '1px solid var(--border)';
-        document.getElementById('nav-label-fix-1').style.textAlign = 'left';
-        document.getElementById('nav-label-fix-2').style.textAlign = 'left';
-        document.querySelectorAll('.nav-item, .project-card, .ccard, .sett-info').forEach(el => el.style.textAlign = 'left');
+        document.getElementById('lbl-workspace').style.textAlign = 'left';
+        document.getElementById('lbl-media').style.textAlign = 'left';
+        document.querySelectorAll('.ni, .project-card, .ccard, .sett-info').forEach(el => el.style.textAlign = 'left');
     }
 
     document.getElementById('lbl-workspace').textContent = dic[lang].lblW;
@@ -466,10 +477,10 @@ function newChat(){
     sw('chat',null);
 }
 
-function useChip(el){document.getElementById('prompt').value = el.textContent;document.getElementById('prompt').focus();}
-function ar(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,140)+'px';}
-function ok(e){if(e.key==='Enter' && !e.shiftKey){e.preventDefault();send();}}
-function onFile(inp){if(inp.files.length){selFile=inp.files[0];document.getElementById('findc').classList.add('on');document.getElementById('fnm').textContent='✓ '+selFile.name;}}
+function useChip(el) { document.getElementById('prompt').value = el.textContent; document.getElementById('prompt').focus(); }
+function ar(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,140)+'px'; }
+function ok(e) { if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(); } }
+function onFile(inp) { if(inp.files.length){ selFile=inp.files[0]; document.getElementById('findc').classList.add('on'); document.getElementById('fnm').textContent='✓ '+selFile.name; } }
 
 async function send() {
     const txt=document.getElementById('prompt').value.trim();
