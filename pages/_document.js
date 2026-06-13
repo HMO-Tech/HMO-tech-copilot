@@ -1,15 +1,19 @@
-import React from 'react';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
 
-export default function Document({ children }) {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="D&T Ai-TECH Platform" />
-        <title>D&T Ai-TECH</title>
-      </head>
-      <body>{children}</body>
-    </html>
-  );
+class MyDocument extends Document {
+  render() {
+    return (
+      <Html lang="fa" dir="rtl">
+        <Head>
+          {/* کدهای متا یا لینک فونت‌ها اگر داری اینجا قرار می‌گیرند */}
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
+  }
 }
+
+export default MyDocument;
