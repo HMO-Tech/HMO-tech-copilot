@@ -1,4 +1,4 @@
-import { runAI } from "../../lib/aiEngine.js"; // مسیر فایل موتور هوش مصنوعی
+import { runAI } from "./aiEngine.js"; // مسیر اصلاح شده بر اساس ساختار پوشه‌ها
 
 export default async function handler(req, res) {
   // تنظیم هدرهای امنیتی و دسترسی
