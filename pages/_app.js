@@ -1,11 +1,3 @@
-import React, { useEffect } from 'react';
-
-function MyApp({ Component, pageProps }) {
-  useEffect(() => {
-    // روتین‌های پایه فرانت‌اَند
-  }, []);
-
+export default function MyApp({ Component, pageProps }) {
   return <Component {...pageProps} />;
 }
-
-export default MyApp;
