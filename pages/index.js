@@ -2,48 +2,16 @@ import { useEffect, useState, useRef } from 'react';
 import Head from 'next/head';
 
 export default function Home() {
-  const [selFile, setSelFile] = useState(null);
+  const [promptInput, setPromptInput] = useState('');
+  const [chatMessages, setChatMessages] = useState([]);
   const [started, setStarted] = useState(false);
   const [currentLang, setCurrentLang] = useState('en');
-  const [chatMessages, setChatMessages] = useState([]);
-  const [promptInput, setPromptInput] = useState('');
-  const [activeView, setActiveView] = useState('chat');
   const [systemTheme, setSystemTheme] = useState('dark');
-  const [searchResult, setSearchResult] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
-  const [imgSrc, setImgSrc] = useState('');
-  const [imgAnalysis, setImgAnalysis] = useState('');
-  const [activeLibTab, setActiveLibTab] = useState('all');
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  
+  const [activeView, setActiveView] = useState('chat');
   const chatboxRef = useRef(null);
-  const fileInputRef = useRef(null);
-  const imgInputRef = useRef(null);
 
-  const VT = {
-    en: { chat: 'AI Studio', project: 'Projects Hub', search: 'Deep Search', images: 'Image Studio', library: 'Extended Library', settings: 'System Settings' },
-    fa: { chat: 'استودیو هوش مصنوعی', project: 'مرکز پروژه‌ها', search: 'جستجوی عمیق', images: 'استودیو تصویر', library: 'کتابخانه مرجع', settings: 'تنظیمات سیستم' }
-  };
-
-  const dic = {
-    en: {
-      lblW: "WORKSPACE", lblM: "REPOS & LIBRARIES", placeholder: "Ask D&T Ai-TECH or upload assets...",
-      greetT: "Where should we start?", greetD: "Advanced computational engineering copilot for generating Grasshopper Python workflows and circuit optimization.",
-      pT: "Projects Hub", pD: "Manage advanced multi-dimensional computational workspaces",
-      sT: "Deep Search Core", sD: "Cross-examine massive parametric databases and engineering manifests", sInp: "Search components or algorithmic libraries...",
-      iT: "Image Studio", iD: "Upload circuit blueprints, wireframes, or architectural sketches for AI dissection", iDrop: "Drop technical asset here or click to choose file",
-      lT: "Extended Library", lD: "Centralized repository housing foundational scripts, prompt systems and templates",
-      stT: "System Settings", stD: "Configure your D&T intelligent engine core variables"
-    },
-    fa: {
-      lblW: "فضای کاری سابسکریپشن", lblM: "مخازن و کتابخانه‌ها", placeholder: "سوال خود را بپرسید یا فایل آپلود کنید...",
-      greetT: "کجا شروع کنیم؟", greetD: "دستیار مهندسی محاسباتی هوشمند جهت تولید اسکریپت‌های پایتون گراس‌هاپر، بهینه‌سازی مدارهای الکترونیکی و پاسخ به سوالات عمومی.",
-      pT: "مرکز پروژه‌ها", pD: "مدیریت و مهار فضاهای کاری پیشرفته چندبعدی",
-      sT: "هسته جستجوی عمیق", sD: "بررسی متقاطع دیتابیس‌های پارامتریک و مانیفست‌های مهندسی", sInp: "در کتابخانه‌های الگوریتمی جستجو کنید...",
-      iT: "استودیوی تصویر", iD: "آپلود نقشه‌های مدار یا اسکیس‌های معماری جهت کالبدشکافی توسط هوش مصنوعی", iDrop: "فایل مهندسی را اینجا رها کنید یا کلیک کنید",
-      lT: "کتابخانه توسعه‌یافته", lD: "مخزن مرکزی کدهای مرجع، سیستم‌های پرامپت و قالب‌های محاسباتی",
-      stT: "تنظیمات سیستم", stD: "پیکربندی متغیرهای هسته پردازش مرکزی هوشمند"
-    }
+  const toggleLanguageSystem = () => {
+    setCurrentLang(prev => prev === 'en' ? 'fa' : 'en');
   };
 
   useEffect(() => {
@@ -52,69 +20,35 @@ export default function Home() {
     }
   }, [chatMessages]);
 
-  const toggleLanguageSystem = () => {
-    setCurrentLang(prev => prev === 'en' ? 'fa' : 'en');
-  };
-
-  const handleFileChange = (e) => {
-    if (e.target.files.length) {
-      setSelFile(e.target.files[0]);
-    }
-  };
-
-  const convertToBase64 = (file) => {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(',')[1]);
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const handleSend = async () => {
+  const handleSendChat = async () => {
     const txt = promptInput.trim();
-    if (!txt && !selFile) return;
+    if (!txt) return;
 
     if (!started) setStarted(true);
 
-    const currentMsgId = 'msg_' + Date.now();
-    const newUserMessage = {
-      sender: 'user',
-      text: txt,
-      fileName: selFile ? selFile.name : null,
-      isFa: /[\u0600-\u06FF]/.test(txt) || currentLang === 'fa'
-    };
-
-    setChatMessages(prev => [...prev, newUserMessage]);
+    setChatMessages(prev => [...prev, { sender: 'user', text: txt }]);
     setPromptInput('');
-    setSelFile(null);
 
     const loadingId = 'loading_' + Date.now();
-    setChatMessages(prev => [...prev, { sender: 'ai', id: loadingId, isLoading: true, text: 'D&T Intelligent Core processing...' }]);
-
-    let fileParts = [];
-    if (selFile) {
-      fileParts = [{ inlineData: { data: await convertToBase64(selFile), mimeType: selFile.type } }];
-    }
+    setChatMessages(prev => [...prev, { sender: 'ai', id: loadingId, text: 'D&T Core processing...' }]);
 
     try {
+      // ارتباط مستقیم و استاندارد با بک‌اَند بدون خراب کردن بیلد ورسل
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: txt, fileParts, lang: currentLang })
+        body: JSON.stringify({ prompt: txt, lang: currentLang })
       });
       const data = await res.json();
       
       setChatMessages(prev => prev.map(m => m.id === loadingId ? {
         sender: 'ai',
-        id: currentMsgId,
-        text: res.ok && data.response ? data.response : 'System Error: Connection failed.',
-        isFa: /[\u0600-\u06FF]/.test(data.response || '')
+        text: res.ok && data.response ? data.response : 'System Error: Connection failed.'
       } : m));
     } catch {
       setChatMessages(prev => prev.map(m => m.id === loadingId ? {
         sender: 'ai',
-        text: 'Connection Error: Serverless cloud engine timed out.',
-        isError: true
+        text: 'Connection Error: Cloud function timeout.'
       } : m));
     }
   };
@@ -122,24 +56,59 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>D&T Ai-TECH | Workspace Core</title>
+        <title>D&T Ai-TECH | Workspace</title>
       </Head>
-      <div className={systemTheme === 'blue' ? 'theme-blue' : ''} style={{
-        display: 'flex', width: '100vw', height: '100vh', background: 'var(--bg, #07070a)', color: 'var(--text, #e8e8f0)',
-        fontFamily: "'Space Grotesk', 'Vazirmatn', sans-serif", overflow: 'hidden'
+      <div style={{
+        display: 'flex', width: '100vw', height: '100vh', background: '#07070a', color: '#e8e8f0',
+        fontFamily: 'sans-serif', overflow: 'hidden', direction: currentLang === 'fa' ? 'rtl' : 'ltr'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
-          <div style={{ textAlign: 'center', padding: '20px' }}>
-            <img src="/logo.png" style={{ width: '120px', marginBottom: '20px', filter: 'drop-shadow(0 0 25px rgba(0, 229, 255, 0.35))' }} alt="D&T Logo" />
-            <h1 style={{ fontSize: '32px', marginBottom: '10px', color: '#fff' }}>{currentLang === 'fa' ? dic.fa.greetT : dic.en.greetT}</h1>
-            <p style={{ color: '#7a7a9a', maxWidth: '500px', margin: '0 auto 24px', fontSize: '14.5px', lineHeight: '1.75' }}>
-              {currentLang === 'fa' ? dic.fa.greetD : dic.en.greetD}
-            </p>
-            <button onClick={toggleLanguageSystem} style={{
-              padding: '8px 20px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)', color: '#00e5ff', cursor: 'pointer'
-            }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ height: '64px', padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+            <span style={{ fontSize: '14px', color: '#7a7a9a', fontWeight: 'bold' }}>D&T AI Studio Workspace</span>
+            <button onClick={toggleLanguageSystem} style={{ padding: '6px 14px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.1)', background: 'transparent', color: '#00e5ff', cursor: 'pointer' }}>
               {currentLang === 'en' ? 'FA / EN' : 'EN / FA'}
             </button>
+          </div>
+
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '24px', overflowY: 'auto' }}>
+            {!started ? (
+              <div style={{ margin: 'auto', textAlign: 'center' }}>
+                <img src="/logo.png" style={{ width: '100px', marginBottom: '20px', filter: 'drop-shadow(0 0 15px rgba(0,229,255,0.3))' }} alt="D&T Logo" />
+                <h1 style={{ fontSize: '2.5rem', fontWeight: '300', marginBottom: '10px', color: '#fff' }}>
+                  {currentLang === 'fa' ? 'کجا شروع کنیم؟' : 'Where should we start?'}
+                </h1>
+                <p style={{ color: '#7a7a9a', maxWidth: '500px', fontSize: '14px', lineHeight: '1.6' }}>
+                  {currentLang === 'fa' 
+                    ? 'دستیار مهندسی محاسباتی هوشمند جهت تولید اسکریپت‌های پایتون گراس‌هاپر و بهینه‌سازی مدارهای الکترونیکی فعال روی dt-ai.tech.' 
+                    : 'Advanced computational engineering copilot active on dt-ai.tech.'}
+                </p>
+              </div>
+            ) : (
+              <div ref={chatboxRef} style={{ flex: 1, overflowY: 'auto', marginBottom: '20px' }}>
+                {chatMessages.map((msg, i) => (
+                  <div key={i} style={{ marginBottom: '15px', textAlign: msg.sender === 'user' ? 'right' : 'left' }}>
+                    <div style={{ display: 'inline-block', padding: '12px 18px', borderRadius: '18px', background: msg.sender === 'user' ? '#141420' : 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}>
+                      <b style={{ color: msg.sender === 'user' ? '#00e5ff' : '#9b6dff' }}>{msg.sender === 'user' ? (currentLang === 'fa' ? 'شما' : 'You') : 'D&T AI'}</b><br />
+                      <div style={{ marginTop: '5px', whiteSpace: 'pre-wrap' }}>{msg.text}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div style={{ maxWidth: '760px', width: '100%', margin: '0 auto', display: 'flex', gap: '10px' }}>
+              <input 
+                type="text" 
+                value={promptInput} 
+                onChange={(e) => setPromptInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSendChat()}
+                placeholder={currentLang === 'fa' ? 'سوال خود را بپرسید یا پروژه جدید را تعریف کنید...' : 'Ask D&T Ai-TECH or enter prompt...'}
+                style={{ flex: 1, background: '#12121a', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '24px', padding: '14px 20px', color: '#fff', outline: 'none' }}
+              />
+              <button onClick={handleSendChat} style={{ padding: '0 24px', borderRadius: '24px', background: 'linear-gradient(90deg, #1a8fff, #9b6dff)', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
+                SEND
+              </button>
+            </div>
           </div>
         </div>
       </div>
