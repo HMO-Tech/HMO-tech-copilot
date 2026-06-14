@@ -7,84 +7,7 @@ function LogoSVG({ size = 36 }) {
     <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="gBody" x1="15" y1="85" x2="85" y2="15" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#1A0055" />import { useEffect, useState, useRef } from 'react';
-import Head from 'next/head';
-
-export default function Home() {
-  const [mounted, setMounted] = useState(false);
-  const [lang, setLang] = useState('en');
-  const [promptInput, setPromptInput] = useState('');
-  const [chatMessages, setChatMessages] = useState([]);
-  const [started, setStarted] = useState(false);
-  const chatEndRef = useRef(null);
-
-  // 🎯 حیاتی: جلوگیری از رندر ناقص سرور که عامل ارور 404 است
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (mounted) {
-      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [chatMessages, mounted]);
-
-  const sendChat = async () => {
-    const txt = promptInput.trim();
-    if (!txt) return;
-    if (!started) setStarted(true);
-    setChatMessages(p => [...p, { sender: 'user', text: txt }]);
-    setPromptInput('');
-    const loadId = 'ld_' + Date.now();
-    setChatMessages(p => [...p, { sender: 'ai', id: loadId, text: lang === 'fa' ? 'در حال پردازش...' : 'D&T Core processing...' }]);
-    
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: txt, fileParts: [], lang })
-      });
-      const data = await res.json();
-      setChatMessages(p => p.map(m => m.id === loadId
-        ? { sender: 'ai', text: res.ok && data.response ? data.response : 'System Error.' }
-        : m));
-    } catch {
-      setChatMessages(p => p.map(m => m.id === loadId ? { sender: 'ai', text: 'Network Error.' } : m));
-    }
-  };
-
-  if (!mounted) return null;
-
-  return (
-    <>
-      <Head><title>D&T Ai-TECH</title></Head>
-      <div style={{ display: 'flex', width: '100vw', height: '100vh', background: '#07070a', color: '#e8e8f0', direction: lang === 'fa' ? 'rtl' : 'ltr' }}>
-        <main style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '20px' }}>
-          <header style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-            <h2>D&T Ai-TECH Core Workspace</h2>
-            <button onClick={() => setLang(l => l === 'en' ? 'fa' : 'en')} style={{ background: 'transparent', border: '1px solid #00e5ff', color: '#00e5ff', padding: '6px 12px', borderRadius: '12px', cursor: 'pointer' }}>
-              {lang === 'en' ? 'FA' : 'EN'}
-            </button>
-          </header>
-          <div style={{ flex: 1, overflowY: 'auto', marginBottom: '20px' }}>
-            {chatMessages.map((msg, i) => (
-              <div key={i} style={{ marginBottom: '10px', textAlign: msg.sender === 'user' ? 'right' : 'left' }}>
-                <div style={{ display: 'inline-block', padding: '10px 16px', background: msg.sender === 'user' ? 'rgba(138,43,226,0.2)' : 'rgba(255,255,255,0.05)', borderRadius: '12px' }}>
-                  {msg.text}
-                </div>
-              </div>
-            ))}
-            <div ref={chatEndRef} />
-          </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <input type="text" value={promptInput} onChange={e => setPromptInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && sendChat()} placeholder="Ask D&T Ai-TECH..." style={{ flex: 1, padding: '12px', borderRadius: '8px', background: '#12121a', border: '1px solid #222', color: '#fff' }} />
-            <button onClick={sendChat} style={{ padding: '0 24px', background: '#00e5ff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>SEND</button>
-          </div>
-        </main>
-      </div>
-    </>
-  );
-}
+          <stop offset="0%" stopColor="#1A0055" />
           <stop offset="30%" stopColor="#3D1A8A" />
           <stop offset="65%" stopColor="#7B4FC4" />
           <stop offset="100%" stopColor="#9B80C8" />
@@ -109,13 +32,13 @@ export default function Home() {
   );
 }
 
-// ── Nav items matching screenshots ───────────────────────────────────────────
+// ── Nav items ───────────────────────────────────────────────────────────
 const NAV = [
-  { id: 'chat',     group: 'WORKSPACE',       icon: '✦',  label: { en: 'New Chat', fa: 'گفتگوی جدید' } },
-  { id: 'projects', group: 'WORKSPACE',       icon: '🖥', label: { en: 'Projects', fa: 'پروژه‌ها' } },
-  { id: 'search',   group: 'WORKSPACE',       icon: '🔍', label: { en: 'Deep Search', fa: 'جستجوی عمیق' } },
-  { id: 'image',    group: 'REPOS & LIBRARIES', icon: '🖼', label: { en: 'Image Studio', fa: 'استودیو تصویر' } },
-  { id: 'library',  group: 'REPOS & LIBRARIES', icon: '📄', label: { en: 'Extended Library', fa: 'کتابخانه مرجع' } },
+  { id: 'chat',     group: 'WORKSPACE',       icon: '✦',  label: 'New Chat' },
+  { id: 'projects', group: 'WORKSPACE',       icon: '🖥', label: 'Projects' },
+  { id: 'search',   group: 'WORKSPACE',       icon: '🔍', label: 'Deep Search' },
+  { id: 'image',    group: 'REPOS & LIBRARIES', icon: '🖼', label: 'Image Studio' },
+  { id: 'library',  group: 'REPOS & LIBRARIES', icon: '📄', label: 'Extended Library' },
 ];
 
 const QUICK_PROMPTS = [
@@ -137,255 +60,60 @@ const LIBRARY = [
 
 // ── Inline styles ────────────────────────────────────────────────────────────
 const S = {
-  root: (lang) => ({
-    display: 'flex', width: '100vw', height: '100vh',
-    background: '#07070a', color: '#e8e8f0',
-    fontFamily: "'Inter', 'Segoe UI', sans-serif",
-    overflow: 'hidden',
-    direction: lang === 'fa' ? 'rtl' : 'ltr',
-  }),
-  sidebar: (collapsed, lang) => ({
-    width: collapsed ? '64px' : '248px',
-    background: 'rgba(10,8,22,0.95)',
-    backdropFilter: 'blur(20px)',
-    borderRight: lang === 'en' ? '1px solid rgba(138,43,226,0.15)' : 'none',
-    borderLeft: lang === 'fa' ? '1px solid rgba(138,43,226,0.15)' : 'none',
-    display: 'flex', flexDirection: 'column',
-    transition: 'width 0.28s cubic-bezier(.4,0,.2,1)',
-    overflow: 'hidden', flexShrink: 0, position: 'relative',
-  }),
-  sbGlow: {
-    position: 'absolute', top: -80, left: -80,
-    width: 260, height: 260, borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(138,43,226,0.12) 0%, transparent 70%)',
-    pointerEvents: 'none',
-  },
-  sbHeader: {
-    height: 64, display: 'flex', alignItems: 'center',
-    padding: '0 14px', gap: 10,
-    borderBottom: '1px solid rgba(255,255,255,0.05)',
-    flexShrink: 0,
-  },
-  hamburger: {
-    background: 'transparent', border: 'none',
-    color: '#7a7a9a', cursor: 'pointer', fontSize: 18,
-    padding: 4, borderRadius: 6, flexShrink: 0,
-    transition: 'color 0.2s',
-  },
-  brandName: {
-    fontSize: 14, fontWeight: 700, whiteSpace: 'nowrap',
-    background: 'linear-gradient(90deg,#9B6FDF,#C4A0FF,#00e5ff)',
-    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-    backgroundClip: 'text',
-  },
+  root: { display: 'flex', width: '100vw', height: '100vh', background: '#07070a', color: '#e8e8f0', fontFamily: "'Inter', 'Segoe UI', sans-serif", overflow: 'hidden' },
+  sidebar: (collapsed) => ({ width: collapsed ? '64px' : '248px', background: 'rgba(10,8,22,0.95)', backdropFilter: 'blur(20px)', borderRight: '1px solid rgba(138,43,226,0.15)', display: 'flex', flexDirection: 'column', transition: 'width 0.28s cubic-bezier(.4,0,.2,1)', overflow: 'hidden', flexShrink: 0, position: 'relative' }),
+  sbGlow: { position: 'absolute', top: -80, left: -80, width: 260, height: 260, borderRadius: '50%', background: 'radial-gradient(circle, rgba(138,43,226,0.12) 0%, transparent 70%)', pointerEvents: 'none' },
+  sbHeader: { height: 64, display: 'flex', alignItems: 'center', padding: '0 14px', gap: 10, borderBottom: '1px solid rgba(255,255,255,0.05)', flexShrink: 0 },
+  hamburger: { background: 'transparent', border: 'none', color: '#7a7a9a', cursor: 'pointer', fontSize: 18, padding: 4, borderRadius: 6, flexShrink: 0, transition: 'color 0.2s' },
+  brandName: { fontSize: 14, fontWeight: 700, whiteSpace: 'nowrap', background: 'linear-gradient(90deg,#9B6FDF,#C4A0FF,#00e5ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' },
   nav: { padding: '10px 8px', flex: 1, display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto' },
-  navGroup: {
-    fontSize: 9, color: 'rgba(255,255,255,0.25)',
-    letterSpacing: 2, padding: '10px 10px 4px',
-    whiteSpace: 'nowrap',
-  },
-  navItem: (active, collapsed) => ({
-    display: 'flex', alignItems: 'center', gap: 10,
-    padding: collapsed ? '10px' : '9px 11px',
-    justifyContent: collapsed ? 'center' : 'flex-start',
-    borderRadius: 10, cursor: 'pointer',
-    fontSize: 13, color: active ? '#E0CFFF' : 'rgba(255,255,255,0.5)',
-    fontWeight: active ? 500 : 400,
-    background: active ? 'rgba(138,43,226,0.15)' : 'transparent',
-    border: active ? '1px solid rgba(138,43,226,0.3)' : '1px solid transparent',
-    transition: 'all 0.18s', whiteSpace: 'nowrap', overflow: 'hidden',
-  }),
-  sbFooter: {
-    padding: '12px 8px',
-    borderTop: '1px solid rgba(255,255,255,0.05)',
-    flexShrink: 0,
-  },
-  settingsBtn: (collapsed) => ({
-    display: 'flex', alignItems: 'center', gap: 10,
-    padding: collapsed ? '10px' : '9px 11px',
-    justifyContent: collapsed ? 'center' : 'flex-start',
-    borderRadius: 10, cursor: 'pointer',
-    fontSize: 13, color: 'rgba(255,255,255,0.4)',
-    background: 'transparent', border: '1px solid transparent',
-    transition: 'all 0.18s', whiteSpace: 'nowrap', width: '100%',
-  }),
+  navGroup: { fontSize: 9, color: 'rgba(255,255,255,0.25)', letterSpacing: 2, padding: '10px 10px 4px', whiteSpace: 'nowrap' },
+  navItem: (active, collapsed) => ({ display: 'flex', alignItems: 'center', gap: 10, padding: collapsed ? '10px' : '9px 11px', justifyContent: collapsed ? 'center' : 'flex-start', borderRadius: 10, cursor: 'pointer', fontSize: 13, color: active ? '#E0CFFF' : 'rgba(255,255,255,0.5)', fontWeight: active ? 500 : 400, background: active ? 'rgba(138,43,226,0.15)' : 'transparent', border: active ? '1px solid rgba(138,43,226,0.3)' : '1px solid transparent', borderLeft: active && !collapsed ? '3px solid #8A2BE2' : (active ? '1px solid rgba(138,43,226,0.3)' : '1px solid transparent'), transition: 'all 0.18s', whiteSpace: 'nowrap', overflow: 'hidden' }),
+  sbFooter: { padding: '12px 8px', borderTop: '1px solid rgba(255,255,255,0.05)', flexShrink: 0 },
+  settingsBtn: (collapsed) => ({ display: 'flex', alignItems: 'center', gap: 10, padding: collapsed ? '10px' : '9px 11px', justifyContent: collapsed ? 'center' : 'flex-start', borderRadius: 10, cursor: 'pointer', fontSize: 13, color: 'rgba(255,255,255,0.4)', background: 'transparent', border: '1px solid transparent', transition: 'all 0.18s', whiteSpace: 'nowrap', width: '100%' }),
   main: { flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 },
-  topbar: {
-    height: 52, display: 'flex', alignItems: 'center',
-    justifyContent: 'space-between', padding: '0 20px',
-    borderBottom: '1px solid rgba(255,255,255,0.06)',
-    background: 'rgba(255,255,255,0.02)', flexShrink: 0,
-  },
+  topbar: { height: 52, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)', flexShrink: 0 },
   topTitle: { fontSize: 13, color: 'rgba(255,255,255,0.5)', fontWeight: 500 },
-  langBtn: {
-    padding: '5px 14px', borderRadius: 20,
-    border: '1px solid rgba(0,229,255,0.25)',
-    background: 'transparent', color: '#00e5ff',
-    cursor: 'pointer', fontWeight: 600, fontSize: 12,
-    fontFamily: 'inherit',
-  },
+  langBtn: { padding: '5px 14px', borderRadius: 20, border: '1px solid rgba(0,229,255,0.25)', background: 'transparent', color: '#00e5ff', cursor: 'pointer', fontWeight: 600, fontSize: 12, fontFamily: 'inherit' },
   content: { flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' },
-  // Chat
   chatArea: { flex: 1, overflowY: 'auto', padding: '24px 20px', display: 'flex', flexDirection: 'column' },
   welcome: { margin: 'auto', textAlign: 'center', maxWidth: 520, padding: '20px 0' },
-  welcomeTitle: {
-    fontSize: 38, fontWeight: 300, margin: '16px 0 10px',
-    color: '#fff', lineHeight: 1.2,
-  },
+  welcomeTitle: { fontSize: 38, fontWeight: 300, margin: '16px 0 10px', color: '#fff', lineHeight: 1.2 },
   welcomeSub: { color: '#6a6a8a', fontSize: 14, lineHeight: 1.75, marginBottom: 28 },
   quickBtns: { display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center' },
-  quickBtn: {
-    padding: '9px 18px', borderRadius: 20,
-    border: '1px solid rgba(255,255,255,0.1)',
-    background: 'rgba(255,255,255,0.04)',
-    color: 'rgba(255,255,255,0.7)', fontSize: 13,
-    cursor: 'pointer', transition: 'all 0.18s', fontFamily: 'inherit',
-  },
-  msgWrap: (sender) => ({
-    marginBottom: 18,
-    display: 'flex',
-    justifyContent: sender === 'user' ? 'flex-end' : 'flex-start',
-    maxWidth: '100%',
-  }),
-  msgBubble: (sender) => ({
-    maxWidth: '72%', padding: '12px 18px', borderRadius: 20,
-    background: sender === 'user' ? 'rgba(138,43,226,0.18)' : 'rgba(255,255,255,0.03)',
-    border: sender === 'user' ? '1px solid rgba(138,43,226,0.3)' : '1px solid rgba(255,255,255,0.06)',
-    fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap',
-  }),
-  msgLabel: (sender) => ({
-    fontSize: 10, fontWeight: 600, marginBottom: 4,
-    color: sender === 'user' ? '#00e5ff' : '#9b6dff',
-  }),
-  // Input bar
-  inputBar: {
-    padding: '12px 20px 16px',
-    background: 'rgba(255,255,255,0.02)',
-    borderTop: '1px solid rgba(255,255,255,0.05)',
-    flexShrink: 0,
-  },
-  inputInner: {
-    maxWidth: 760, margin: '0 auto',
-    display: 'flex', alignItems: 'center', gap: 10,
-    background: 'rgba(14,14,26,0.9)',
-    border: '1px solid rgba(255,255,255,0.08)',
-    borderRadius: 28, padding: '6px 6px 6px 18px',
-    backdropFilter: 'blur(12px)',
-    boxShadow: '0 0 32px rgba(138,43,226,0.06)',
-  },
-  inputField: {
-    flex: 1, background: 'transparent', border: 'none',
-    color: '#fff', outline: 'none', fontSize: 14,
-    fontFamily: 'inherit',
-  },
-  iconBtn: {
-    background: 'transparent', border: 'none',
-    color: 'rgba(255,255,255,0.3)', cursor: 'pointer',
-    fontSize: 16, padding: '6px', borderRadius: 8,
-    transition: 'color 0.2s',
-  },
-  sendBtn: {
-    height: 40, padding: '0 22px', borderRadius: 20,
-    border: 'none', cursor: 'pointer', fontWeight: 700,
-    fontSize: 13, fontFamily: 'inherit',
-    background: 'linear-gradient(270deg, #1a8fff, #9b6dff)',
-    color: '#fff', flexShrink: 0, transition: 'opacity 0.2s',
-  },
-  // Pages
+  quickBtn: { padding: '9px 18px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.7)', fontSize: 13, cursor: 'pointer', transition: 'all 0.18s', fontFamily: 'inherit' },
+  msgWrap: (sender) => ({ marginBottom: 18, display: 'flex', justifyContent: sender === 'user' ? 'flex-end' : 'flex-start', maxWidth: '100%' }),
+  msgBubble: (sender) => ({ maxWidth: '72%', padding: '12px 18px', borderRadius: 20, background: sender === 'user' ? 'rgba(138,43,226,0.18)' : 'rgba(255,255,255,0.03)', border: sender === 'user' ? '1px solid rgba(138,43,226,0.3)' : '1px solid rgba(255,255,255,0.06)', fontSize: 14, lineHeight: 1.7, whiteSpace: 'pre-wrap' }),
+  msgLabel: (sender) => ({ fontSize: 10, fontWeight: 600, marginBottom: 4, color: sender === 'user' ? '#00e5ff' : '#9b6dff' }),
+  inputBar: { padding: '12px 20px 16px', background: 'rgba(255,255,255,0.02)', borderTop: '1px solid rgba(255,255,255,0.05)', flexShrink: 0 },
+  inputInner: { maxWidth: 760, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(14,14,26,0.9)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 28, padding: '6px 6px 6px 18px', backdropFilter: 'blur(12px)', boxShadow: '0 0 32px rgba(138,43,226,0.06)' },
+  inputField: { flex: 1, background: 'transparent', border: 'none', color: '#fff', outline: 'none', fontSize: 14, fontFamily: 'inherit' },
+  iconBtn: { background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.3)', cursor: 'pointer', fontSize: 16, padding: '6px', borderRadius: 8, transition: 'color 0.2s' },
+  sendBtn: { height: 40, padding: '0 22px', borderRadius: 20, border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: 13, fontFamily: 'inherit', background: 'linear-gradient(270deg, #1a8fff, #9b6dff)', color: '#fff', flexShrink: 0, transition: 'opacity 0.2s' },
   pageWrap: { flex: 1, padding: '32px 28px', overflowY: 'auto' },
-  pageTitle: {
-    fontSize: 26, fontWeight: 600, textAlign: 'center',
-    background: 'linear-gradient(90deg,#00b4d8,#9b6dff)',
-    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-    backgroundClip: 'text', marginBottom: 6,
-  },
+  pageTitle: { fontSize: 26, fontWeight: 600, textAlign: 'center', background: 'linear-gradient(90deg,#00b4d8,#9b6dff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', marginBottom: 6 },
   pageSub: { textAlign: 'center', color: '#6a6a8a', fontSize: 13, marginBottom: 28 },
-  // Projects grid
   grid3: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(260px,1fr))', gap: 16, marginTop: 8 },
-  projCard: {
-    background: 'rgba(255,255,255,0.03)',
-    border: '1px solid rgba(255,255,255,0.07)',
-    borderRadius: 14, padding: 22, cursor: 'pointer',
-    transition: 'all 0.2s',
-  },
+  projCard: { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, padding: 22, cursor: 'pointer', transition: 'all 0.2s' },
   projTitle: { fontSize: 15, fontWeight: 600, color: '#e0e0f0', marginBottom: 8 },
   projDesc: { fontSize: 12.5, color: '#6a6a8a', lineHeight: 1.6, marginBottom: 14 },
-  tag: (color) => ({
-    display: 'inline-block', fontSize: 10, fontWeight: 600,
-    padding: '3px 10px', borderRadius: 20,
-    background: color + '22', color: color,
-    border: `1px solid ${color}44`,
-  }),
-  // Search
+  tag: (color) => ({ display: 'inline-block', fontSize: 10, fontWeight: 600, padding: '3px 10px', borderRadius: 20, background: color + '22', color: color, border: `1px solid ${color}44` }),
   searchWrap: { maxWidth: 640, margin: '0 auto', marginTop: 8 },
-  searchBox: {
-    display: 'flex', alignItems: 'center', gap: 10,
-    background: 'rgba(14,14,26,0.8)',
-    border: '1px solid rgba(255,255,255,0.1)',
-    borderRadius: 28, padding: '12px 20px',
-  },
-  searchInput: {
-    flex: 1, background: 'transparent', border: 'none',
-    color: '#fff', outline: 'none', fontSize: 14, fontFamily: 'inherit',
-  },
-  // Image Studio
-  dropZone: {
-    maxWidth: 560, margin: '0 auto', marginTop: 8,
-    border: '1.5px dashed rgba(0,229,255,0.25)',
-    borderRadius: 16, padding: '60px 32px',
-    textAlign: 'center',
-    background: 'rgba(0,229,255,0.03)',
-    cursor: 'pointer', transition: 'all 0.2s',
-  },
-  // Library
-  libCard: {
-    background: 'rgba(255,255,255,0.03)',
-    border: '1px solid rgba(255,255,255,0.07)',
-    borderRadius: 12, padding: '18px 20px',
-    marginBottom: 14,
-  },
-  libCode: {
-    background: 'rgba(0,0,0,0.4)', borderRadius: 8,
-    padding: '10px 14px', fontFamily: 'monospace',
-    fontSize: 11.5, color: '#00e5ff', marginTop: 10,
-    overflowX: 'auto', lineHeight: 1.6,
-    border: '1px solid rgba(0,229,255,0.1)',
-  },
+  searchBox: { display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(14,14,26,0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 28, padding: '12px 20px' },
+  searchInput: { flex: 1, background: 'transparent', border: 'none', color: '#fff', outline: 'none', fontSize: 14, fontFamily: 'inherit' },
+  dropZone: { maxWidth: 560, margin: '0 auto', marginTop: 8, border: '1.5px dashed rgba(0,229,255,0.25)', borderRadius: 16, padding: '60px 32px', textAlign: 'center', background: 'rgba(0,229,255,0.03)', cursor: 'pointer', transition: 'all 0.2s' },
+  libCard: { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: '18px 20px', marginBottom: 14 },
+  libCode: { background: 'rgba(0,0,0,0.4)', borderRadius: 8, padding: '10px 14px', fontFamily: 'monospace', fontSize: 11.5, color: '#00e5ff', marginTop: 10, overflowX: 'auto', lineHeight: 1.6, border: '1px solid rgba(0,229,255,0.1)' },
   libTabs: { display: 'flex', gap: 8, marginBottom: 20, justifyContent: 'center' },
-  libTab: (active) => ({
-    padding: '7px 18px', borderRadius: 20, cursor: 'pointer',
-    fontSize: 12, fontFamily: 'inherit',
-    background: active ? 'rgba(155,109,255,0.2)' : 'transparent',
-    border: active ? '1px solid rgba(155,109,255,0.4)' : '1px solid rgba(255,255,255,0.08)',
-    color: active ? '#9b6dff' : 'rgba(255,255,255,0.5)',
-    transition: 'all 0.18s',
-  }),
-  // Settings
-  settingsCard: {
-    maxWidth: 600, margin: '0 auto', marginTop: 8,
-    background: 'rgba(255,255,255,0.03)',
-    border: '1px solid rgba(255,255,255,0.07)',
-    borderRadius: 16, overflow: 'hidden',
-  },
-  settingsRow: {
-    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-    padding: '18px 24px',
-    borderBottom: '1px solid rgba(255,255,255,0.05)',
-  },
+  libTab: (active) => ({ padding: '7px 18px', borderRadius: 20, cursor: 'pointer', fontSize: 12, fontFamily: 'inherit', background: active ? 'rgba(155,109,255,0.2)' : 'transparent', border: active ? '1px solid rgba(155,109,255,0.4)' : '1px solid rgba(255,255,255,0.08)', color: active ? '#9b6dff' : 'rgba(255,255,255,0.5)', transition: 'all 0.18s' }),
+  settingsCard: { maxWidth: 600, margin: '0 auto', marginTop: 8, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 16, overflow: 'hidden' },
+  settingsRow: { display: 'flex', alignItems: 'center', justifyIntent: 'space-between', padding: '18px 24px', borderBottom: '1px solid rgba(255,255,255,0.05)' },
   settingsRowTitle: { fontSize: 14, color: '#e0e0f0', marginBottom: 3 },
   settingsRowSub: { fontSize: 12, color: '#6a6a8a' },
-  select: {
-    background: 'rgba(14,14,26,0.8)',
-    border: '1px solid rgba(255,255,255,0.1)',
-    borderRadius: 8, color: '#e0e0f0',
-    padding: '6px 12px', fontSize: 12, cursor: 'pointer',
-    outline: 'none',
-  },
+  select: { background: 'rgba(14,14,26,0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#e0e0f0', padding: '6px 12px', fontSize: 12, cursor: 'pointer', outline: 'none' }
 };
 
-// ── Main component ────────────────────────────────────────────────────────────
 export default function Home() {
-  const [mounted, setMounted]           = useState(false);
   const [promptInput, setPromptInput]   = useState('');
   const [chatMessages, setChatMessages] = useState([]);
   const [started, setStarted]           = useState(false);
@@ -396,17 +124,9 @@ export default function Home() {
   const [searchVal, setSearchVal]       = useState('');
   const chatEndRef = useRef(null);
 
-  // هماهنگی با چرخه سرور Next.js برای شکستن باگ ۴۰۴
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // اسکرول اتوماتیک چت
-  useEffect(() => {
-    if (mounted) {
-      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [chatMessages, mounted]);
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages]);
 
   const groups = ['WORKSPACE', 'REPOS & LIBRARIES'];
 
@@ -423,34 +143,26 @@ export default function Home() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: txt,
-          fileParts: [],
+          message: txt,
           lang: lang
         }),
       });
       const data = await res.json();
       setChatMessages(p => p.map(m => m.id === loadId
-        ? { sender: 'ai', text: res.ok && data.response ? data.response : (lang === 'fa' ? 'خطا در اتصال به سرور مرکزی.' : 'System Error: Connection failed.') }
+        ? { sender: 'ai', text: res.ok && data.success ? data.reply : 'System Error: Connection failed.' }
         : m));
     } catch {
       setChatMessages(p => p.map(m => m.id === loadId
-        ? { sender: 'ai', text: lang === 'fa' ? 'خطای شبکه در اتصال به گیت‌وی ابری.' : 'Connection Error: Cloud function timeout.' }
+        ? { sender: 'ai', text: 'Connection Error: Cloud function timeout.' }
         : m));
     }
   };
 
   const pageTitles = {
-    chat: lang === 'fa' ? 'استودیو هوش مصنوعی' : 'AI Studio',
-    projects: lang === 'fa' ? 'مرکز پروژه‌ها' : 'Projects Hub',
-    search: lang === 'fa' ? 'جستجوی عمیق' : 'Deep Search',
-    image: lang === 'fa' ? 'استودیو تصویر' : 'Image Studio',
-    library: lang === 'fa' ? 'کتابخانه مرجع' : 'Extended Library',
-    settings: lang === 'fa' ? 'تنظیمات سیستمی' : 'System Settings',
+    chat: 'AI Studio', projects: 'Projects Hub',
+    search: 'Deep Search', image: 'Image Studio',
+    library: 'Extended Library', settings: 'System Settings',
   };
-
-  if (!mounted) {
-    return <div style={{ background: '#07070a', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7a7a9a' }}>Initializing Workspace Engine...</div>;
-  }
 
   return (
     <>
@@ -475,13 +187,9 @@ export default function Home() {
         `}</style>
       </Head>
 
-      <div style={S.root(lang)}>
-
-        {/* ══ SIDEBAR ══ */}
-        <aside style={S.sidebar(collapsed, lang)}>
+      <div style={S.root}>
+        <aside style={S.sidebar(collapsed)}>
           <div style={S.sbGlow} />
-
-          {/* Header */}
           <div style={S.sbHeader}>
             <button style={S.hamburger} onClick={() => setCollapsed(c => !c)}>☰</button>
             {!collapsed && (
@@ -491,8 +199,6 @@ export default function Home() {
               </>
             )}
           </div>
-
-          {/* Nav */}
           <nav style={S.nav}>
             {groups.map(group => {
               const items = NAV.filter(n => n.group === group);
@@ -505,18 +211,16 @@ export default function Home() {
                       className="nav-item-btn"
                       style={S.navItem(activeNav === item.id, collapsed)}
                       onClick={() => setActiveNav(item.id)}
-                      title={collapsed ? item.label[lang] : undefined}
+                      title={collapsed ? item.label : undefined}
                     >
                       <span style={{ fontSize: 15, flexShrink: 0 }}>{item.icon}</span>
-                      {!collapsed && <span>{item.label[lang]}</span>}
+                      {!collapsed && <span>{item.label}</span>}
                     </button>
                   ))}
                 </div>
               );
             })}
           </nav>
-
-          {/* Footer / Settings */}
           <div style={S.sbFooter}>
             <button
               className="nav-item-btn"
@@ -525,25 +229,20 @@ export default function Home() {
               title={collapsed ? 'System Settings' : undefined}
             >
               <span style={{ fontSize: 15 }}>⚙️</span>
-              {!collapsed && <span style={{ fontSize: 13 }}>{lang === 'fa' ? 'تنظیمات هسته' : 'System Settings'}</span>}
+              {!collapsed && <span style={{ fontSize: 13 }}>System Settings</span>}
             </button>
           </div>
         </aside>
 
-        {/* ══ MAIN ══ */}
         <main style={S.main}>
-          {/* Topbar */}
           <div style={S.topbar}>
-            <span style={S.topTitle}>{pageTitles[activeNav]}</span>
+            <span style={S.topTitle}>{pageTitles[activeNav] || 'AI Studio'}</span>
             <button style={S.langBtn} onClick={() => setLang(l => l === 'en' ? 'fa' : 'en')}>
               {lang === 'en' ? 'FA / EN' : 'EN / FA'}
             </button>
           </div>
 
-          {/* Content area */}
           <div style={S.content}>
-
-            {/* ── CHAT ── */}
             {activeNav === 'chat' && (
               <>
                 <div style={S.chatArea}>
@@ -580,7 +279,6 @@ export default function Home() {
                     </div>
                   )}
                 </div>
-                {/* Input */}
                 <div style={S.inputBar}>
                   <div style={S.inputInner}>
                     <button className="icon-btn" style={S.iconBtn} title="Attach">📎</button>
@@ -598,7 +296,6 @@ export default function Home() {
               </>
             )}
 
-            {/* ── PROJECTS HUB ── */}
             {activeNav === 'projects' && (
               <div style={S.pageWrap}>
                 <h2 style={S.pageTitle}>Projects Hub</h2>
@@ -615,7 +312,6 @@ export default function Home() {
               </div>
             )}
 
-            {/* ── DEEP SEARCH ── */}
             {activeNav === 'search' && (
               <div style={S.pageWrap}>
                 <h2 style={S.pageTitle}>Deep Search Core</h2>
@@ -627,14 +323,13 @@ export default function Home() {
                       style={S.searchInput}
                       value={searchVal}
                       onChange={e => setSearchVal(e.target.value)}
-                      placeholder={lang === 'fa' ? 'در مخازن داده جستجو کنید...' : 'Search components or algorithmic libraries...'}
+                      placeholder="Search components or algorithmic libraries..."
                     />
                   </div>
                 </div>
               </div>
             )}
 
-            {/* ── IMAGE STUDIO ── */}
             {activeNav === 'image' && (
               <div style={S.pageWrap}>
                 <h2 style={S.pageTitle}>Image Studio</h2>
@@ -642,19 +337,17 @@ export default function Home() {
                 <div
                   className="drop-zone"
                   style={S.dropZone}
-                  onDragOver={e => e.preventDefault()}
                   onClick={() => document.getElementById('file-input').click()}
                 >
                   <div style={{ fontSize: 32, marginBottom: 12, color: '#00e5ff' }}>🖼</div>
                   <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)' }}>
-                    {lang === 'fa' ? 'فایل تصویر فنی را اینجا رها کنید یا کلیک کنید' : 'Drop technical asset here or click to choose file'}
+                    Drop technical asset here or click to choose file
                   </div>
                   <input id="file-input" type="file" style={{ display: 'none' }} />
                 </div>
               </div>
             )}
 
-            {/* ── EXTENDED LIBRARY ── */}
             {activeNav === 'library' && (
               <div style={S.pageWrap}>
                 <h2 style={S.pageTitle}>Extended Library</h2>
@@ -676,7 +369,6 @@ export default function Home() {
               </div>
             )}
 
-            {/* ── SYSTEM SETTINGS ── */}
             {activeNav === 'settings' && (
               <div style={S.pageWrap}>
                 <h2 style={S.pageTitle}>System Settings</h2>
@@ -698,8 +390,7 @@ export default function Home() {
                 </div>
               </div>
             )}
-
-          </div>{/* /content */}
+          </div>
         </main>
       </div>
     </>
