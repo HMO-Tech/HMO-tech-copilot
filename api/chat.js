@@ -6,59 +6,67 @@ export default async function handler(req, res) {
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-    const { prompt, message, lang } = req.body;
-    const userText = (prompt || message || '').trim();
-    if (!userText) return res.status(400).json({ error: 'No message' });
+    // پشتیبانی کامل از ورودی‌های فرانت‌آند هساآرت استودیو
+    const { prompt, message, fileParts, lang } = req.body;
+    const userText = (prompt || message || '').trim() || 'Execute workspace analysis.';
 
-    const apiKey = process.env.OPENROUTER_API_KEY;
+    // خواندن توکن مستقیمی که در ورسل ذخیره کردی
+    const apiKey = process.env.OPENROUTER_API_KEY || process.env.GEMINI_API_KEY;
+
     if (!apiKey) {
-        const msg = 'OPENROUTER_API_KEY یافت نشد در Vercel';
-        return res.status(200).json({ response: msg, success: false, reply: msg });
+        return res.status(200).json({
+            response: "توکن هوش مصنوعی یافت نشد. لطفاً آن را در انوایورمنت ورسل تنظیم کنید.",
+            success: false,
+            reply: "API Key is missing."
+        });
     }
 
-    const systemPrompt = lang === 'fa'
-        ? 'شما دستیار هوشمند D&T Ai-TECH هستید. پاسخ فارسی، کدها انگلیسی.'
-        : 'You are D&T Ai-TECH AI assistant. Help with engineering, Grasshopper, parametric design, and coding.';
+    // استفاده از قوی‌ترین و پایدارترین مدل زنده نسل جدید گوگل بر اساس داکیومنت جدیدی که فرستادی
+    const model = 'gemini-3.5-flash';
+    
+    let systemInstructionText = lang === 'fa'
+        ? "شما هسته هوشمند D&T Ai-TECH هستید. به سوالات مهندسی، برنامه‌نویسی پایتون و گراس‌هاپر پاسخ دهید. پاسخ فارسی، کدها انگلیسی."
+        : "You are D&T Ai-TECH Intelligent Core. Help with Grasshopper scripts, parametric design, and engineering.";
+
+    const parts = [];
+    if (fileParts && Array.isArray(fileParts)) {
+        fileParts.forEach(p => {
+            if (p.inlineData?.data) parts.push({ inlineData: p.inlineData });
+        });
+    }
+    parts.push({ text: userText });
+
+    const requestBody = {
+        contents: [{ parts }],
+        systemInstruction: { parts: [{ text: systemInstructionText }] },
+        generationConfig: { temperature: 0.2, maxOutputTokens: 3500, topP: 0.95 }
+    };
 
     try {
-        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        // اتصال مستقیم به اندپوینت رسمی گوگل بدون نیاز به واسطه‌ها
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+        const response = await fetch(url, {
             method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json',
-                'HTTP-Referer': 'https://www.dt-ai.tech',
-                'X-Title': 'D&T Ai-TECH'
-            },
-            body: JSON.stringify({
-                model: 'google/gemini-2.0-flash-exp:free',
-                messages: [
-                    { role: 'system', content: systemPrompt },
-                    { role: 'user', content: userText }
-                ],
-                max_tokens: 3500,
-                temperature: 0.2
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestBody)
         });
-
         const data = await response.json();
-        const aiText = data.choices?.[0]?.message?.content;
 
+        if (data.error) {
+            return res.status(200).json({ response: `خطای سرور گوگل: ${data.error.message}`, success: false });
+        }
+
+        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
         if (aiText) {
             return res.status(200).json({ 
                 response: aiText, 
-                reply: aiText, 
-                success: true 
+                success: true,
+                reply: aiText 
             });
+        } else {
+            return res.status(200).json({ response: "فرمت پاسخ ناشناخته: " + JSON.stringify(data), success: false });
         }
-
-        const errMsg = data.error?.message || 'No response from AI';
-        return res.status(200).json({ response: errMsg, reply: errMsg, success: false });
-
     } catch (err) {
-        return res.status(200).json({ 
-            response: 'Connection error: ' + err.message, 
-            reply: 'Connection error', 
-            success: false 
-        });
+        return res.status(500).json({ error: 'Server Connection Error' });
     }
 }
