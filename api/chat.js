@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     const { prompt, message, fileParts, lang, systemText } = req.body;
     const userText = (prompt || message || '').trim() || 'Execute workspace analysis.';
 
-    // خواندن دقیق کلیدی که در تصویر ورسل فرستادی
+    // خواندن دقیق کلیدی که در تنظیمات ورسل داری
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
     );
 
     try {
-        // اتصال هوشمند به اوپن‌روتر با استفاده از توکنی که در ورسل داری
+        // اتصال به اوپن‌روتر با استفاده از توکن فعال شما
         const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
                 'X-Title': 'Hesaart Studio Dashboard'
             },
             body: JSON.stringify({
-                model: 'google/gemini-2.0-flash', // مدل پایدار و فعال در پلتفرم اوپن‌روتر
+                model: 'google/gemini-2.0-flash', // مدل کاملاً فعال و پایدار در اوپن‌روتر
                 messages: [
                     { role: 'system', content: systemInstructionText },
                     { role: 'user', content: userText }
@@ -56,7 +56,7 @@ export default async function handler(req, res) {
         const aiText = data.choices?.[0]?.message?.content;
         
         if (aiText) {
-            // بازگرداندن فیلدها به صورتی که هم با ایندکس قدیمی و هم جدید فرانت‌آند سینک باشد
+            // بازگرداندن فیلدها به صورتی که هم با فیلدهای قدیمی و هم جدید فرانت‌آند سینک باشد
             return res.status(200).json({ 
                 response: aiText, 
                 reply: aiText, 
@@ -65,7 +65,7 @@ export default async function handler(req, res) {
             });
         } else {
             return res.status(200).json({ 
-                response: "خطا: پاسخ هوش مصنوعی خالی بود. دیتای خام: " + JSON.stringify(data), 
+                response: "خطا: پاسخ هوش مصنوعی خالی بود.", 
                 success: false 
             });
         }
